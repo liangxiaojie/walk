@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Hello MUI</title>
+		<title>历史更新</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -16,11 +16,22 @@
 			body {
 				background-color: #efeff4;
 			}
+			header.mui-bar {
+				display: none;
+			}
+			.mui-bar-nav~.mui-content {
+				padding: 0;
+			}
+			.title {
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
 		</style>
 	</head>
 
 	<body>
-		<!--下拉刷新容器-->
+<!--下拉刷新容器-->
 		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
 			<div class="mui-scroll">
 				<!--数据列表-->
@@ -52,8 +63,14 @@
 					var cells = document.body.querySelectorAll('.mui-table-view-cell');
 					for (var i = cells.length, len = i + 3; i < len; i++) {
 						var li = document.createElement('li');
-						li.className = 'mui-table-view-cell';
-						li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
+						li.className = 'mui-table-view-cell mui-media';
+						li.innerHTML = '<a class="mui-navigate-right">'
+						+'  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">'
+						+'	<div class="mui-media-body">'
+						+'		<div style="float:left;">井盖掉了' + (i + 1) +'</div><h6> 2014.12.04</h6>'
+						+'		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>'
+						+'	</div>'
+						+'</a>'
 						//下拉刷新，新纪录插到最前面；
 						table.insertBefore(li, table.firstChild);
 					}
@@ -71,8 +88,14 @@
 					var cells = document.body.querySelectorAll('.mui-table-view-cell');
 					for (var i = cells.length, len = i + 20; i < len; i++) {
 						var li = document.createElement('li');
-						li.className = 'mui-table-view-cell';
-						li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
+						li.className = 'mui-table-view-cell mui-mmui-media';
+						li.innerHTML = '<a class="mui-navigate-right">'
+						+'  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">'
+						+'	<div class="mui-media-body">'
+						+'		<div style="float:left;">井盖掉了' + (i + 1) +'</div><h6> 2014.12.04</h6>'
+						+'		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>'
+						+'	</div>'
+						+'</a>'
 						table.appendChild(li);
 					}
 				}, 1500);
