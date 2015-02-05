@@ -1,7 +1,7 @@
 {
-	"@platforms": ["android", "iPhone", "iPad"],
+	"@platforms": ["android"],
 	"id": "H5291D269",/*必选，应用的标识*/
-	"name": "test",/*必选，应用名称*/
+	"name": "步行出行环境评价应用系统",/*必选，应用名称*/
 	"version": {
 		"name": "1.0",/*必选，版本名称*/
 		"code": ""
@@ -10,7 +10,7 @@
 	"icons": {
 		"72": "icon.png"
 	},
-	"launch_path": "index.html",/*必选，应用的入口页面，默认为根目录下的index.html；也可以是网络地址，网络地址必须以http://或https://开头*/
+	"launch_path": "login.html",/*必选，应用的入口页面，默认为根目录下的index.html；也可以是网络地址，网络地址必须以http://或https://开头*/
 	"developer": {
 		"email": "",/*可选，开发者名称*/
 		"name": "",/*可选，开发者邮箱地址*/
@@ -108,7 +108,7 @@
 	"plus": {
 		"popGesture": "close",/*设置应用默认侧滑返回关闭Webview窗口，none为无侧滑返回功能，hide为侧滑隐藏Webview窗口。参考ask.dcloud.net.cn/article/102*/
 		"splashscreen": {
-			"autoclose": false,/*如果为true，程序启动的图片可以自动关闭，如果为false，开发者需要手动关闭*/
+			"autoclose": true,/*如果为true，程序启动的图片可以自动关闭，如果为false，开发者需要手动关闭*/
 			"waiting": true/*是否在程序启动界面显示等待雪花，true表示显示，false表示不显示。*/
 		},
 		"runmode": "liberate",/*两个值，liberate或normal，前者在应用安装时释放资源，后者不需要释放资源*/
@@ -120,7 +120,7 @@
 				"mobileprovision": "",/*iOS必选，打包配置文件*/
 				"password": "",/*iOS必选，导入配置文件密码*/
 				"p12": "",/*iOS必选，打包配置文件关联的个人证书*/
-				"devices": "universal",/*iphone，可取值iphone/ipad/universal*/
+				"devices": "",/*iphone，可取值iphone/ipad/universal*/
 				"frameworks":[]/*用户在调用 Native.js 或开发第三方插件时使用到的 FrameWork 名*/
 			},
 			"google": {
@@ -185,11 +185,11 @@
 					}
 				},
 				"android": {
-					"mdpi": "", /*必选，240x282，普通屏启动图片*/
-					"ldpi": "", /*必选，320x442，大屏启动图片*/
-					"hdpi": "", /*必选，480x762，高分屏启动图片*/
-					"xhdpi": "", /*必选，720x1242，720P高分屏启动图片*/
-					"xxhdpi": "" /*1080p 高分屏启动图片*/
+					"mdpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-240.png", /*必选，240x282，普通屏启动图片*/
+					"ldpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-320.png", /*必选，320x442，大屏启动图片*/
+					"hdpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-480.png", /*必选，480x762，高分屏启动图片*/
+					"xhdpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-720.png", /*必选，720x1242，720P高分屏启动图片*/
+					"xxhdpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-1080.png" /*1080p 高分屏启动图片*/
 				}
 			}
 		}
