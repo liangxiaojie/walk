@@ -1,16 +1,97 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title></title>
-    <script src="js/mui.min.js"></script>
-    <link href="css/mui.min.css" rel="stylesheet"/>
-    <script type="text/javascript" charset="utf-8">
-      	mui.init();
-    </script>
-</head>
-<body>
-	
-</body>
+
+	<head>
+		<meta charset="utf-8">
+		<title>设施信息更新</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../css/base.css" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.eva-type .item1 {
+				background: #ff7c81;
+			}
+			.eva-type .item2 {
+				background: #92d14f;
+				padding-top: 18px;
+			}
+			.eva-type .item3 {
+				background: #01b0f1;
+			}
+			.eva-type .item4 {
+				background: #f59c58;
+			}
+			.eva-type .item5 {
+				background: #ff9800;
+			}
+			.eva-type .item6 {
+				background: #0071c1;
+			}
+			.eva-type .item7 {
+				background: #7030a0;
+			}
+			.eva-type .item8 {
+				background: #00af50;
+				padding-top: 18px;
+			}
+			.eva-type .item9 {
+				background: #33cc33;
+				font-size: 14px;
+			}
+		</style>
+		<script type="text/javascript">
+			mui.init();
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">设施信息更新</h1>
+		</header>
+		<div class="container">
+			<p>当前位置:</p>
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">设施类型</a>
+					<div class="mui-collapse-content">
+						<div class="eva-type">
+							<div class="item item1">人行<br/>跨路桥</div>
+							<div class="item item2">栅栏</div>
+							<div class="item item3">照明<br />设施</div>
+							<div class="item item4">视线诱导标志</div>
+							<div class="item item5">公路<br />反射镜</div>
+							<div class="item item6">公路<br />情报板</div>
+							<div class="item item7">公路监视系统</div>
+							<div class="item item8">停车场</div>
+							<div class="item item9">公共汽车停靠站</div>
+						</div>
+						<hr />
+						<div class="mui-input-row">
+							<label style="width: 25%;">其他</label>
+							<input style="float: left;" type="text" class="mui-input-speech mui-input-clear" placeholder="请输入其他设施类型">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">设施图片</a>
+					<div class="mui-collapse-content">
+						<div class="eva-img">
+						</div>
+						<a href="#middlePopover" class="mui-btn mui-btn-primary mui-btn-block mui-btn-outlined" style="padding: 5px 20px;">上传图片</a>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<button class="mui-btn mui-btn-primary mui-btn-block">提交</button>
+			</div>
+		</div>
+	</body>
+
 </html>

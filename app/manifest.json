@@ -185,11 +185,11 @@
 					}
 				},
 				"android": {
-					"mdpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-240.png", /*必选，240x282，普通屏启动图片*/
-					"ldpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-320.png", /*必选，320x442，大屏启动图片*/
-					"hdpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-480.png", /*必选，480x762，高分屏启动图片*/
-					"xhdpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-720.png", /*必选，720x1242，720P高分屏启动图片*/
-					"xxhdpi": "D:\\Workspaces\\Hbuilder\\walk\\app\\images\\start-1080.png" /*1080p 高分屏启动图片*/
+					"mdpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\start-240.png", /*必选，240x282，普通屏启动图片*/
+					"ldpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\start-320.png", /*必选，320x442，大屏启动图片*/
+					"hdpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\start-480.png", /*必选，480x762，高分屏启动图片*/
+					"xhdpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\start-720.png", /*必选，720x1242，720P高分屏启动图片*/
+					"xxhdpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\start-1080.png" /*1080p 高分屏启动图片*/
 				}
 			}
 		}

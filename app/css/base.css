@@ -1,0 +1,33 @@
+html,
+body {
+	max-width: 720px;
+	background-color: #efeff4;
+}
+.container {
+	margin-top: 60px;
+}
+.section {
+	padding-bottom: 30px;
+}
+.footer {
+	width: 96%;
+	margin: auto;
+}
+/* 类型列表 */
+.eva-type {
+	overflow: hidden;
+	max-width: 294px;
+	margin: 0 auto;
+	font-size: 16px;
+	color: #fff;
+	text-align: center;
+}
+.eva-type .item {
+	float: left;
+	width: 63px;
+	height: 60px;
+	margin: 5px;
+	padding-top: 8px;
+	background: #eee;
+	border-radius: 5px;
+}

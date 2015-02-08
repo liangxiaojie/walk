@@ -1,0 +1,1 @@
+plus.nativeUI.closeWaiting();
