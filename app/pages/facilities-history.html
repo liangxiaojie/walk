@@ -121,22 +121,22 @@
 			}
 
 			(function($) {
-				var html1 = '<ul class="mui-table-view"><li class="mui-table-view-cell">第二个选项卡子项-1</li><li class="mui-table-view-cell">第二个选项卡子项-2</li><li class="mui-table-view-cell">第二个选项卡子项-3</li><li class="mui-table-view-cell">第二个选项卡子项-4</li><li class="mui-table-view-cell">第二个选项卡子项-5</li></ul>';
+				//var html2 = '<div id="pullrefresh2" class="mui-content mui-scroll-wrapper"><div class="mui-scroll"><ul class="mui-table-view mui-table-view-chevron">asdf</ul></div></div>';
 				var html2 = '<ul class="mui-table-view"><li class="mui-table-view-cell">第三个选项卡子项-1</li><li class="mui-table-view-cell">第三个选项卡子项-2</li><li class="mui-table-view-cell">第三个选项卡子项-3</li><li class="mui-table-view-cell">第三个选项卡子项-4</li><li class="mui-table-view-cell">第三个选项卡子项-5</li></ul>';
-				var item1 = document.getElementById('item1mobile');
 				var item2 = document.getElementById('item2mobile');
 				document.getElementById('slider').addEventListener('slide', function(e) {
+					if (e.detail.slideNumber === 0) {
+						document.getElementById('scroll1').style.display = 'block';
+						document.getElementById('scroll2').style.display = 'none';
+					}
 					if (e.detail.slideNumber === 1) {
+						document.getElementById('scroll2').style.display = 'block';
+						document.getElementById('scroll1').style.display = 'none';
 						if (item2.querySelector('.mui-loading')) {
 							setTimeout(function() {
 								item2.querySelector('.mui-scroll').innerHTML = html2;
-							}, 1000);
-						}
-					} else if (e.detail.slideNumber === 2) {
-						if (item3.querySelector('.mui-loading')) {
-							setTimeout(function() {
-								item3.querySelector('.mui-scroll').innerHTML = html3;
-							}, 1000);
+								
+							}, 200);
 						}
 					}
 				});
