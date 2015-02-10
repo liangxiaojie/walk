@@ -1,1 +1,3 @@
-plus.nativeUI.closeWaiting();
+mui.plusReady(function(){
+	plus.nativeUI.closeWaiting();
+});
