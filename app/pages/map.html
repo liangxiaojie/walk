@@ -7,12 +7,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-
+		
 		<link href="../css/mui.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="../css/base.css" />
-
 		<script src="../js/mui.min.js"></script>
-
+		
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
+		
 		<style type="text/css">
 			#map {
 				width: 100%;
@@ -26,7 +27,6 @@
 		</style>
 
 		<script type="text/javascript">
-			mui.init();
 			var ws = null,
 				wo = null;
 			var em = null,
@@ -99,14 +99,17 @@
 	</head>
 
 	<body>
+
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<div class="mui-icon mui-icon-right-nav mui-pull-right mui-icon-location" onclick="userLocation();"></div>
 			<h1 class="mui-title">地图</h1>
 		</header>
-		<div class="container">
+
+		<div class="mui-content">
 			<div id="map">地图加载中...</div>
 		</div>
+
 	</body>
 
 </html>

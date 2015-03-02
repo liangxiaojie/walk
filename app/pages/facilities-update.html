@@ -7,10 +7,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
 		<link href="../css/mui.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="../css/base.css" />
 		<script src="../js/mui.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="../css/base.css" />
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
+
 		<style type="text/css">
 			.eva-type .item1 {
 				background: #ff7c81;
@@ -42,38 +45,48 @@
 				background: #33cc33;
 				font-size: 14px;
 			}
-			.footer .mui-btn{
+			.footer .mui-btn {
 				padding-left: 15%;
 				padding-right: 15%;
-				padding-top: 15px;
-				padding-bottom: 15px;
+				padding-top: 12px;
+				padding-bottom: 12px;
 				margin-bottom: 30px;
 				font-size: 20px;
 			}
 		</style>
-		<script type="text/javascript">
-			mui.init();
-		</script>
 	</head>
 
 	<body>
+
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">设施信息更新</h1>
 		</header>
-		<div class="container">
-			<p>当前位置:</p>
+
+		<div class="mui-content">
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">当前位置</a>
+					<div class="mui-collapse-content">
+						<p>XX市XX区XX街</p>
+					</div>
+				</div>
+			</div>
 			<div class="section">
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
 					<a class="mui-navigate-right" href="#">设施类型</a>
 					<div class="mui-collapse-content">
 						<div class="eva-type">
-							<div class="item item1">人行<br/>跨路桥</div>
+							<div class="item item1">人行
+								<br/>跨路桥</div>
 							<div class="item item2">栅栏</div>
-							<div class="item item3">照明<br />设施</div>
+							<div class="item item3">照明
+								<br />设施</div>
 							<div class="item item4">视线诱导标志</div>
-							<div class="item item5">公路<br />反射镜</div>
-							<div class="item item6">公路<br />情报板</div>
+							<div class="item item5">公路
+								<br />反射镜</div>
+							<div class="item item6">公路
+								<br />情报板</div>
 							<div class="item item7">公路监视系统</div>
 							<div class="item item8">停车场</div>
 							<div class="item item9">公共汽车停靠站</div>
@@ -98,11 +111,12 @@
 			</div>
 			<div class="footer">
 				<div class="mui-button-row">
-					<button class="mui-btn mui-btn-primary mui-btn-outlined">暂存</button>
-					<button class="mui-btn mui-btn-primary">提交</button>
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined">暂存</button>&nbsp;&nbsp;
+					<button type="button" class="mui-btn mui-btn-primary">提交</button>
 				</div>
 			</div>
 		</div>
+
 	</body>
 
 </html>

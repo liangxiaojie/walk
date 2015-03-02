@@ -7,10 +7,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
 		<link href="../css/mui.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="../css/base.css" />
 		<script src="../js/mui.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="../css/base.css" />
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
+
 		<style>
 			#map {
 				width: 100%;
@@ -27,24 +30,22 @@
 				left: 0;
 				right: 0;
 			}
-			.footer button{
+			.footer button {
 				padding: 10px;
 				margin-bottom: 8px;
 			}
-			.footer span{
+			.footer span {
 				font-size: 20px;
 				position: relative;
 				top: -2px;
 			}
-			.footer .img-icon{
+			.footer .img-icon {
 				width: 25px;
 				position: relative;
 				top: 3px;
 			}
 		</style>
 		<script type="text/javascript">
-			mui.init();
-
 			var ws = null,
 				wo = null;
 			var em = null,
@@ -115,27 +116,30 @@
 			}
 
 			function toRecord() {
-				document.getElementById("img-icon").src="../images/icons/stop.png";
-				document.getElementById("record").innerHTML="停止记录";
+				document.getElementById("img-icon").src = "../images/icons/stop.png";
+				document.getElementById("record").innerHTML = "停止记录";
 			}
 		</script>
 	</head>
 
 	<body>
+
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<div class="mui-icon mui-icon-right-nav mui-pull-right mui-icon-location" onclick="userLocation();"></div>
 			<h1 class="mui-title">路径评价</h1>
 		</header>
-		<div class="container">
+
+		<div class="mui-content">
 			<div id="map">地图加载中...</div>
+			<div class="footer">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="toRecord();">
+					<img id="img-icon" class="img-icon" src="../images/icons/start.png" />
+					<span id="record">开始记录</span>
+				</button>
+			</div>
 		</div>
-		<div class="footer">
-			<button class="mui-btn mui-btn-primary mui-btn-block" onclick="toRecord();">
-				<img id="img-icon" class="img-icon" src="../images/icons/start.png" />
-				<span id="record">开始记录</span>
-			</button>
-		</div>
+
 	</body>
 
 </html>

@@ -3,13 +3,17 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>登录</title>
+		<title>用户登录</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 		<link rel="stylesheet" href="css/mui.min.css">
 		<script src="js/mui.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="css/base.css" />
+		<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
+
 		<style type="text/css">
 			html,
 			body {
@@ -33,15 +37,15 @@
 			.loginform img {
 				float: left;
 				margin-left: 10px;
-				margin-top: 5px;
+				margin-top: 2px;
 				width: 35px;
 				height: 35px;
 			}
 			.loginform input {
 				border: 0;
-				font-size: 22px;
+				font-size: 18px;
 				margin: 0;
-				padding: 22px;
+				padding: 18px;
 				font-family: "microsoft yahei";
 				width: 230px;
 				text-align: left;
@@ -50,13 +54,14 @@
 				border-bottom: 1px solid #007aff;
 			}
 			.reform {
+				width: 99%;
 				text-align: right;
 				margin-top: 20px;
 			}
-			.reform img{
+			.reform img {
 				width: 80px;
 			}
-			.remember{
+			.remember {
 				float: left;
 				margin-top: 8px;
 			}
@@ -66,35 +71,46 @@
 			.footer img {
 				width: 82%;
 			}
+			.mui-input-row input{
+				background: none;
+			}
 		</style>
 	</head>
 
 	<body>
-		<div class="header">
-			<img src="images/login/icon.png" />
-		</div>
-		<div class="container">
-			<div class="loginform">
-				<div class="mui-input-row username">
-					<img src="images/login/username.png" />
-					<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入用户名">
+
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">用户登录</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="header">
+				<img src="images/login/icon.png" />
+			</div>
+			<div class="container">
+				<div class="loginform">
+					<div class="mui-input-row username">
+						<img src="images/login/username.png" />
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入用户名">
+					</div>
+					<div class="mui-input-row">
+						<img src="images/login/passowrd.png" />
+						<input type="password" class="mui-input-clear" placeholder="请输入密码">
+					</div>
 				</div>
-				<div class="mui-input-row">
-					<img src="images/login/passowrd.png" />
-					<input type="password" class="mui-input-clear" placeholder="请输入密码">
+				<div class="reform">
+					<div class="remember">
+						<input type="checkbox" class="mui-checkbox" name="" id="" value="" /> 记住账号
+					</div>
+					<button type="button" class="mui-btn mui-btn-primary">忘了密码？</button>
+					<a class="mui-btn mui-btn-primary" href="register.html">用户注册</a>
+				</div>
+				<div class="footer">
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="location.href='index.html'">登录</button>
 				</div>
 			</div>
-			<div class="reform">
-				<div class="remember">
-					<input type="checkbox" class="mui-checkbox" name="" id="" value="" /> 记住账号
-				</div>
-				<button class="mui-btn mui-btn-primary">忘了密码？</button>
-				<a class="mui-btn mui-btn-primary" href="register.html">用户注册</a>
-			</div>
 		</div>
-		<div class="footer">
-			<button class="mui-btn mui-btn-primary mui-btn-block" style="width: 80%;margin: 0 auto;" onclick="location.href='index.html'">登录</button>
-		</div>
+
 	</body>
 
 </html>
