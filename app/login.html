@@ -75,6 +75,28 @@
 				background: none;
 			}
 		</style>
+		<script type="text/javascript">
+			function userLogin(){
+				mui.ajax("http://www.baidu.com",{
+					data:{
+						username:'username',
+						password:'password'
+					},
+					dataType:'json',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					timeout:1000,//超时时间设置为1秒；
+					success:function(data){
+						//服务器返回响应，根据响应结果，分析是否登录成功；
+						location.href="index.html";
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						console.log(type);
+						location.href="index.html";
+					}
+				});
+			}
+		</script>
 	</head>
 
 	<body>
@@ -106,7 +128,8 @@
 					<a class="mui-btn mui-btn-primary" href="register.html">用户注册</a>
 				</div>
 				<div class="footer">
-					<button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="location.href='index.html'">登录</button>
+					<!-- 使用userLogin()方法发送AJAX请求 -->
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="userLogin()">登录</button>
 				</div>
 			</div>
 		</div>
