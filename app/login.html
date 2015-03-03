@@ -77,21 +77,28 @@
 		</style>
 		<script type="text/javascript">
 			function userLogin(){
-				mui.ajax("http://www.baidu.com",{
+				mui.ajax("http://192.168.1.113:8000/login.asp",{
 					data:{
 						username:'username',
 						password:'password'
 					},
 					dataType:'json',//服务器返回json格式数据
 					type:'post',//HTTP请求类型
-					timeout:1000,//超时时间设置为1秒；
+					timeout:10000,//超时时间设置为10秒；
 					success:function(data){
 						//服务器返回响应，根据响应结果，分析是否登录成功；
-						location.href="index.html";
+						console.log(data);
+						if(data.success==true){
+							alert('登陆成功，跳转首页');
+							location.href="index.html";
+						}else{
+							alert("登陆失败，用户名密码错误");
+						}
 					},
 					error:function(xhr,type,errorThrown){
 						//异常处理；
-						console.log(type);
+						console.log(errorThrown);
+						alert('ajax通信失败，跳转首页');
 						location.href="index.html";
 					}
 				});

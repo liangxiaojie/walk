@@ -1,0 +1,3 @@
+<%
+Response.Write("{"success":true}");
+%>
