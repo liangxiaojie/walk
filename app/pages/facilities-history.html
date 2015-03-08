@@ -14,29 +14,9 @@
 		<link rel="stylesheet" type="text/css" href="../css/base.css" />
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
 
-		<script type="text/javascript">
-			function showWindow(id, url) {
-				mui.openWindow({
-					id: id,
-					url: url,
-					show: {
-						autoshow: true,
-						aniShow: 'slide-in-right'
-					},
-					waiting: {
-						autoshow: false
-					}
-				})
-			}
-		</script>
 	</head>
 
 	<body>
-
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">历史设施</h1>
-		</header>
 
 		<div class="mui-content">
 			<div id="slider" class="mui-slider">
@@ -74,13 +54,14 @@
 			</div>
 		</div>
 
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 			mui.init({
 				swipeBack: false,
 				pullRefresh: {
 					container: '#pullrefresh',
 					down: {
-						callback: pulldownRefresh
+						callback: function(){mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); }
 					},
 					up: {
 						contentrefresh: '正在加载...',
@@ -88,38 +69,76 @@
 					}
 				}
 			});
-			/**
-			 * 下拉刷新具体业务实现
-			 */
-			function pulldownRefresh() {
-				setTimeout(function() {
-					var table = document.body.querySelector('.mui-table-view');
-					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					for (var i = cells.length, len = i + 3; i < len; i++) {
-						var li = document.createElement('li');
-						li.className = 'mui-table-view-cell mui-media';
-						li.innerHTML = '<a class="mui-navigate-right" href="facilities-history-info.html">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">井盖掉了' + (i + 1) + '</div><h6> 2014.12.04</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a>'
-							//下拉刷新，新纪录插到最前面；
-						table.insertBefore(li, table.firstChild);
+			function showWindow(id, url,recid) {
+				mui.openWindow({
+					id: id,
+					url: url,
+					show: {
+						autoshow: true,
+						aniShow: 'slide-in-right'
+					},
+					waiting: {
+						autoshow: false
+					},
+					extras:{
+						recid:recid
 					}
-					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
-				}, 800);
+				})
 			}
+			var total = 0; //总个数
+			var pageNo = 0; //当前页数
+			var pageSize = 20; //显示多少个
+			
 			var count = 0;
 			/**
 			 * 上拉加载具体业务实现
 			 */
 			function pullupRefresh() {
 				setTimeout(function() {
-					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
 					var table = document.body.querySelector('.mui-table-view');
 					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					for (var i = cells.length, len = i + 20; i < len; i++) {
-						var li = document.createElement('li');
-						li.className = 'mui-table-view-cell mui-mmui-media';
-						li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-history-info\',\'facilities-history-info.html\')">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">井盖掉了' + (i + 1) + '</div><h6> 2014.12.04</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a>'
-						table.appendChild(li);
-					}
+					mui.ajax(localhost + "walk/service/appInfoService/searchAppInfo?pageNo=" + pageNo + "&pageSize=" + pageSize, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 15000, //超时时间设置为10秒；
+						success: function(result) {
+							//服务器返回响应，根据响应结果，分析是否登录成功；
+							if (result.success) {
+								var data = result.data;
+								var rows = data.rows;
+								var pageIndex = pageNo * pageSize;
+								if (rows.length > 0) {
+									for (var i = 0; i < rows.length; i++) {
+										var evalContent = rows[i].EVALCONTENT;
+										var address = rows[i].ADDRESS;
+										var uploadtime = rows[i].UPLOADTIME;
+										var evaltype = rows[i].EVALTYPE;
+										var id = rows[i].ID;
+										var longitude = rows[i].LONGITUDE;
+										var filedpath = rows[i].FILEDPATH;
+										var statu = rows[i].STATU;
+										var latitude = rows[i].LATITUDE;
+										var userid = rows[i].USERID;
+										var li = document.createElement('li');
+										li.className = 'mui-table-view-cell mui-mmui-media';
+										li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-update-history-info\',\'facilities-update-history-info.html\',\''+id+'\')">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">井盖掉了' + (pageIndex += 1) + '</div><h6>' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a>'
+										table.appendChild(li);
+									}
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
+								} else {
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
+								}
+								pageNo ++;
+							} else {
+								alert("服务异常，请稍后再试！");
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							alert("服务异常，请稍后再试！");
+						}
+					});
 				}, 800);
 			}
 			if (mui.os.plus) {
@@ -127,14 +146,12 @@
 					setTimeout(function() {
 						mui('#pullrefresh').pullRefresh().pullupLoading();
 					}, 200);
-
 				});
 			} else {
 				mui.ready(function() {
 					mui('#pullrefresh').pullRefresh().pullupLoading();
 				});
 			}
-
 			(function($) {
 				//var html2 = '<div id="pullrefresh2" class="mui-content mui-scroll-wrapper"><div class="mui-scroll"><ul class="mui-table-view mui-table-view-chevron">asdf</ul></div></div>';
 				var html2 = '<ul class="mui-table-view"><li class="mui-table-view-cell">第三个选项卡子项-1</li><li class="mui-table-view-cell">第三个选项卡子项-2</li><li class="mui-table-view-cell">第三个选项卡子项-3</li><li class="mui-table-view-cell">第三个选项卡子项-4</li><li class="mui-table-view-cell">第三个选项卡子项-5</li></ul>';
@@ -150,7 +167,6 @@
 						if (item2.querySelector('.mui-loading')) {
 							setTimeout(function() {
 								item2.querySelector('.mui-scroll').innerHTML = html2;
-
 							}, 200);
 						}
 					}

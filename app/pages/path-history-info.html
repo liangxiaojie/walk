@@ -91,7 +91,9 @@
 						<div class="eva-type">
 							<div class="item item1">人行道宽度窄</div>
 							<div class="item item2">
-								人行道无盲道</div>
+								<div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: rgba(0,0,0,0.5);">
+									<img style="margin-top: 12px;" width="40" src="../images/duihao.png" />
+								</div>人行道无盲道</div>
 							<div class="item item3">盲道有障碍物</div>
 							<div class="item item4">人行道不平整</div>
 							<div class="item item5">绿化
@@ -135,7 +137,7 @@
 		<script type="text/javascript">
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
-				mui.ajax(localhost + "walk/service/appEvaluationService/queryAppEvaluation?id=" + self.recid, {
+				mui.ajax(localhost + "walk/service/appPathService/queryAppPath?id=" + self.recid, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'get', //HTTP请求类型
 					timeout: 15000, //超时时间设置为15秒；

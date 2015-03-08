@@ -14,6 +14,8 @@
 		<link rel="stylesheet" type="text/css" href="css/base.css" />
 		<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
 
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+
 		<style type="text/css">
 			html,
 			body {
@@ -71,35 +73,36 @@
 			.footer img {
 				width: 82%;
 			}
-			.mui-input-row input{
+			.mui-input-row input {
 				background: none;
 			}
 		</style>
 		<script type="text/javascript">
-			function userLogin(){
-				mui.ajax("http://192.168.1.113:8000/login.asp",{
-					data:{
-						username:'username',
-						password:'password'
+			function userLogin() {
+				mui.ajax(localhost + "walk/service/appUserService/login", {
+					data: {
+						userId: document.getElementById('userId').value,
+						userPass: document.getElementById('userPass').value
 					},
-					dataType:'json',//服务器返回json格式数据
-					type:'post',//HTTP请求类型
-					timeout:10000,//超时时间设置为10秒；
-					success:function(data){
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 15000, //超时时间设置为15秒；
+					success: function(result) {
 						//服务器返回响应，根据响应结果，分析是否登录成功；
-						console.log(data);
-						if(data.success==true){
-							alert('登陆成功，跳转首页');
-							location.href="index.html";
-						}else{
-							alert("登陆失败，用户名密码错误");
+						if (result.success) {
+							if (result.data.code == "S001") {
+								location.href = "index.html";
+							} else {
+								alert(result.data.msg);
+							}
+						} else {
+							alert("服务异常，请稍后再试！");
 						}
 					},
-					error:function(xhr,type,errorThrown){
+					error: function(xhr, type, errorThrown) {
 						//异常处理；
-						console.log(errorThrown);
-						alert('ajax通信失败，跳转首页');
-						location.href="index.html";
+						console.log(type);
+						alert("服务异常，请稍后再试！");
 					}
 				});
 			}
@@ -120,11 +123,11 @@
 				<div class="loginform">
 					<div class="mui-input-row username">
 						<img src="images/login/username.png" />
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入用户名">
+						<input type="text" id="userId" class="mui-input-speech mui-input-clear" placeholder="请输入用户名">
 					</div>
 					<div class="mui-input-row">
 						<img src="images/login/passowrd.png" />
-						<input type="password" class="mui-input-clear" placeholder="请输入密码">
+						<input type="password" id="userPass" class="mui-input-clear" placeholder="请输入密码">
 					</div>
 				</div>
 				<div class="reform">
