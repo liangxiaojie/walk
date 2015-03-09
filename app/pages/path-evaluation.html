@@ -45,23 +45,26 @@
 				top: 3px;
 			}
 		</style>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var ws = null,
-				wo = null;
-			var em = null,
-				map = null;
+			var ws = null, wo = null;
+			var em = null, map = null;
 			 // H5 plus事件处理
 			function plusReady() {
-				if (!em || ws) {
-					return
-				};
+//				if (!em || ws) {
+//					return
+//				};
 				// 获取窗口对象
 				ws = plus.webview.currentWebview();
 				wo = ws.opener();
 				setTimeout(function() {
 					map = new plus.maps.Map("map");
-					map.centerAndZoom(new plus.maps.Point(116.3977, 39.906016), 12);
-					createMarker();
+					map.getUserLocation(function(state, pos) 
+					{
+						map.showUserLocation(true);
+						map.centerAndZoom(new plus.maps.Point(pos.getLng(), pos.getLat()), 18);
+					});
+//					createMarker();
 					// 创建子窗口
 					//createSubview();
 				}, 300);
@@ -82,19 +85,27 @@
 			function userLocation() {
 				map.showUserLocation(true);
 				map.getUserLocation(function(state, pos) {
+//					console.log(state)
+//					console.log(pos.getLat() + "====" + pos.getLng())
 					if (0 == state) {
-						map.setCenter(pos);
+						map.centerAndZoom(new plus.maps.Point(pos.getLng(), pos.getLat()), 18);
+//						map.setCenter(pos);
+//						map.setZoom(18);
 					}
 				});
 			}
 
 			function createMarker() {
-				var marker = new plus.maps.Marker(new plus.maps.Point(116.347496, 39.970191));
-				marker.setIcon("/logo.png");
-				marker.setLabel("HBuilder");
-				var bubble = new plus.maps.Bubble("打造最好的HTML5移动开发工具");
-				marker.setBubble(bubble);
-				map.addOverlay(marker);
+				map.getUserLocation(function(state, pos) 
+				{
+					var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
+					marker.setIcon("/logo.png");
+					marker.setLabel("起点");
+					var bubble = new plus.maps.Bubble("起点");
+					marker.setBubble(bubble);
+					map.addOverlay(marker);
+					
+				});
 			}
 
 			function createSubview() {
@@ -115,9 +126,138 @@
 				map.centerAndZoom(new plus.maps.Point(116.666755, 40.16814), 12);
 			}
 
-			function toRecord() {
-				document.getElementById("img-icon").src = "../images/icons/stop.png";
-				document.getElementById("record").innerHTML = "停止记录";
+			var path = {};
+			path.sadd = "";		//开始地址
+			path.sdate = "";	//开始时间
+			path.slon = "";		//开始经度
+			path.slat = "";		//开始纬度
+			
+			path.eadd = "";		//结束地址
+			path.edate = "";	//结束时间
+			path.elon = "";		//结束经度
+			path.elat = "";		//结束纬度
+			
+			path.distance = "";	//步行距离
+			path.costtime = "";	//步行时间
+			
+			path.proce = "";	//起点和终点之间的坐标
+			path.kpi1 = "";		//kpi1
+			path.kpi2 = "";		//kpi2
+			path.kpi3 = "";		//kpi3
+			path.kpi = "";		//kpi
+			path.suggest = "";	//个人建议
+				
+			var recorded = false;
+			var points = new Array();
+			function toRecord() 
+			{
+				if (recorded)
+				{
+					if (confirm("您确认停止记录吗?"))
+					{
+						recorded = false;
+						map.getUserLocation(function(state, pos)
+						{
+							path.elon = pos.getLng();
+							path.elat = pos.getLat()
+							path.edate = new Date();
+
+							costtime =path.edate - path.sdate;
+
+							var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
+							marker.setIcon("/logo.png");
+							marker.setLabel("终点");
+	//						var bubble = new plus.maps.Bubble("起点");
+	//						marker.setBubble(bubble);
+							map.addOverlay(marker);
+
+							document.getElementById("img-icon").src = "../images/icons/start.png";
+							document.getElementById("record").innerHTML = "开始记录";
+
+							mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key="+mapkey, 
+							{
+								dataType: 'json', //服务器返回json格式数据
+								type: 'get', //HTTP请求类型
+								timeout: 15000, //超时时间设置为15秒；
+								success: function(result) {
+									//服务器返回响应，根据响应结果，分析是否请求成功；
+									if (result.status == "OK") {
+										path.eadd = result.result.formatted_address;
+									} else {
+										alert("无法获取当前位置，请打开定位服务");
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									//异常处理；
+									console.log(type);
+									alert("定位服务异常，请稍后再试！");
+								}
+							});
+							
+						});
+					}
+				}else
+				{
+					recorded = true;
+					map.getUserLocation(function(state, pos) 
+					{
+						path.slon = pos.getLng();
+						path.slat = pos.getLat()
+						path.sdate = new Date();
+						
+						var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
+						marker.setIcon("/logo.png");
+						marker.setLabel("起点");
+//						var bubble = new plus.maps.Bubble("起点");
+//						marker.setBubble(bubble);
+						map.addOverlay(marker);
+
+						document.getElementById("img-icon").src = "../images/icons/stop.png";
+						document.getElementById("record").innerHTML = "停止记录";
+						
+						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key="+mapkey, 
+						{
+							dataType: 'json', //服务器返回json格式数据
+							type: 'get', //HTTP请求类型
+							timeout: 15000, //超时时间设置为15秒；
+							success: function(result) {
+								//服务器返回响应，根据响应结果，分析是否请求成功；
+								if (result.status == "OK") {
+									path.sadd = result.result.formatted_address;
+								} else {
+									alert("无法获取当前位置，请打开定位服务");
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log(type);
+								alert("定位服务异常，请稍后再试！");
+							}
+						});
+
+					});
+					
+					//i=0时，坐标不变。测试时改为1
+					var i = 1;
+					window.setInterval(function() 
+					{
+						if (recorded)
+						{
+							map.getUserLocation(function(state, pos) 
+							{
+								points.push(new plus.maps.Point(pos.getLng()+i*0.00005, pos.getLat()+i*0.00005));
+	
+								var polylineObj = new plus.maps.Polyline(points);
+								map.centerAndZoom(new plus.maps.Point(pos.getLng()+i*0.00005, pos.getLat()+i*0.00005),18);
+								polylineObj.setStrokeColor("#00FF00");
+								polylineObj.setLineWidth(8);
+								map.addOverlay(polylineObj);
+
+								i++;
+							});
+						}
+					}, 3000);
+				}
 			}
 		</script>
 	</head>

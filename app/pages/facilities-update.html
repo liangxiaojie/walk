@@ -20,7 +20,6 @@
 			}
 			.eva-type .item2 {
 				background: #92d14f;
-				padding-top: 18px;
 			}
 			.eva-type .item3 {
 				background: #01b0f1;
@@ -33,23 +32,36 @@
 			}
 			.eva-type .item6 {
 				background: #0071c1;
+				font-size: 14px;
+				line-height: 14px;
 			}
 			.eva-type .item7 {
 				background: #7030a0;
+				font-size: 14px;
 			}
 			.eva-type .item8 {
 				background: #00af50;
-				padding-top: 18px;
 			}
 			.eva-type .item9 {
 				background: #33cc33;
+			}
+			.eva-type .item10 {
+				background: #ff99cb;
 				font-size: 14px;
+			}
+			.eva-type .item11 {
+				background: #ff7a7f;
+				font-size: 14px;
+				line-height: 14px;
+			}
+			.eva-type .item12 {
+				background: #00ccff;
 			}
 			.footer .mui-btn {
 				padding-left: 15%;
 				padding-right: 15%;
-				padding-top: 12px;
-				padding-bottom: 12px;
+				padding-top: 15px;
+				padding-bottom: 15px;
 				margin-bottom: 30px;
 				font-size: 20px;
 			}
@@ -63,7 +75,10 @@
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
 					<a class="mui-navigate-right" href="#">当前位置</a>
 					<div class="mui-collapse-content">
-						<p>XX市XX区XX街</p>
+						<p id="f-address">定位中</p>
+						<div id="map">
+
+						</div>
 					</div>
 				</div>
 			</div>
@@ -72,45 +87,196 @@
 					<a class="mui-navigate-right" href="#">设施类型</a>
 					<div class="mui-collapse-content">
 						<div class="eva-type">
-							<div class="item item1">人行
+							<div evalType="1" class="item item1">人行
 								<br/>跨路桥</div>
-							<div class="item item2">栅栏</div>
-							<div class="item item3">照明
+							<div evalType="2" class="item item2">栅栏</div>
+							<div evalType="3" class="item item3">照明
 								<br />设施</div>
-							<div class="item item4">视线诱导标志</div>
-							<div class="item item5">公路
+							<div evalType="4" class="item item4">视线诱导标志</div>
+							<div evalType="5" class="item item5">公路
 								<br />反射镜</div>
-							<div class="item item6">公路
+							<div evalType="6" class="item item6">公路
 								<br />情报板</div>
-							<div class="item item7">公路监视系统</div>
-							<div class="item item8">停车场</div>
-							<div class="item item9">公共汽车停靠站</div>
+							<div evalType="7" class="item item7">公路监视系统</div>
+							<div evalType="8" class="item item8">停车场</div>
+							<div evalType="9" class="item item9">公共汽车停靠站</div>
 						</div>
 						<hr />
 						<div class="mui-input-row">
 							<label style="width: 25%;">其他</label>
-							<input style="float: left;" type="text" class="mui-input-speech mui-input-clear" placeholder="请输入其他设施类型">
+							<input id="eva-type-orther" style="float: left;" type="text" class="mui-input-speech mui-input-clear" placeholder="请输入其他评价类型">
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="section">
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
-					<a class="mui-navigate-right" href="#">设施图片</a>
+					<a class="mui-navigate-right" href="#">评价图片</a>
 					<div class="mui-collapse-content">
-						<div class="eva-img">
+						<div id="eva-img">
 						</div>
-						<a href="#middlePopover" class="mui-btn mui-btn-primary mui-btn-block mui-btn-outlined" style="padding: 5px 20px;">上传图片</a>
+						<div class="mui-btn mui-btn-primary mui-btn-block mui-btn-outlined" onclick="appendByCamera()">拍照</div>
+						<div class="mui-btn mui-btn-primary mui-btn-block mui-btn-outlined" onclick="appendByGallery()">相册选取</div>
 					</div>
 				</div>
 			</div>
 			<div class="footer">
 				<div class="mui-button-row">
 					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined">暂存</button>&nbsp;&nbsp;
-					<button type="button" class="mui-btn mui-btn-primary">提交</button>
+					<button type="button" class="mui-btn mui-btn-primary" onclick="upload()">提交</button>
 				</div>
 			</div>
 		</div>
+
+		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var files = [];
+			var facilities = {};
+			facilities.address = "";
+			facilities.longitude = "";
+			facilities.latitude = "";
+			facilities.evalType = "";
+			facilities.evalContent = "";
+			mui.plusReady(function() {
+				$(".eva-type .item").click(function() {
+					var obj = $(this);
+					if (obj.hasClass("active")) {
+						obj.removeClass("active");
+						obj.find(".eva-duihao").remove();
+					} else {
+						obj.addClass("active");
+						this.innerHTML += '<div class="eva-duihao"><img src="../images/duihao.png" /></div>';
+					}
+				});
+				var map = new plus.maps.Map("map");
+				map.getUserLocation(function(state, pos) {
+					if (0 == state) {
+						var posObj = new plus.maps.Position(new plus.maps.Point(pos.getLat(), pos.getLng()));
+						facilities.longitude = pos.getLng();
+						facilities.latitude = pos.getLat();
+						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=hVI52P08obxgT6Gl1uxKnxId", {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'get', //HTTP请求类型
+							timeout: 15000, //超时时间设置为15秒；
+							success: function(result) {
+								//服务器返回响应，根据响应结果，分析是否请求成功；
+								if (result.status == "OK") {
+									facilities.address = result.result.formatted_address;
+									document.getElementById("f-address").innerHTML = facilities.address;
+								} else {
+									alert("无法获取当前位置，请打开定位服务");
+									document.getElementById("f-address").innerHTML = "无法获取当前位置，请打开定位服务";
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log(type);
+								alert("服务异常，请稍后再试！");
+							}
+						});
+					} else {
+						alert("无法获取当前位置");
+					}
+				});
+			});
+			 // 上传文件
+			function upload() {
+					var evtypes = $(".eva-type .item");
+					for (var i = 0; i < evtypes.length; i++) {
+						facilities.evalType += $(evtypes[i]).attr("evalType").val()+",";
+					}
+					if(!facilities.evalType){
+						facilities.evalType=facilities.evalType.substr(0,facilities.evalType.length-2);
+					}
+					var eto = $("#eva-type-orther").val();
+					facilities.evalContent = eto;
+					var server = localhost + "walk/service/appEvaluationService/saveAppEvaluation?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&eval_type="+facilities.evalType+"&eval_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
+					if (files.length <= 0) {
+						plus.nativeUI.alert("没有添加上传文件！");
+						return;
+					}
+					var wt = plus.nativeUI.showWaiting();
+					var task = plus.uploader.createUpload(server, {
+							method: "POST"
+						},
+						function(t, status) { //上传完成
+							if (status == 200) {
+								alert("上传成功：" + t.responseText);
+								plus.uploader.clear();
+//								plus.storage.setItem("uploader", t.responseText);
+								wt.close();
+								mui.back();
+							} else {
+								alert("上传失败：" + status);
+								wt.close();
+							}
+						}
+					);
+					task.addData("string_key", "string_value");
+					task.addData("client", "HelloH5+");
+					task.addData("uid", getUid());
+					for (var i = 0; i < files.length; i++) {
+						var f = files[i];
+						task.addFile(f.path, {
+							key: f.name
+						});
+					}
+					/*
+						task.addEventListener('statechanged', function(upload, status){
+							
+							var total = upload.totalSize;
+					//		console.log(status + "total==== " + total);
+							window.clearInterval(timer);
+							var timer = window.setInterval(function(){
+								document.getElementById('pic_mask').innerHTML = Math.round(upload.uploadedSize/total)+'%';
+								console.log("upload.uploadedSize==== " + upload.uploadedSize);
+							}, 1000)
+							if (total == upload.uploadedSize)
+							{
+								window.clearInterval(timer);
+								document.getElementById('pic_mask').innerHTML = '100%';
+							}
+						}, false);
+					*/
+					task.start();
+				}
+				// 拍照添加文件
+
+			function appendByCamera() {
+					plus.camera.getCamera().captureImage(function(p) {
+						appendFile(p);
+					});
+				}
+				// 从相册添加文件
+
+			function appendByGallery() {
+					plus.gallery.pick(function(p) {
+						appendFile(p);
+					});
+				}
+				// 添加文件
+			var index = 1;
+			var files = [];
+
+			function appendFile(p) {
+					var fe = document.getElementById("eva-img");
+					var li = document.createElement("p");
+					var n = p.substr(p.lastIndexOf('/') + 1);
+					li.innerText = n;
+					fe.appendChild(li);
+					files.push({
+						name: "uploadkey" + index,
+						path: p
+					});
+					index++;
+				}
+				// 产生一个随机数
+
+			function getUid() {
+				return Math.floor(Math.random() * 100000000 + 10000000).toString();
+			}
+		</script>
 
 	</body>
 

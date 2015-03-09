@@ -54,6 +54,7 @@
 			</div>
 		</div>
 
+		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 			mui.init({
@@ -61,7 +62,9 @@
 				pullRefresh: {
 					container: '#pullrefresh',
 					down: {
-						callback: function(){mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); }
+						callback: function() {
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						}
 					},
 					up: {
 						contentrefresh: '正在加载...',
@@ -69,7 +72,8 @@
 					}
 				}
 			});
-			function showWindow(id, url,recid) {
+
+			function showWindow(id, url, recid) {
 				mui.openWindow({
 					id: id,
 					url: url,
@@ -80,15 +84,15 @@
 					waiting: {
 						autoshow: false
 					},
-					extras:{
-						recid:recid
+					extras: {
+						recid: recid
 					}
 				})
 			}
+			var slideType = 0;
 			var total = 0; //总个数
 			var pageNo = 0; //当前页数
 			var pageSize = 20; //显示多少个
-			
 			var count = 0;
 			/**
 			 * 上拉加载具体业务实现
@@ -121,14 +125,14 @@
 										var userid = rows[i].USERID;
 										var li = document.createElement('li');
 										li.className = 'mui-table-view-cell mui-mmui-media';
-										li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-update-history-info\',\'facilities-update-history-info.html\',\''+id+'\')">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">井盖掉了' + (pageIndex += 1) + '</div><h6>' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a>'
+										li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-update-history-info\',\'facilities-update-history-info.html\',\'' + id + '\')">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">井盖掉了' + (pageIndex += 1) + '</div><h6>' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a>'
 										table.appendChild(li);
 									}
 									mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
 								} else {
 									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
 								}
-								pageNo ++;
+								pageNo++;
 							} else {
 								alert("服务异常，请稍后再试！");
 							}

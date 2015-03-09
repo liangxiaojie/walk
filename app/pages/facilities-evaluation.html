@@ -75,7 +75,7 @@
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
 					<a class="mui-navigate-right" href="#">当前位置</a>
 					<div class="mui-collapse-content">
-						<p id="f-address">定位中</p>
+						<p id="f-address">定位中...</p>
 						<div id="map">
 
 						</div>
@@ -87,27 +87,27 @@
 					<a class="mui-navigate-right" href="#">评价类型</a>
 					<div class="mui-collapse-content">
 						<div class="eva-type">
-							<div class="item item1">人行道宽度窄</div>
-							<div class="item item2">人行道无盲道</div>
-							<div class="item item3">盲道有障碍物</div>
-							<div class="item item4">人行道不平整</div>
-							<div class="item item5">绿化
+							<div evalType="1" class="item item1">人行道宽度窄</div>
+							<div evalType="2" class="item item2">人行道无盲道</div>
+							<div evalType="3" class="item item3">盲道有障碍物</div>
+							<div evalType="4" class="item item4">人行道不平整</div>
+							<div evalType="5" class="item item5">绿化
 								<br />环境差</div>
-							<div class="item item6">人行道与非机动车道未隔离</div>
-							<div class="item item7">人行道
+							<div evalType="6" class="item item6">人行道与非机动车道未隔离</div>
+							<div evalType="7" class="item item7">人行道
 								<br />有障碍物</div>
-							<div class="item item8">缺少过街设施</div>
-							<div class="item item9">过街距离过长</div>
-							<div class="item item10">过街信号灯过短</div>
-							<div class="item item11">信号灯
+							<div evalType="8" class="item item8">缺少过街设施</div>
+							<div evalType="9" class="item item9">过街距离过长</div>
+							<div evalType="10" class="item item10">过街信号灯过短</div>
+							<div evalType="11" class="item item11">信号灯
 								<br />等待时间过长</div>
-							<div class="item item12">缺少
+							<div evalType="12" class="item item12">缺少
 								<br />人行道</div>
 						</div>
 						<hr />
 						<div class="mui-input-row">
 							<label style="width: 25%;">其他</label>
-							<input style="float: left;" type="text" class="mui-input-speech mui-input-clear" placeholder="请输入其他评价类型">
+							<input id="eva-type-orther" style="float: left;" type="text" class="mui-input-speech mui-input-clear" placeholder="请输入其他评价类型">
 						</div>
 					</div>
 				</div>
@@ -125,7 +125,7 @@
 			</div>
 			<div class="footer">
 				<div class="mui-button-row">
-					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined">暂存</button>&nbsp;&nbsp;
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined" onclick="save()">暂存</button>&nbsp;&nbsp;
 					<button type="button" class="mui-btn mui-btn-primary" onclick="upload()">提交</button>
 				</div>
 			</div>
@@ -139,10 +139,12 @@
 			facilities.address = "";
 			facilities.longitude = "";
 			facilities.latitude = "";
-			facilities.evalType = "1,2,3";
-			facilities.evalContent = "asdf";
-			mui.plusReady(function() {
-				$(".eva-type .item").click(function() {
+			facilities.evalType = "";
+			facilities.evalContent = "";
+			mui.plusReady(function() 
+			{
+				$(".eva-type .item").click(function() 
+				{
 					var obj = $(this);
 					if (obj.hasClass("active")) {
 						obj.removeClass("active");
@@ -153,12 +155,13 @@
 					}
 				});
 				var map = new plus.maps.Map("map");
-				map.getUserLocation(function(state, pos) {
+				map.getUserLocation(function(state, pos) 
+				{
 					if (0 == state) {
 						var posObj = new plus.maps.Position(new plus.maps.Point(pos.getLat(), pos.getLng()));
 						facilities.longitude = pos.getLng();
 						facilities.latitude = pos.getLat();
-						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=hVI52P08obxgT6Gl1uxKnxId", {
+						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key="+mapkey, {
 							dataType: 'json', //服务器返回json格式数据
 							type: 'get', //HTTP请求类型
 							timeout: 15000, //超时时间设置为15秒；
@@ -184,70 +187,110 @@
 				});
 			});
 			 // 上传文件
-			function upload() {
-					var server = localhost + "walk/service/appEvaluationService/saveAppEvaluation?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&eval_type=1,2,3&eval_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
-					if (files.length <= 0) {
-						plus.nativeUI.alert("没有添加上传文件！");
-						return;
-					}
-					var wt = plus.nativeUI.showWaiting();
-					var task = plus.uploader.createUpload(server, {
-							method: "POST"
-						},
-						function(t, status) { //上传完成
-							if (status == 200) {
-								alert("上传成功：" + t.responseText);
-								plus.uploader.clear();
-								plus.storage.setItem("uploader", t.responseText);
-								wt.close();
-							} else {
-								alert("上传失败：" + status);
-								wt.close();
-							}
+			function upload() 
+			{
+				var evtypes = $(".eva-type .item");
+				for (var i = 0; i < evtypes.length; i++) {
+					facilities.evalType += $(evtypes[i]).attr("evalType")+",";
+				}
+				if(!facilities.evalType){
+					facilities.evalType=facilities.evalType.substr(0,facilities.evalType.length-2);
+				}
+				var eto = $("#eva-type-orther").val();
+				facilities.evalContent = eto;
+				var server = localhost + "walk/service/appEvaluationService/saveAppEvaluation?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&eval_type="+facilities.evalType+"&eval_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
+				if (files.length <= 0) {
+					plus.nativeUI.alert("没有添加上传文件！");
+					return;
+				}
+				var wt = plus.nativeUI.showWaiting();
+				var task = plus.uploader.createUpload(server, {
+						method: "POST"
+					},
+					function(t, status) { //上传完成
+						if (status == 200) {
+							alert("上传成功：" + t.responseText);
+							plus.uploader.clear();
+//							plus.storage.setItem("uploader", t.responseText);
+							wt.close();
+							mui.back();
+						} else {
+							alert("上传失败：" + status);
+							wt.close();
 						}
-					);
-					task.addData("string_key", "string_value");
-					task.addData("client", "HelloH5+");
-					task.addData("uid", getUid());
-					for (var i = 0; i < files.length; i++) {
-						var f = files[i];
-						task.addFile(f.path, {
-							key: f.name
-						});
 					}
-					/*
-						task.addEventListener('statechanged', function(upload, status){
-							
-							var total = upload.totalSize;
-					//		console.log(status + "total==== " + total);
+				);
+				task.addData("string_key", "string_value");
+				task.addData("client", "HelloH5+");
+				task.addData("uid", getUid());
+				for (var i = 0; i < files.length; i++) {
+					var f = files[i];
+					task.addFile(f.path, {
+						key: f.name
+					});
+				}
+				/*
+					task.addEventListener('statechanged', function(upload, status){
+
+						var total = upload.totalSize;
+				//		console.log(status + "total==== " + total);
+						window.clearInterval(timer);
+						var timer = window.setInterval(function(){
+							document.getElementById('pic_mask').innerHTML = Math.round(upload.uploadedSize/total)+'%';
+							console.log("upload.uploadedSize==== " + upload.uploadedSize);
+						}, 1000)
+						if (total == upload.uploadedSize)
+						{
 							window.clearInterval(timer);
-							var timer = window.setInterval(function(){
-								document.getElementById('pic_mask').innerHTML = Math.round(upload.uploadedSize/total)+'%';
-								console.log("upload.uploadedSize==== " + upload.uploadedSize);
-							}, 1000)
-							if (total == upload.uploadedSize)
-							{
-								window.clearInterval(timer);
-								document.getElementById('pic_mask').innerHTML = '100%';
-							}
-						}, false);
-					*/
-					task.start();
-				}
-				// 拍照添加文件
+							document.getElementById('pic_mask').innerHTML = '100%';
+						}
+					}, false);
+				*/
+				task.start();
+			}
 
+			//暂存数据到手机的sqlite
+			function save()
+			{
+				var wt = plus.nativeUI.showWaiting();
+				var evtypes = $(".eva-type .item");
+				for (var i = 0; i < evtypes.length; i++) {
+					facilities.evalType += $(evtypes[i]).attr("evalType")+",";
+				}
+				if(!facilities.evalType){
+					facilities.evalType=facilities.evalType.substr(0,facilities.evalType.length-2);
+				}
+				
+				var rows = JSON.parse(plus.storage.getItem("walk_eval"));
+				if (rows == null)
+				{
+					rows = new Array();
+				}
+				var record = 
+				{
+			        id: getUid(),
+			        address: facilities.address,
+			        evalType: facilities.evalType,
+			        evalContent: facilities.evalContent
+				};  
+				rows.push(record);
+				plus.storage.setItem("walk_eval", JSON.stringify(rows));
+				alert("暂存成功！");
+				wt.close();
+				mui.back();
+			}
+			// 拍照添加文件
 			function appendByCamera() {
-					plus.camera.getCamera().captureImage(function(p) {
-						appendFile(p);
-					});
-				}
-				// 从相册添加文件
-
+				plus.camera.getCamera().captureImage(function(p) {
+					appendFile(p);
+				});
+			}
+			// 从相册添加文件
 			function appendByGallery() {
-					plus.gallery.pick(function(p) {
-						appendFile(p);
-					});
-				}
+				plus.gallery.pick(function(p) {
+					appendFile(p);
+				});
+			}
 				// 添加文件
 			var index = 1;
 			var files = [];
@@ -258,6 +301,7 @@
 					var n = p.substr(p.lastIndexOf('/') + 1);
 					li.innerText = n;
 					fe.appendChild(li);
+					alert(p)
 					files.push({
 						name: "uploadkey" + index,
 						path: p
