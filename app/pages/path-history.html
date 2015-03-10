@@ -92,7 +92,7 @@
 			}
 			var total = 0; //总个数
 			var pageNo = 0; //当前页数
-			var pageSize = 20; //显示多少个
+			var pageSize = 10; //显示多少个
 			var count = 0;
 			/**
 			 * 上拉加载具体业务实现
@@ -143,7 +143,7 @@
 							alert("服务异常，请稍后再试！");
 						}
 					});
-				}, 800);
+				}, 200);
 			}
 			if (mui.os.plus) {
 				mui.plusReady(function() {

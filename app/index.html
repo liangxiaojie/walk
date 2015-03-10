@@ -77,7 +77,7 @@
 					路径评价
 				</div>
 			</a>
-			<a class="app" href="pages/facilities-evaluation.html">
+			<a class="app" onclick="showWindow('pages/facilities-evaluation.html','pages/facilities-evaluation.html')">
 				<div class="app-img">
 					<img src="images/index/icon4.png" />
 				</div>
@@ -85,7 +85,7 @@
 					设施评价
 				</div>
 			</a>
-			<a class="app" href="pages/facilities-update.html">
+			<a class="app" onclick="showWindow('pages/facilities-update.html','pages/facilities-update.html')">
 				<div class="app-img">
 					<img src="images/index/icon7.png" />
 				</div>
@@ -133,7 +133,7 @@
 					设置
 				</div>
 			</a>
-			<a class="app" onclick="showWindow('pages/help.html','pages/help.html')">
+			<a class="app" onclick="showWindow('pages/popovers.html','pages/popovers.html')">
 				<div class="app-img">
 					<img src="images/index/icon9.png" />
 				</div>
@@ -192,7 +192,9 @@
 					}, 1000);
 				} else {
 					if (new Date().getTime() - first < 1000) {
-						plus.runtime.quit();
+						mui.plusReady(function(){
+							plus.runtime.quit();
+						});
 					}
 				}
 			}
@@ -329,11 +331,11 @@
 					});
 					var reload = true;
 					if (!template.loaded) {
-						if (contentWebview.getURL() != this.href) {
+						//if (contentWebview.getURL() != this.href) {
 							contentWebview.loadURL(this.href);
-						} else {
-							reload = false;
-						}
+						//} else {
+							//reload = false;
+						//}
 					} else {
 						reload = false;
 					}

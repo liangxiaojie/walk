@@ -30,7 +30,7 @@
 				left: 0;
 				right: 0;
 			}
-			.footer button {
+			.footer a {
 				padding: 10px;
 				margin-bottom: 8px;
 			}
@@ -47,24 +47,25 @@
 		</style>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var ws = null, wo = null;
-			var em = null, map = null;
+			var ws = null,
+				wo = null;
+			var em = null,
+				map = null;
 			 // H5 plus事件处理
 			function plusReady() {
-//				if (!em || ws) {
-//					return
-//				};
+				//				if (!em || ws) {
+				//					return
+				//				};
 				// 获取窗口对象
 				ws = plus.webview.currentWebview();
 				wo = ws.opener();
 				setTimeout(function() {
 					map = new plus.maps.Map("map");
-					map.getUserLocation(function(state, pos) 
-					{
+					map.getUserLocation(function(state, pos) {
 						map.showUserLocation(true);
 						map.centerAndZoom(new plus.maps.Point(pos.getLng(), pos.getLat()), 18);
 					});
-//					createMarker();
+					//					createMarker();
 					// 创建子窗口
 					//createSubview();
 				}, 300);
@@ -85,26 +86,24 @@
 			function userLocation() {
 				map.showUserLocation(true);
 				map.getUserLocation(function(state, pos) {
-//					console.log(state)
-//					console.log(pos.getLat() + "====" + pos.getLng())
+					//					console.log(state)
+					//					console.log(pos.getLat() + "====" + pos.getLng())
 					if (0 == state) {
 						map.centerAndZoom(new plus.maps.Point(pos.getLng(), pos.getLat()), 18);
-//						map.setCenter(pos);
-//						map.setZoom(18);
+						//						map.setCenter(pos);
+						//						map.setZoom(18);
 					}
 				});
 			}
 
 			function createMarker() {
-				map.getUserLocation(function(state, pos) 
-				{
+				map.getUserLocation(function(state, pos) {
 					var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
 					marker.setIcon("/logo.png");
 					marker.setLabel("起点");
 					var bubble = new plus.maps.Bubble("起点");
 					marker.setBubble(bubble);
 					map.addOverlay(marker);
-					
 				});
 			}
 
@@ -125,57 +124,45 @@
 			function resetMap() {
 				map.centerAndZoom(new plus.maps.Point(116.666755, 40.16814), 12);
 			}
-
 			var path = {};
-			path.sadd = "";		//开始地址
-			path.sdate = "";	//开始时间
-			path.slon = "";		//开始经度
-			path.slat = "";		//开始纬度
-			
-			path.eadd = "";		//结束地址
-			path.edate = "";	//结束时间
-			path.elon = "";		//结束经度
-			path.elat = "";		//结束纬度
-			
-			path.distance = "";	//步行距离
-			path.costtime = "";	//步行时间
-			
-			path.proce = "";	//起点和终点之间的坐标
-			path.kpi1 = "";		//kpi1
-			path.kpi2 = "";		//kpi2
-			path.kpi3 = "";		//kpi3
-			path.kpi = "";		//kpi
-			path.suggest = "";	//个人建议
-				
+			path.sadd = ""; //开始地址
+			path.sdate = ""; //开始时间
+			path.slon = ""; //开始经度
+			path.slat = ""; //开始纬度
+			path.eadd = ""; //结束地址
+			path.edate = ""; //结束时间
+			path.elon = ""; //结束经度
+			path.elat = ""; //结束纬度
+			path.distance = ""; //步行距离
+			path.costtime = ""; //步行时间
+			path.proce = ""; //起点和终点之间的坐标
+			path.kpi1 = ""; //kpi1
+			path.kpi2 = ""; //kpi2
+			path.kpi3 = ""; //kpi3
+			path.kpi = ""; //kpi
+			path.suggest = ""; //个人建议
 			var recorded = false;
 			var points = new Array();
-			function toRecord() 
-			{
-				if (recorded)
-				{
-					if (confirm("您确认停止记录吗?"))
-					{
+
+			function toRecord() {
+				if (recorded) {
+					if (confirm("您确认停止记录吗?")) {
 						recorded = false;
-						map.getUserLocation(function(state, pos)
-						{
+						map.getUserLocation(function(state, pos) {
 							path.elon = pos.getLng();
 							path.elat = pos.getLat()
 							path.edate = new Date();
-
-							costtime =path.edate - path.sdate;
-
+							path.costtime = path.edate - path.sdate;
+							path.proce = points;
 							var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
 							marker.setIcon("/logo.png");
 							marker.setLabel("终点");
-	//						var bubble = new plus.maps.Bubble("起点");
-	//						marker.setBubble(bubble);
+							//						var bubble = new plus.maps.Bubble("起点");
+							//						marker.setBubble(bubble);
 							map.addOverlay(marker);
-
 							document.getElementById("img-icon").src = "../images/icons/start.png";
 							document.getElementById("record").innerHTML = "开始记录";
-
-							mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key="+mapkey, 
-							{
+							mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=" + mapkey, {
 								dataType: 'json', //服务器返回json格式数据
 								type: 'get', //HTTP请求类型
 								timeout: 15000, //超时时间设置为15秒；
@@ -183,6 +170,9 @@
 									//服务器返回响应，根据响应结果，分析是否请求成功；
 									if (result.status == "OK") {
 										path.eadd = result.result.formatted_address;
+										//console.log(JSON.stringify(path));
+										map.hide();
+										mui('.mui-popover').popover('toggle');
 									} else {
 										alert("无法获取当前位置，请打开定位服务");
 									}
@@ -193,30 +183,23 @@
 									alert("定位服务异常，请稍后再试！");
 								}
 							});
-							
 						});
 					}
-				}else
-				{
+				} else {
 					recorded = true;
-					map.getUserLocation(function(state, pos) 
-					{
+					map.getUserLocation(function(state, pos) {
 						path.slon = pos.getLng();
 						path.slat = pos.getLat()
 						path.sdate = new Date();
-						
 						var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
 						marker.setIcon("/logo.png");
 						marker.setLabel("起点");
-//						var bubble = new plus.maps.Bubble("起点");
-//						marker.setBubble(bubble);
+						//						var bubble = new plus.maps.Bubble("起点");
+						//						marker.setBubble(bubble);
 						map.addOverlay(marker);
-
 						document.getElementById("img-icon").src = "../images/icons/stop.png";
 						document.getElementById("record").innerHTML = "停止记录";
-						
-						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key="+mapkey, 
-						{
+						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=" + mapkey, {
 							dataType: 'json', //服务器返回json格式数据
 							type: 'get', //HTTP请求类型
 							timeout: 15000, //超时时间设置为15秒；
@@ -234,31 +217,77 @@
 								alert("定位服务异常，请稍后再试！");
 							}
 						});
-
 					});
-					
 					//i=0时，坐标不变。测试时改为1
 					var i = 1;
-					window.setInterval(function() 
-					{
-						if (recorded)
-						{
-							map.getUserLocation(function(state, pos) 
-							{
-								points.push(new plus.maps.Point(pos.getLng()+i*0.00005, pos.getLat()+i*0.00005));
-	
+					window.setInterval(function() {
+						if (recorded) {
+							map.getUserLocation(function(state, pos) {
+								points.push(new plus.maps.Point(pos.getLng() + i * 0.0001, pos.getLat() + i * 0.0001));
 								var polylineObj = new plus.maps.Polyline(points);
-								map.centerAndZoom(new plus.maps.Point(pos.getLng()+i*0.00005, pos.getLat()+i*0.00005),18);
+								map.centerAndZoom(new plus.maps.Point(pos.getLng() + i * 0.0001, pos.getLat() + i * 0.0001), 18);
 								polylineObj.setStrokeColor("#00FF00");
 								polylineObj.setLineWidth(8);
 								map.addOverlay(polylineObj);
-
 								i++;
 							});
 						}
 					}, 3000);
 				}
 			}
+
+			function submit() {
+				var wt = plus.nativeUI.showWaiting();
+				mui.ajax(localhost + "walk/service/appPathService/saveAppPath", {
+					data: {
+						sadd: path.sadd,
+						sdate: path.sdate.Format("yyyy-MM-dd hh:mm:ss"),
+						slon: path.slon,
+						slat: path.slat,
+						eadd: path.eadd,
+						edate: path.edate.Format("yyyy-MM-dd hh:mm:ss"),
+						elon: path.elon,
+						elat: path.elat,
+						distance: path.distance,
+						costtime: path.costtime,
+						proce: JSON.stringify(path.proce),
+						kpi1: path.kpi1,
+						kpi2: path.kpi2,
+						kpi3: path.kpi3,
+						kpi: path.kpi,
+						suggest: path.suggest
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 20000, //超时时间设置为15秒；
+					success: function(result) {
+						//服务器返回响应，根据响应结果，分析是否登录成功；
+						if (result.success) {
+							if (result.data.code == "S001") {
+								alert(result.data.msg);
+								wt.close();
+								mui.back();
+							} else {
+								alert(result.data.msg);
+							}
+						} else {
+							alert("服务异常，请稍后再试！");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+						alert("服务异常，请稍后再试！");
+					}
+				});
+			}
+			mui('.mui-scroll-wrapper').scroll();
+			mui('body').on('shown', '.mui-popover', function(e) {
+				//console.log('shown', e.detail.id);//detail为当前popover元素
+			});
+			mui('body').on('hidden', '.mui-popover', function(e) {
+				//console.log('hidden', e.detail.id);//detail为当前popover元素
+			});
 		</script>
 	</head>
 
@@ -271,12 +300,43 @@
 		</header>
 
 		<div class="mui-content">
-			<div id="map">地图加载中...</div>
+			<!--<div id="map">地图加载中...</div>-->
 			<div class="footer">
-				<button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="toRecord();">
+				<!--<a class="mui-btn mui-btn-primary mui-btn-block" onclick="toRecord();">-->
+				<a href="#middlePopover" class="mui-btn mui-btn-primary mui-btn-block">
 					<img id="img-icon" class="img-icon" src="../images/icons/start.png" />
 					<span id="record">开始记录</span>
-				</button>
+				</a>
+			</div>
+		</div>
+
+		<div id="middlePopover" class="mui-popover mui-popover-bottom">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell"><a href="#">Item1</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item2</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item3</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item4</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item5</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item6</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item7</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item8</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item9</a>
+						</li>
+						<li class="mui-table-view-cell"><a href="#">Item10</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 

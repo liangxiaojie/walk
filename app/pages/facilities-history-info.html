@@ -135,37 +135,41 @@
 		<script type="text/javascript">
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
-				mui.ajax(localhost + "walk/service/appEvaluationService/queryAppEvaluation?id=" + self.recid, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'get', //HTTP请求类型
-					timeout: 15000, //超时时间设置为15秒；
-					success: function(result) {
-						//服务器返回响应，根据响应结果，分析是否登录成功；
-						if (result.success) {
-							var data = result.data;
-							var evalContent = data.EVALCONTENT;
-							var address = data.ADDRESS;
-							var uploadtime = data.UPLOADTIME;
-							var evaltype = data.EVALTYPE;
-							var id = data.ID;
-							var longitude = data.LONGITUDE;
-							var filedpath = data.FILEDPATH;
-							var statu = data.STATU;
-							var latitude = data.LATITUDE;
-							var userid = data.USERID;
-							document.getElementById("f-address").innerHTML=address;
-							document.getElementById("f-uploadtime").innerHTML=uploadtime;
-							
-						} else {
+				if (self.rectype == 0) {
+					document.getElementById("f-address").innerHTML = self.recid;
+					document.getElementById("f-uploadtime").innerHTML = "uploadtime";
+				} else {
+					mui.ajax(localhost + "walk/service/appEvaluationService/queryAppEvaluation?id=" + self.recid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 15000, //超时时间设置为15秒；
+						success: function(result) {
+							//服务器返回响应，根据响应结果，分析是否登录成功；
+							if (result.success) {
+								var data = result.data;
+								var evalContent = data.EVALCONTENT;
+								var address = data.ADDRESS;
+								var uploadtime = data.UPLOADTIME;
+								var evaltype = data.EVALTYPE;
+								var id = data.ID;
+								var longitude = data.LONGITUDE;
+								var filedpath = data.FILEDPATH;
+								var statu = data.STATU;
+								var latitude = data.LATITUDE;
+								var userid = data.USERID;
+								document.getElementById("f-address").innerHTML = address;
+								document.getElementById("f-uploadtime").innerHTML = uploadtime;
+							} else {
+								alert("服务异常，请稍后再试！");
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
 							alert("服务异常，请稍后再试！");
 						}
-					},
-					error: function(xhr, type, errorThrown) {
-						//异常处理；
-						console.log(type);
-						alert("服务异常，请稍后再试！");
-					}
-				});
+					});
+				}
 			});
 		</script>
 

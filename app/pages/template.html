@@ -77,7 +77,6 @@
 	<script type="text/javascript">
 		var titleElem = document.getElementById("title")
 		var menu = document.getElementById("menu")
-
 		 window.addEventListener("updateHeader", function(e) {
 			var title = e.detail.title;
 			var showMenu = e.detail.showMenu;
@@ -91,9 +90,10 @@
 			}
 			menu.style.display = display;
 		});
-
 		document.getElementById("menu").addEventListener('tap', function() {
-			plus.webview.currentWebview().children()[0].evalJS('mui("#topPopover").popover("toggle")');
+			mui.plusReady(function() {
+				plus.webview.currentWebview().children()[0].evalJS('mui("#topPopover").popover("toggle")');
+			});
 		});
 	</script>
 

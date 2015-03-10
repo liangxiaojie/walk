@@ -20,6 +20,7 @@
 			}
 			.eva-type .item2 {
 				background: #92d14f;
+				line-height: 40px;
 			}
 			.eva-type .item3 {
 				background: #01b0f1;
@@ -32,27 +33,24 @@
 			}
 			.eva-type .item6 {
 				background: #0071c1;
-				font-size: 14px;
-				line-height: 14px;
 			}
 			.eva-type .item7 {
 				background: #7030a0;
-				font-size: 14px;
 			}
 			.eva-type .item8 {
 				background: #00af50;
+				line-height: 40px;
 			}
 			.eva-type .item9 {
 				background: #33cc33;
+				font-size: 14px;
+				line-height: 20px;
 			}
 			.eva-type .item10 {
 				background: #ff99cb;
-				font-size: 14px;
 			}
 			.eva-type .item11 {
 				background: #ff7a7f;
-				font-size: 14px;
-				line-height: 14px;
 			}
 			.eva-type .item12 {
 				background: #00ccff;
@@ -69,7 +67,10 @@
 	</head>
 
 	<body>
-
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">设施信息更新</h1>
+		</header>
 		<div class="mui-content">
 			<div class="section">
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
@@ -90,7 +91,8 @@
 							<div evalType="1" class="item item1">人行
 								<br/>跨路桥</div>
 							<div evalType="2" class="item item2">栅栏</div>
-							<div evalType="3" class="item item3">照明
+							<div evalType="3" class="item item3">
+								照明
 								<br />设施</div>
 							<div evalType="4" class="item item4">视线诱导标志</div>
 							<div evalType="5" class="item item5">公路
@@ -122,7 +124,7 @@
 			</div>
 			<div class="footer">
 				<div class="mui-button-row">
-					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined">暂存</button>&nbsp;&nbsp;
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined" onclick="save()">暂存</button>&nbsp;&nbsp;
 					<button type="button" class="mui-btn mui-btn-primary" onclick="upload()">提交</button>
 				</div>
 			</div>
@@ -131,14 +133,13 @@
 		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var files = [];
 			var facilities = {};
 			facilities.address = "";
 			facilities.longitude = "";
 			facilities.latitude = "";
-			facilities.evalType = "";
-			facilities.evalContent = "";
-			mui.plusReady(function() {
+			var files = [];
+			var index = 1;
+			$(function() {
 				$(".eva-type .item").click(function() {
 					var obj = $(this);
 					if (obj.hasClass("active")) {
@@ -149,13 +150,15 @@
 						this.innerHTML += '<div class="eva-duihao"><img src="../images/duihao.png" /></div>';
 					}
 				});
+			});
+			mui.plusReady(function() {
 				var map = new plus.maps.Map("map");
 				map.getUserLocation(function(state, pos) {
 					if (0 == state) {
 						var posObj = new plus.maps.Position(new plus.maps.Point(pos.getLat(), pos.getLng()));
 						facilities.longitude = pos.getLng();
 						facilities.latitude = pos.getLat();
-						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=hVI52P08obxgT6Gl1uxKnxId", {
+						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=" + mapkey, {
 							dataType: 'json', //服务器返回json格式数据
 							type: 'get', //HTTP请求类型
 							timeout: 15000, //超时时间设置为15秒；
@@ -171,40 +174,88 @@
 							},
 							error: function(xhr, type, errorThrown) {
 								//异常处理；
-								console.log(type);
 								alert("服务异常，请稍后再试！");
 							}
 						});
 					} else {
-						alert("无法获取当前位置");
+						alert("无法获取当前位置，请打开定位服务");
 					}
 				});
 			});
-			 // 上传文件
+
+			function validate() {
+				//数据验证
+				if (!facilities.address) {
+					return "无法获取当前位置，请打开定位服务";
+				}
+				if (!facilities.evalType && !facilities.evalContent) {
+					return "请选择评价类型或输入其他评价类型";
+				}
+				if (facilities.imgs.length == 0) {
+					return "请添加评价图片";
+				}
+				return true;
+			}
+
+			function addData() {
+				var evtypes = $(".eva-type .item.active");
+				facilities.evalType = "";
+				for (var i = 0; i < evtypes.length; i++) {
+					facilities.evalType += evtypes[i].getAttribute("evaltype") + ",";
+				}
+				if (facilities.evalType) {
+					facilities.evalType = facilities.evalType.substr(0, facilities.evalType.length - 1);
+				}
+				facilities.evalContent = $("#eva-type-orther").val();
+				facilities.imgs = files;
+			}
+
+			function save() {
+				//暂存数据到手机的sqlite
+				var wt = plus.nativeUI.showWaiting();
+				addData();
+				var vdt = validate();
+				if (vdt === true) {
+					var rows = JSON.parse(plus.storage.getItem("walk_facilities_update"));
+					if (rows == null) {
+						rows = new Array();
+					}
+					var record = {
+						id: getUid(),
+						address: facilities.address,
+						longitude: facilities.longitude,
+						latitude: facilities.latitude,
+						evalType: facilities.evalType,
+						evalContent: facilities.evalContent,
+						imgs: facilities.imgs
+					};
+					rows.push(record);
+					plus.storage.setItem("walk_facilities_update", JSON.stringify(rows));
+					alert("暂存成功！");
+					wt.close();
+					mui.back();
+				} else {
+					alert("暂存失败，" + vdt)
+					wt.close();
+				}
+			}
+
 			function upload() {
-					var evtypes = $(".eva-type .item");
-					for (var i = 0; i < evtypes.length; i++) {
-						facilities.evalType += $(evtypes[i]).attr("evalType").val()+",";
-					}
-					if(!facilities.evalType){
-						facilities.evalType=facilities.evalType.substr(0,facilities.evalType.length-2);
-					}
-					var eto = $("#eva-type-orther").val();
-					facilities.evalContent = eto;
-					var server = localhost + "walk/service/appEvaluationService/saveAppEvaluation?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&eval_type="+facilities.evalType+"&eval_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
-					if (files.length <= 0) {
-						plus.nativeUI.alert("没有添加上传文件！");
-						return;
-					}
-					var wt = plus.nativeUI.showWaiting();
+				// 上传文件
+				var server = localhost + "walk/service/appInfoService/saveAppInfo?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&info_type=" + facilities.evalType + "&info_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
+				var wt = plus.nativeUI.showWaiting();
+				addData();
+				var vdt = validate();
+				if (vdt === true) {
 					var task = plus.uploader.createUpload(server, {
 							method: "POST"
 						},
 						function(t, status) { //上传完成
 							if (status == 200) {
-								alert("上传成功：" + t.responseText);
+								//alert("上传成功：" + t.responseText);
+								alert("上传成功，点击确定返回首页");
 								plus.uploader.clear();
-//								plus.storage.setItem("uploader", t.responseText);
+								//plus.storage.setItem("uploader", t.responseText);
 								wt.close();
 								mui.back();
 							} else {
@@ -224,7 +275,7 @@
 					}
 					/*
 						task.addEventListener('statechanged', function(upload, status){
-							
+
 							var total = upload.totalSize;
 					//		console.log(status + "total==== " + total);
 							window.clearInterval(timer);
@@ -240,40 +291,42 @@
 						}, false);
 					*/
 					task.start();
+				} else {
+					alert("提交失败，" + vdt)
+					wt.close();
 				}
-				// 拍照添加文件
+			}
 
 			function appendByCamera() {
-					plus.camera.getCamera().captureImage(function(p) {
-						appendFile(p);
-					});
-				}
-				// 从相册添加文件
+				// 拍照添加文件
+				plus.camera.getCamera().captureImage(function(p) {
+					appendFile(p);
+				});
+			}
 
 			function appendByGallery() {
-					plus.gallery.pick(function(p) {
-						appendFile(p);
-					});
-				}
-				// 添加文件
-			var index = 1;
-			var files = [];
+				// 从相册添加文件
+				plus.gallery.pick(function(p) {
+					appendFile(p);
+				});
+			}
 
 			function appendFile(p) {
-					var fe = document.getElementById("eva-img");
-					var li = document.createElement("p");
-					var n = p.substr(p.lastIndexOf('/') + 1);
-					li.innerText = n;
-					fe.appendChild(li);
-					files.push({
-						name: "uploadkey" + index,
-						path: p
-					});
-					index++;
-				}
-				// 产生一个随机数
+				// 添加文件
+				var fe = document.getElementById("eva-img");
+				var li = document.createElement("p");
+				var n = p.substr(p.lastIndexOf('/') + 1);
+				li.innerText = n;
+				fe.appendChild(li);
+				files.push({
+					name: "uploadkey" + index,
+					path: p
+				});
+				index++;
+			}
 
 			function getUid() {
+				// 产生一个随机数
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		</script>

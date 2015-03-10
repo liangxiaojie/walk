@@ -69,13 +69,16 @@
 	</head>
 
 	<body>
-
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">设施评价</h1>
+		</header>
 		<div class="mui-content">
 			<div class="section">
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
 					<a class="mui-navigate-right" href="#">当前位置</a>
 					<div class="mui-collapse-content">
-						<p id="f-address">定位中...</p>
+						<p id="f-address" class="no-position">定位中...</p>
 						<div id="map">
 
 						</div>
@@ -101,7 +104,8 @@
 							<div evalType="10" class="item item10">过街信号灯过短</div>
 							<div evalType="11" class="item item11">信号灯
 								<br />等待时间过长</div>
-							<div evalType="12" class="item item12">缺少
+							<div evalType="12" class="item item12">
+								&nbsp;&nbsp;缺少
 								<br />人行道</div>
 						</div>
 						<hr />
@@ -134,17 +138,14 @@
 		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var files = [];
 			var facilities = {};
 			facilities.address = "";
 			facilities.longitude = "";
 			facilities.latitude = "";
-			facilities.evalType = "";
-			facilities.evalContent = "";
-			mui.plusReady(function() 
-			{
-				$(".eva-type .item").click(function() 
-				{
+			var files = [];
+			var index = 1;
+			$(function() {
+				$(".eva-type .item").click(function() {
 					var obj = $(this);
 					if (obj.hasClass("active")) {
 						obj.removeClass("active");
@@ -154,14 +155,15 @@
 						this.innerHTML += '<div class="eva-duihao"><img src="../images/duihao.png" /></div>';
 					}
 				});
+			});
+			mui.plusReady(function() {
 				var map = new plus.maps.Map("map");
-				map.getUserLocation(function(state, pos) 
-				{
+				map.getUserLocation(function(state, pos) {
 					if (0 == state) {
 						var posObj = new plus.maps.Position(new plus.maps.Point(pos.getLat(), pos.getLng()));
 						facilities.longitude = pos.getLng();
 						facilities.latitude = pos.getLat();
-						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key="+mapkey, {
+						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=" + mapkey, {
 							dataType: 'json', //服务器返回json格式数据
 							type: 'get', //HTTP请求类型
 							timeout: 15000, //超时时间设置为15秒；
@@ -177,140 +179,159 @@
 							},
 							error: function(xhr, type, errorThrown) {
 								//异常处理；
-								console.log(type);
 								alert("服务异常，请稍后再试！");
 							}
 						});
 					} else {
-						alert("无法获取当前位置");
+						alert("无法获取当前位置，请打开定位服务");
 					}
 				});
 			});
-			 // 上传文件
-			function upload() 
-			{
-				var evtypes = $(".eva-type .item");
+
+			function validate() {
+				//数据验证
+				if (!facilities.address) {
+					return "无法获取当前位置，请打开定位服务";
+				}
+				if (!facilities.evalType && !facilities.evalContent) {
+					return "请选择评价类型或输入其他评价类型";
+				}
+				if (facilities.imgs.length == 0) {
+					return "请添加评价图片";
+				}
+				return true;
+			}
+
+			function addData() {
+				var evtypes = $(".eva-type .item.active");
+				facilities.evalType = "";
 				for (var i = 0; i < evtypes.length; i++) {
-					facilities.evalType += $(evtypes[i]).attr("evalType")+",";
+					facilities.evalType += evtypes[i].getAttribute("evaltype") + ",";
 				}
-				if(!facilities.evalType){
-					facilities.evalType=facilities.evalType.substr(0,facilities.evalType.length-2);
+				if (facilities.evalType) {
+					facilities.evalType = facilities.evalType.substr(0, facilities.evalType.length - 1);
 				}
-				var eto = $("#eva-type-orther").val();
-				facilities.evalContent = eto;
-				var server = localhost + "walk/service/appEvaluationService/saveAppEvaluation?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&eval_type="+facilities.evalType+"&eval_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
-				if (files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
+				facilities.evalContent = $("#eva-type-orther").val();
+				facilities.imgs = files;
+			}
+
+			function save() {
+				//暂存数据到手机的sqlite
 				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(server, {
-						method: "POST"
-					},
-					function(t, status) { //上传完成
-						if (status == 200) {
-							alert("上传成功：" + t.responseText);
-							plus.uploader.clear();
-//							plus.storage.setItem("uploader", t.responseText);
-							wt.close();
-							mui.back();
-						} else {
-							alert("上传失败：" + status);
-							wt.close();
-						}
+				addData();
+				var vdt = validate();
+				if (vdt === true) {
+					var rows = JSON.parse(plus.storage.getItem("walk_facilities_eval"));
+					if (rows == null) {
+						rows = new Array();
 					}
-				);
-				task.addData("string_key", "string_value");
-				task.addData("client", "HelloH5+");
-				task.addData("uid", getUid());
-				for (var i = 0; i < files.length; i++) {
-					var f = files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
+					var record = {
+						id: getUid(),
+						address: facilities.address,
+						longitude: facilities.longitude,
+						latitude: facilities.latitude,
+						evalType: facilities.evalType,
+						evalContent: facilities.evalContent,
+						imgs: facilities.imgs
+					};
+					rows.push(record);
+					plus.storage.setItem("walk_facilities_eval", JSON.stringify(rows));
+					alert("暂存成功！");
+					wt.close();
+					mui.back();
+				} else {
+					alert("暂存失败，" + vdt)
+					wt.close();
 				}
-				/*
-					task.addEventListener('statechanged', function(upload, status){
-
-						var total = upload.totalSize;
-				//		console.log(status + "total==== " + total);
-						window.clearInterval(timer);
-						var timer = window.setInterval(function(){
-							document.getElementById('pic_mask').innerHTML = Math.round(upload.uploadedSize/total)+'%';
-							console.log("upload.uploadedSize==== " + upload.uploadedSize);
-						}, 1000)
-						if (total == upload.uploadedSize)
-						{
-							window.clearInterval(timer);
-							document.getElementById('pic_mask').innerHTML = '100%';
-						}
-					}, false);
-				*/
-				task.start();
 			}
 
-			//暂存数据到手机的sqlite
-			function save()
-			{
+			function upload() {
+				// 上传文件
+				var server = localhost + "walk/service/appEvaluationService/saveAppEvaluation?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&eval_type=" + facilities.evalType + "&eval_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
 				var wt = plus.nativeUI.showWaiting();
-				var evtypes = $(".eva-type .item");
-				for (var i = 0; i < evtypes.length; i++) {
-					facilities.evalType += $(evtypes[i]).attr("evalType")+",";
+				addData();
+				var vdt = validate();
+				if (vdt === true) {
+					var task = plus.uploader.createUpload(server, {
+							method: "POST"
+						},
+						function(t, status) { //上传完成
+							if (status == 200) {
+								//alert("上传成功：" + t.responseText);
+								alert("上传成功，点击确定返回首页");
+								plus.uploader.clear();
+								//plus.storage.setItem("uploader", t.responseText);
+								wt.close();
+								mui.back();
+							} else {
+								alert("上传失败：" + status);
+								wt.close();
+							}
+						}
+					);
+					task.addData("string_key", "string_value");
+					task.addData("client", "HelloH5+");
+					task.addData("uid", getUid());
+					for (var i = 0; i < files.length; i++) {
+						var f = files[i];
+						task.addFile(f.path, {
+							key: f.name
+						});
+					}
+					/*
+						task.addEventListener('statechanged', function(upload, status){
+
+							var total = upload.totalSize;
+					//		console.log(status + "total==== " + total);
+							window.clearInterval(timer);
+							var timer = window.setInterval(function(){
+								document.getElementById('pic_mask').innerHTML = Math.round(upload.uploadedSize/total)+'%';
+								console.log("upload.uploadedSize==== " + upload.uploadedSize);
+							}, 1000)
+							if (total == upload.uploadedSize)
+							{
+								window.clearInterval(timer);
+								document.getElementById('pic_mask').innerHTML = '100%';
+							}
+						}, false);
+					*/
+					task.start();
+				} else {
+					alert("提交失败，" + vdt)
+					wt.close();
 				}
-				if(!facilities.evalType){
-					facilities.evalType=facilities.evalType.substr(0,facilities.evalType.length-2);
-				}
-				
-				var rows = JSON.parse(plus.storage.getItem("walk_eval"));
-				if (rows == null)
-				{
-					rows = new Array();
-				}
-				var record = 
-				{
-			        id: getUid(),
-			        address: facilities.address,
-			        evalType: facilities.evalType,
-			        evalContent: facilities.evalContent
-				};  
-				rows.push(record);
-				plus.storage.setItem("walk_eval", JSON.stringify(rows));
-				alert("暂存成功！");
-				wt.close();
-				mui.back();
 			}
-			// 拍照添加文件
+
 			function appendByCamera() {
+				// 拍照添加文件
 				plus.camera.getCamera().captureImage(function(p) {
 					appendFile(p);
 				});
 			}
-			// 从相册添加文件
+
 			function appendByGallery() {
+				// 从相册添加文件
 				plus.gallery.pick(function(p) {
 					appendFile(p);
 				});
 			}
-				// 添加文件
-			var index = 1;
-			var files = [];
 
 			function appendFile(p) {
-					var fe = document.getElementById("eva-img");
-					var li = document.createElement("p");
-					var n = p.substr(p.lastIndexOf('/') + 1);
-					li.innerText = n;
-					fe.appendChild(li);
-					alert(p)
-					files.push({
-						name: "uploadkey" + index,
-						path: p
-					});
-					index++;
-				}
-				// 产生一个随机数
+				// 添加文件
+				var fe = document.getElementById("eva-img");
+				var li = document.createElement("p");
+				var n = p.substr(p.lastIndexOf('/') + 1);
+				li.innerText = n;
+				fe.appendChild(li);
+				files.push({
+					name: "uploadkey" + index,
+					path: p
+				});
+				index++;
+			}
 
 			function getUid() {
+				// 产生一个随机数
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		</script>

@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>历史设施</title>
+		<title>历史更新</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -28,12 +28,21 @@
 				<div class="mui-slider-group">
 					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
 						<div id="scroll1" class="mui-scroll-wrapper">
+							<!--<div class="mui-scroll">
+								<div class="mui-loading">
+									<div class="mui-spinner">
+									</div>
+								</div>
+							</div>-->
 							<!--下拉刷新容器-->
-							<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+							<div class="mui-content mui-scroll-wrapper">
 								<div class="mui-scroll">
 									<!--数据列表-->
 									<ul class="mui-table-view mui-table-view-chevron">
-
+										<div class="mui-loading">
+											<div class="mui-spinner">
+											</div>
+										</div>
 									</ul>
 								</div>
 							</div>
@@ -41,35 +50,28 @@
 					</div>
 					<div id="item2mobile" class="mui-slider-item mui-control-content">
 						<div id="scroll2" class="mui-scroll-wrapper">
-							<div class="mui-scroll">
-								<div class="mui-loading">
-									<div class="mui-spinner">
-									</div>
+							<!--下拉刷新容器-->
+							<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<!--数据列表-->
+									<ul class="mui-table-view mui-table-view-chevron">
+										<div class="mui-loading">
+											<div class="mui-spinner">
+											</div>
+										</div>
+									</ul>
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
 		</div>
 
+		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
-		<script>
-			mui.init({
-				swipeBack: false,
-				pullRefresh: {
-					container: '#pullrefresh',
-					down: {
-						callback: function(){mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); }
-					},
-					up: {
-						contentrefresh: '正在加载...',
-						callback: pullupRefresh
-					}
-				}
-			});
-			function showWindow(id, url,recid) {
+		<script type="text/javascript">
+			function showWindow(id, url, recid, rectype) {
 				mui.openWindow({
 					id: id,
 					url: url,
@@ -80,118 +82,110 @@
 					waiting: {
 						autoshow: false
 					},
-					extras:{
-						recid:recid
+					extras: {
+						recid: recid,
+						rectype: rectype
 					}
 				})
 			}
+
+			function getUid() {
+				return Math.floor(Math.random() * 100000000 + 10000000).toString();
+			}
+			var index = 1;
+
+			function update() {
+				mui.plusReady(function() {
+					if (slideType == 0) {
+						var data = JSON.parse(plus.storage.getItem("walk_facilities_update"));
+						var html = '<ul class="mui-table-view mui-table-view-chevron">';
+						if (data) {
+							for (var i = 0; i < data.length; i++) {
+								html += '<li class="mui-table-view-cell mui-mmui-media"><a class="mui-navigate-right" onclick="showWindow(\'facilities-history-info\',\'facilities-history-info.html\',\'' + data[i].id + '\',0)">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">新增人行道' + (index++) + '</div><h6></h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路新增人行道...</p>' + '	</div>' + '</a></li>';
+							}
+						} else {
+							html += "没有暂存的数据";
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
+						}
+						html += '</ul>';
+						$("#scroll1 .mui-scroll").html(html);
+					}
+				});
+			}
+			var slideType = 0; //当前显示页面
 			var total = 0; //总个数
 			var pageNo = 0; //当前页数
-			var pageSize = 20; //显示多少个
-			/**
-			 * 下拉刷新具体业务实现
-			 */
-			function pulldownRefresh() {
-				setTimeout(function() {
-					var table = document.body.querySelector('.mui-table-view');
-					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					mui.ajax(localhost + "walk/service/appEvaluationService/searchAppEvaluation?pageNo=" + pageNo + "&pageSize=" + pageSize, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'get', //HTTP请求类型
-						timeout: 15000, //超时时间设置为10秒；
-						success: function(result) {
-							//服务器返回响应，根据响应结果，分析是否登录成功；
-							if (result.success) {
-								var data = result.data;
-								var rows = data.rows;
-								var pageIndex = pageNo * pageSize;
-								if (rows.length > 0) {
-									for (var i = 0; i < rows.length; i++) {
-										var evalContent = rows[i].EVALCONTENT;
-										var address = rows[i].ADDRESS;
-										var uploadtime = rows[i].UPLOADTIME;
-										var evaltype = rows[i].EVALTYPE;
-										var id = rows[i].ID;
-										var longitude = rows[i].LONGITUDE;
-										var filedpath = rows[i].FILEDPATH;
-										var statu = rows[i].STATU;
-										var latitude = rows[i].LATITUDE;
-										var userid = rows[i].USERID;
-										var li = document.createElement('li');
-										li.className = 'mui-table-view-cell mui-mmui-media';
-										li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-history-info\',\'facilities-history-info.html\',\''+id+'\')">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">新增人行道' + (pageIndex += 1) + '</div><h6>' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路新增人行道...</p>' + '	</div>' + '</a>'
-										//下拉刷新，新纪录插到最前面；
-										table.insertBefore(li, table.firstChild);
-									}
-									mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
-								} else {
-									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
-								}
-								pageNo += 1;
-							} else {
-								alert("服务异常，请稍后再试！");
-							}
-						},
-						error: function(xhr, type, errorThrown) {
-							//异常处理；
-							console.log(type);
-							alert("服务异常，请稍后再试！");
-						}
-					});
-				}, 800);
-			}
+			var pageSize = 10; //显示多少个
 			var count = 0;
 			/**
 			 * 上拉加载具体业务实现
 			 */
 			function pullupRefresh() {
 				setTimeout(function() {
-					var table = document.body.querySelector('.mui-table-view');
-					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					mui.ajax(localhost + "walk/service/appEvaluationService/searchAppEvaluation?pageNo=" + pageNo + "&pageSize=" + pageSize, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'get', //HTTP请求类型
-						timeout: 15000, //超时时间设置为10秒；
-						success: function(result) {
-							//服务器返回响应，根据响应结果，分析是否登录成功；
-							if (result.success) {
-								var data = result.data;
-								var rows = data.rows;
-								var pageIndex = pageNo * pageSize;
-								if (rows.length > 0) {
-									for (var i = 0; i < rows.length; i++) {
-										var evalContent = rows[i].EVALCONTENT;
-										var address = rows[i].ADDRESS;
-										var uploadtime = rows[i].UPLOADTIME;
-										var evaltype = rows[i].EVALTYPE;
-										var id = rows[i].ID;
-										var longitude = rows[i].LONGITUDE;
-										var filedpath = rows[i].FILEDPATH;
-										var statu = rows[i].STATU;
-										var latitude = rows[i].LATITUDE;
-										var userid = rows[i].USERID;
-										var li = document.createElement('li');
-										li.className = 'mui-table-view-cell mui-mmui-media';
-										li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-history-info\',\'facilities-history-info.html\',\''+id+'\')">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">新增人行道' + (pageIndex += 1) + '</div><h6>' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路新增人行道...</p>' + '	</div>' + '</a>'
-										table.appendChild(li);
+					var table = document.body.querySelector('#scroll2 .mui-table-view');
+					var cells = document.body.querySelectorAll('#scroll2 .mui-table-view-cell');
+					if (slideType === 1) {
+						mui.ajax(localhost + "walk/service/appInfoService/searchAppInfo?pageNo=" + pageNo + "&pageSize=" + pageSize, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'get', //HTTP请求类型
+							timeout: 15000, //超时时间设置为15秒；
+							success: function(result) {
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								if (result.success) {
+									var data = result.data;
+									var rows = data.rows;
+									var pageIndex = pageNo * pageSize;
+									if (rows.length > 0) {
+										for (var i = 0; i < rows.length; i++) {
+											var evalContent = rows[i].EVALCONTENT;
+											var address = rows[i].ADDRESS;
+											var uploadtime = rows[i].UPLOADTIME;
+											var evaltype = rows[i].EVALTYPE;
+											var id = rows[i].ID;
+											var longitude = rows[i].LONGITUDE;
+											var filedpath = rows[i].FILEDPATH;
+											var statu = rows[i].STATU;
+											var latitude = rows[i].LATITUDE;
+											var userid = rows[i].USERID;
+											var li = document.createElement('li');
+											li.className = 'mui-table-view-cell mui-mmui-media';
+											li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-update-history-info\',\'facilities-update-history-info.html\',\'' + id + '\',1)">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">井盖掉了' + (pageIndex += 1) + '</div><h6>' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a>'
+											table.appendChild(li);
+										}
+										mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
+									} else {
+										mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
 									}
+									pageNo++;
 								} else {
-									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
+									alert("服务异常，请稍后再试！");
 								}
-								mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
-								pageNo += 1;
-							} else {
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
 								alert("服务异常，请稍后再试！");
 							}
-						},
-						error: function(xhr, type, errorThrown) {
-							//异常处理；
-							console.log(type);
-							alert("服务异常，请稍后再试！");
-						}
-					});
-				}, 800);
+						});
+					} else {
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
+					}
+				}, 200);
 			}
+			mui.init({
+				swipeBack: false,
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: function() {
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						}
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
 			if (mui.os.plus) {
 				mui.plusReady(function() {
 					setTimeout(function() {
@@ -203,34 +197,22 @@
 					mui('#pullrefresh').pullRefresh().pullupLoading();
 				});
 			}
-			(function($) {
-				//var html2 = '<div id="pullrefresh2" class="mui-content mui-scroll-wrapper"><div class="mui-scroll"><ul class="mui-table-view mui-table-view-chevron">asdf</ul></div></div>';
-				var html2 = '<ul class="mui-table-view"><li class="mui-table-view-cell">第三个选项卡子项-1</li><li class="mui-table-view-cell">第三个选项卡子项-2</li><li class="mui-table-view-cell">第三个选项卡子项-3</li><li class="mui-table-view-cell">第三个选项卡子项-4</li><li class="mui-table-view-cell">第三个选项卡子项-5</li></ul>';
-				var item2 = document.getElementById('item2mobile');
+			$(function() {
+				update();
 				document.getElementById('slider').addEventListener('slide', function(e) {
 					if (e.detail.slideNumber === 0) {
-						document.getElementById('scroll1').style.display = 'block';
-						document.getElementById('scroll2').style.display = 'none';
+						slideType = 0;
 					}
 					if (e.detail.slideNumber === 1) {
-						document.getElementById('scroll2').style.display = 'block';
-						document.getElementById('scroll1').style.display = 'none';
-						if (item2.querySelector('.mui-loading')) {
-							setTimeout(function() {
-								item2.querySelector('.mui-scroll').innerHTML = html2;
-							}, 200);
+						slideType = 1;
+						var load = $("#scroll2 .mui-loading");
+						if ($("#scroll2 .mui-loading").length > 0) {
+							pullupRefresh();
+							load.remove();
 						}
 					}
 				});
-				var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
-				$('.mui-input-group').on('change', 'input', function() {
-					if (this.checked) {
-						sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
-						//force repaint
-						sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
-					}
-				});
-			})(mui);
+			});
 		</script>
 
 	</body>
