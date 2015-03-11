@@ -1,6 +1,24 @@
 ﻿var localhost = "http://192.168.2.102/";
 var mapkey = "hVI52P08obxgT6Gl1uxKnxId";
-
+function getTypeNames(typeNames, typeValues)
+{
+	console.log(typeValues)
+	var rtnValue = "";
+	var typeValueArray = typeValues.split(","); 
+	for (var j = 0; j < typeValueArray.length; j++)
+	{
+		var typeValue = typeValueArray[j];
+		
+		for(var i = 0; i < typeNames.length; i++)
+		{
+			if (typeNames[i].type == typeValue)
+			{
+				rtnValue += typeNames[i].name + "、";
+			}
+		}		
+	}
+	return rtnValue;
+}
 var evalTypeNames = [{
 	type: 1,
 	name: "人行道宽度窄"
@@ -39,6 +57,43 @@ var evalTypeNames = [{
 	name: "缺少人行道"
 }];
 
+
+
+
+
+
+
+
+
+
+var infoTypeNames = [{
+	type: 1,
+	name: "人行跨路桥"
+}, {
+	type: 2,
+	name: "栅栏"
+}, {
+	type: 3,
+	name: "照明设施"
+}, {
+	type: 4,
+	name: "视线诱导标志"
+}, {
+	type: 5,
+	name: "公路反射镜"
+}, {
+	type: 6,
+	name: "公路情报板"
+}, {
+	type: 7,
+	name: "公路监视系统"
+}, {
+	type: 8,
+	name: "停车场"
+}, {
+	type: 9,
+	name: "公共汽车停靠站"
+}];
 // 对Date的扩展，将 Date 转化为指定格式的String   
 // 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   
 // 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)   

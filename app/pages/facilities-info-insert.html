@@ -151,9 +151,11 @@
 					}
 				});
 			});
-			mui.plusReady(function() {
+			mui.plusReady(function() 
+			{
 				var map = new plus.maps.Map("map");
-				map.getUserLocation(function(state, pos) {
+				map.getUserLocation(function(state, pos) 
+				{
 					if (0 == state) {
 						var posObj = new plus.maps.Position(new plus.maps.Point(pos.getLat(), pos.getLng()));
 						facilities.longitude = pos.getLng();
@@ -216,7 +218,7 @@
 				addData();
 				var vdt = validate();
 				if (vdt === true) {
-					var rows = JSON.parse(plus.storage.getItem("walk_facilities_update"));
+					var rows = JSON.parse(plus.storage.getItem("walk_facilities_info"));
 					if (rows == null) {
 						rows = new Array();
 					}
@@ -227,10 +229,11 @@
 						latitude: facilities.latitude,
 						evalType: facilities.evalType,
 						evalContent: facilities.evalContent,
+						saveTime: new Date().Format("yyyy-MM-dd hh:mm:ss"),
 						imgs: facilities.imgs
 					};
 					rows.push(record);
-					plus.storage.setItem("walk_facilities_update", JSON.stringify(rows));
+					plus.storage.setItem("walk_facilities_info", JSON.stringify(rows));
 					alert("暂存成功！");
 					wt.close();
 					mui.back();
@@ -240,11 +243,12 @@
 				}
 			}
 
-			function upload() {
+			function upload() 
+			{
+				addData();
 				// 上传文件
 				var server = localhost + "walk/service/appInfoService/saveAppInfo?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&info_type=" + facilities.evalType + "&info_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
 				var wt = plus.nativeUI.showWaiting();
-				addData();
 				var vdt = validate();
 				if (vdt === true) {
 					var task = plus.uploader.createUpload(server, {

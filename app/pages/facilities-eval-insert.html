@@ -94,19 +94,14 @@
 							<div evalType="2" class="item item2">人行道无盲道</div>
 							<div evalType="3" class="item item3">盲道有障碍物</div>
 							<div evalType="4" class="item item4">人行道不平整</div>
-							<div evalType="5" class="item item5">绿化
-								<br />环境差</div>
+							<div evalType="5" class="item item5">绿化<br />环境差</div>
 							<div evalType="6" class="item item6">人行道与非机动车道未隔离</div>
-							<div evalType="7" class="item item7">人行道
-								<br />有障碍物</div>
+							<div evalType="7" class="item item7">人行道<br />有障碍物</div>
 							<div evalType="8" class="item item8">缺少过街设施</div>
 							<div evalType="9" class="item item9">过街距离过长</div>
 							<div evalType="10" class="item item10">过街信号灯过短</div>
-							<div evalType="11" class="item item11">信号灯
-								<br />等待时间过长</div>
-							<div evalType="12" class="item item12">
-								&nbsp;&nbsp;缺少
-								<br />人行道</div>
+							<div evalType="11" class="item item11">信号灯<br />等待时间过长</div>
+							<div evalType="12" class="item item12">&nbsp;&nbsp;缺少<br />人行道</div>
 						</div>
 						<hr />
 						<div class="mui-input-row">
@@ -156,10 +151,13 @@
 					}
 				});
 			});
-			mui.plusReady(function() {
+			mui.plusReady(function() 
+			{
 				var map = new plus.maps.Map("map");
-				map.getUserLocation(function(state, pos) {
-					if (0 == state) {
+				map.getUserLocation(function(state, pos) 
+				{
+					if (0 == state) 
+					{
 						var posObj = new plus.maps.Position(new plus.maps.Point(pos.getLat(), pos.getLng()));
 						facilities.longitude = pos.getLng();
 						facilities.latitude = pos.getLat();
@@ -232,6 +230,7 @@
 						latitude: facilities.latitude,
 						evalType: facilities.evalType,
 						evalContent: facilities.evalContent,
+						saveTime: new Date().Format("yyyy-MM-dd hh:mm:ss"),
 						imgs: facilities.imgs
 					};
 					rows.push(record);
@@ -246,10 +245,10 @@
 			}
 
 			function upload() {
+				addData();
 				// 上传文件
 				var server = localhost + "walk/service/appEvaluationService/saveAppEvaluation?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&eval_type=" + facilities.evalType + "&eval_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
 				var wt = plus.nativeUI.showWaiting();
-				addData();
 				var vdt = validate();
 				if (vdt === true) {
 					var task = plus.uploader.createUpload(server, {

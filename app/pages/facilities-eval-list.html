@@ -94,16 +94,35 @@
 			}
 			var index = 1;
 
-			function update() {
-				mui.plusReady(function() {
-					if (slideType == 0) {
+			function update() 
+			{
+				mui.plusReady(function() 
+				{
+					if (slideType == 0) 
+					{
 						var data = JSON.parse(plus.storage.getItem("walk_facilities_eval"));
-						var html = '<ul class="mui-table-view mui-table-view-chevron">';
-						if (data) {
-							for (var i = 0; i < data.length; i++) {
-								html += '<li class="mui-table-view-cell mui-mmui-media"><a class="mui-navigate-right" onclick="showWindow(\'facilities-history-info\',\'facilities-history-info.html\',\'' + data[i].id + '\',0)">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">' + (index++) + "." + data[i].address + '</div><h6>2014.07.23</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a></li>';
+						var html = '<ul id="tmpRow" class="mui-table-view mui-table-view-chevron">';
+						if (data) 
+						{
+							console.log(JSON.stringify(data))
+							for (var i = data.length-1; i >=0 ; i--) 
+							{
+								html += '<li class="mui-table-view-cell mui-mmui-media">'
+									  + '	<div class="mui-slider-right mui-disabled">'					
+									  + '		<a class="mui-btn mui-btn-yellow" onclick="showWindow(\'facilities-eval-update\',\'facilities-eval-update.html\',\'' + data[i].id + '\',0)">编辑</a>'
+									  + '		<a class="mui-btn mui-btn-red" onclick="deleteRow(this, '+data[i].id+')">删除</a>'
+									  + '	</div>'
+									  + '	<div class="mui-slider-handle mui-table">'
+									  + '		<div class="mui-table-cell">'
+									  + '			<a class="mui-navigate-right">' + '  <img class="mui-media-object mui-pull-left" src="_doc/1426061416132.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">' + data[i].address + '</div><h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + data[i].saveTime + '</h6>' + '		<p class="mui-ellipsis">'+getTypeNames(evalTypeNames, data[i].evalType)+'...</p>' + '	</div>' + '</a>'
+									  + '		</div>'
+									  + '	</div>'
+									  + '</li>';
+
+//								html += '<li class="mui-table-view-cell mui-mmui-media"><a class="mui-navigate-right" onclick="showWindow(\'facilities-history-info\',\'facilities-history-info.html\',\'' + data[i].id + '\',0)">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">' + (index++) + "." + data[i].address + '</div><h6>2014.07.23</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a></li>';
 							}
-						} else {
+						} else 
+						{
 							html += "没有暂存的数据";
 							mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
 						}
@@ -112,6 +131,35 @@
 					}
 				});
 			}
+			var btnArray = ['确认', '取消'];
+			function deleteRow(elem, id)
+			{
+				mui.confirm('确认删除该条记录？', '步行设施评价信息', btnArray, function(e) 
+				{
+					if (e.index == 0) 
+					{
+						var li = elem.parentNode.parentNode;
+						li.parentNode.removeChild(li);
+						
+						var data = JSON.parse(plus.storage.getItem("walk_facilities_eval"));
+						if (data) 
+						{
+							var newRows = new Array();
+							for (var i = data.length-1; i >=0 ; i--) 
+							{
+								if (data[i].id != id)
+								{
+									newRows.push(data[i])
+								}
+							}
+							plus.storage.setItem("walk_facilities_eval", JSON.stringify(newRows));
+						}
+
+					}
+				});
+			}
+			
+
 			var slideType = 0; //当前显示页面
 			var total = 0; //总个数
 			var pageNo = 0; //当前页数
@@ -131,12 +179,15 @@
 							timeout: 15000, //超时时间设置为15秒；
 							success: function(result) {
 								//服务器返回响应，根据响应结果，分析是否登录成功；
-								if (result.success) {
+								if (result.success) 
+								{
 									var data = result.data;
 									var rows = data.rows;
 									var pageIndex = pageNo * pageSize;
-									if (rows.length > 0) {
-										for (var i = 0; i < rows.length; i++) {
+									if (rows.length > 0) 
+									{
+										for (var i = 0; i < rows.length; i++) 
+										{
 											var evalContent = rows[i].EVALCONTENT;
 											var address = rows[i].ADDRESS;
 											var uploadtime = rows[i].UPLOADTIME;
@@ -149,7 +200,7 @@
 											var userid = rows[i].USERID;
 											var li = document.createElement('li');
 											li.className = 'mui-table-view-cell mui-mmui-media';
-											li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-update-history-info\',\'facilities-update-history-info.html\',\'' + id + '\',1)">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">井盖掉了' + (pageIndex += 1) + '</div><h6>' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路下水道井盖掉了...</p>' + '	</div>' + '</a>'
+											li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-eval-view\',\'facilities-eval-view.html\',\'' + id + '\',1)">' + '  <img class="mui-media-object mui-pull-left" src="'+localhost+'walk'+filedpath+'">' + '	<div class="mui-media-body">' + '		<div style="float:left;">' + address + '</div><h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + uploadtime + '</h6>' + '<p class="mui-ellipsis">'+getTypeNames(evalTypeNames, evaltype)+'...</p>' + '	</div>' + '</a>'
 											table.appendChild(li);
 										}
 										mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
