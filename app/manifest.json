@@ -130,7 +130,7 @@
 				"aliasname": "",/*Android必选，打包证书别名*/
 				"permissions": []
 			},
-			"orientation": ["portrait-primary", "landscape-primary", "portrait-secondary", "landscape-secondary"],/*必选*/
+			"orientation": ["portrait-primary","portrait-secondary"],/*必选*/
 			"icons": {
 				"ios": {
 					"prerendered": "", /*必选，是否高亮显示*/
@@ -159,11 +159,11 @@
 					}
 				},
 				"android": {
-					"mdpi": "", /*必选，48x48，普通屏程序图标*/
-					"ldpi": "", /*必选，48x48，大屏程序图标*/
-					"hdpi": "", /*必选，72x72，高分屏程序图标*/
-					"xhdpi": "",/*必选，96x96，720P高分屏程序图标*/
-					"xxhdpi": ""
+					"mdpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\icons\\48.png", /*必选，48x48，普通屏程序图标*/
+					"ldpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\icons\\48.png", /*必选，48x48，大屏程序图标*/
+					"hdpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\icons\\72.png", /*必选，72x72，高分屏程序图标*/
+					"xhdpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\icons\\96.png",/*必选，96x96，720P高分屏程序图标*/
+					"xxhdpi": "H:\\存档\\步行出行环境评价应用系统\\app\\images\\icons\\144.png"
 				}
 			},
 			"splashscreen": {

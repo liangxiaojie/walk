@@ -105,27 +105,30 @@
 						dataType: 'json', //服务器返回json格式数据
 						type: 'get', //HTTP请求类型
 						timeout: 15000, //超时时间设置为10秒；
-						success: function(result) {
+						success: function(result) 
+						{
 							//服务器返回响应，根据响应结果，分析是否登录成功；
-							if (result.success) {
+							if (result.success) 
+							{
 								var data = result.data;
 								var rows = data.rows;
+//								alert(JSON.stringify(rows))
 								var pageIndex = pageNo * pageSize;
-								if (rows.length > 0) {
-									for (var i = 0; i < rows.length; i++) {
-										var evalContent = rows[i].EVALCONTENT;
-										var address = rows[i].ADDRESS;
+								if (rows.length > 0)
+								{
+									for (var i = 0; i < rows.length; i++) 
+									{
 										var uploadtime = rows[i].UPLOADTIME;
-										var evaltype = rows[i].EVALTYPE;
 										var id = rows[i].ID;
-										var longitude = rows[i].LONGITUDE;
-										var filedpath = rows[i].FILEDPATH;
-										var statu = rows[i].STATU;
-										var latitude = rows[i].LATITUDE;
-										var userid = rows[i].USERID;
+										var sadd = rows[i].SADD;
+										var eadd = rows[i].EADD;
+										var costtime = rows[i].COSTTIME;
+										var distance = rows[i].DISTANCE;
+										var kpi = rows[i].KPI;
+
 										var li = document.createElement('li');
 										li.className = 'mui-table-view-cell mui-mmui-media';
-										li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'path-history-info\',\'path-history-info.html\',\'' + id + '\')">' + '	<div class="mui-media-body">' + '		<div style="float:left;">路径' + (pageIndex += 1) + '</div><h6> ' + uploadtime + ' 111米 综合得分80分</h6>' + '		<p class="mui-ellipsis">从顺义区马坡镇XX街XX号到XX街XX号...</p>' + '	</div>' + '</a>'
+										li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'path-history-info\',\'path-history-info.html\',\'' + id + '\')">' + '	<div class="mui-media-body">' + '		<div style="float:left;">路径' + (pageIndex += 1) + '</div><h6>&nbsp;&nbsp;&nbsp;&nbsp;' + uploadtime + '&nbsp;&nbsp;&nbsp;&nbsp;距离：'+distance+'米&nbsp;&nbsp;&nbsp;&nbsp;耗时：'+costtime+'秒&nbsp;&nbsp;&nbsp;&nbsp;综合得分'+kpi+'分</h6>' + '		<p class="mui-ellipsis">从'+sadd+'到'+eadd+'...</p>' + '	</div>' + '</a>'
 										table.appendChild(li);
 									}
 									mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
