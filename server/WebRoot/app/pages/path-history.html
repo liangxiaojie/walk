@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>历史路径</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link href="../css/mui.min.css" rel="stylesheet">
+		<script src="../js/mui.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="../css/base.css" />
+		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+
+		<div class="mui-content">
+			<!--下拉刷新容器-->
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--数据列表-->
+					<ul class="mui-table-view mui-table-view-chevron">
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			var count = 0;
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
+					var table = document.body.querySelector('.mui-table-view');
+					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+					for (var i = cells.length, len = i + 20; i < len; i++) {
+						var li = document.createElement('li');
+						li.className = 'mui-table-view-cell mui-mmui-media';
+						table.appendChild(li);
+					}
+				}, 800);
+			}
+			if (mui.os.plus) {
+				mui.plusReady(function() {
+					setTimeout(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					}, 200);
+				});
+			} else {
+				mui.ready(function() {
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				});
+			}
+			mui.init({
+				swipeBack: false,
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: function() {
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						}
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+
+			function showWindow(id, url, recid) {
+				mui.openWindow({
+					id: id,
+					url: url,
+					show: {
+						autoshow: true,
+						aniShow: 'slide-in-right'
+					},
+					waiting: {
+						autoshow: false
+					},
+					extras: {
+						recid: recid
+					}
+				})
+			}
+			var total = 0; //总个数
+			var pageNo = 0; //当前页数
+			var pageSize = 10; //显示多少个
+			var count = 0;
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				setTimeout(function() {
+					var table = document.body.querySelector('.mui-table-view');
+					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+					mui.ajax(localhost + "walk/service/appPathService/searchAppPath?pageNo=" + pageNo + "&pageSize=" + pageSize, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 15000, //超时时间设置为10秒；
+						success: function(result) 
+						{
+							//服务器返回响应，根据响应结果，分析是否登录成功；
+							if (result.success) 
+							{
+								var data = result.data;
+								var rows = data.rows;
+//								alert(JSON.stringify(rows))
+								var pageIndex = pageNo * pageSize;
+								if (rows.length > 0)
+								{
+									for (var i = 0; i < rows.length; i++) 
+									{
+										var uploadtime = rows[i].UPLOADTIME;
+										var id = rows[i].ID;
+										var sadd = rows[i].SADD;
+										var eadd = rows[i].EADD;
+										var costtime = rows[i].COSTTIME;
+										var distance = rows[i].DISTANCE;
+										var kpi = rows[i].KPI;
+
+										var li = document.createElement('li');
+										li.className = 'mui-table-view-cell mui-mmui-media';
+										li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'path-history-info\',\'path-history-info.html\',\'' + id + '\')">' + '	<div class="mui-media-body">' + '		<div style="float:left;">路径' + (pageIndex += 1) + '</div><h6>&nbsp;&nbsp;&nbsp;&nbsp;' + uploadtime + '&nbsp;&nbsp;&nbsp;&nbsp;距离：'+distance+'米&nbsp;&nbsp;&nbsp;&nbsp;耗时：'+costtime+'秒&nbsp;&nbsp;&nbsp;&nbsp;综合得分'+kpi+'分</h6>' + '		<p class="mui-ellipsis">从'+sadd+'到'+eadd+'...</p>' + '	</div>' + '</a>'
+										table.appendChild(li);
+									}
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
+								} else {
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
+								}
+								pageNo++;
+							} else {
+								alert("服务异常，请稍后再试！");
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							alert("服务异常，请稍后再试！");
+						}
+					});
+				}, 200);
+			}
+			if (mui.os.plus) {
+				mui.plusReady(function() {
+					setTimeout(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					}, 200);
+				});
+			} else {
+				mui.ready(function() {
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				});
+			}
+		</script>
+	</body>
+
+</html>

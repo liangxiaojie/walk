@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AppPicture.Mapper" >
+
+	<select id="queryAppPicture" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select id, fid, filename, filetype, filedpath, filepath, filesize, walktype, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime 
+		from app_picture
+		where fid = #{id} and walktype = #{walktype} 
+	</select>
+
+
+	<insert id="saveAppPicture" parameterType="com.app.domain.AppEvaluation" >
+	    insert into app_picture (ID, FID, FILENAME, FILETYPE, FILEDPATH, FILEPATH, FILESIZE, WALKTYPE, UPLOADTIME)
+		values (#{id}, #{fid}, #{filename}, #{filetype}, #{filedpath}, #{filepath}, #{filesize}, #{walktype}, sysdate )
+	</insert>
+
+</mapper>

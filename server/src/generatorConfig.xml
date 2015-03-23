@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+  <context id="context1" >
+    <commentGenerator>  
+    	<!-- 是否去除自动生成的注释 true：是 ： false:否 -->  
+    	<property name="suppressAllComments" value="true" />
+    	<property name="suppressDate" value="true" />    
+   		  
+  	</commentGenerator>
+
+  	<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->  
+    <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" 
+    	connectionURL="jdbc:oracle:thin:@localhost:1521:xe" 
+    	userId="walk" 
+    	password="walk" />
+
+    <javaTypeResolver >
+    	<!-- 该属性可以控制是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal,默认值为false,一般不需要配置 -->
+		<property name="forceBigDecimals" value="false" />
+	</javaTypeResolver>
+
+    <javaModelGenerator targetPackage="com.app.domain" targetProject="walk\src" >
+    	<property name="enableSubPackages" value="false" />
+	</javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="resource.mybatis" targetProject="walk\src" />
+
+    <javaClientGenerator targetPackage="com.app.service" targetProject="walk\src" type="XMLMAPPER" >
+    	<!-- enableSubPackages:是否让schema作为包的后缀 -->
+    	<property name="enableSubPackages" value="false" />  
+    </javaClientGenerator>
+
+    <table schema="walk" tableName="APP_EVALUATION" domainObjectName="AppEvaluation"  
+		enableCountByExample="false" 
+		enableUpdateByExample="false" 
+		enableDeleteByExample="false"
+		enableSelectByExample="false" 
+		selectByExampleQueryId="false" >
+    </table>
+
+  </context>
+</generatorConfiguration>

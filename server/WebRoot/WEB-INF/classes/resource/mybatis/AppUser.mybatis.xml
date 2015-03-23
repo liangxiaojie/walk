@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AppUser.Mapper" >
+
+	<resultMap id="BaseResultMap" type="com.app.domain.AppUser">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+		<result column="USER_PASS" jdbcType="VARCHAR" property="userPass" />
+		<result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+		<result column="PHONE_NUMBER" jdbcType="CHAR" property="phoneNumber" />
+		<result column="STATU" jdbcType="CHAR" property="statu" />
+		<result column="FLAG" jdbcType="CHAR" property="flag" />
+		<result column="LAST_LOGTIME" jdbcType="TIMESTAMP" property="lastLogtime" />
+	</resultMap>
+
+	<select id="getAppUserInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select ID, USER_ID, USER_NAME, USER_PASS, CREATE_TIME, PHONE_NUMBER, STATU, FLAG, LAST_LOGTIME
+		from APP_USER where ID = #{id}
+	</select>
+	
+	<select id="checkAppUserExist" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select ID, USER_ID, USER_NAME, USER_PASS, STATU, FLAG
+		from APP_USER where USER_ID = #{userId} and FLAG = #{flag} 
+	</select>
+
+	<update id="updateAppUserLogTime" parameterType="com.app.domain.AppUser" >
+		update  APP_USER set LAST_LOGTIME = sysdate where ID = #{id}
+	</update>
+
+</mapper>

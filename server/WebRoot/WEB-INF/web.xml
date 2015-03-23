@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="WebApp_1276766734308" version="2.4" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  <display-name>walk</display-name>
+<!-- 
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:org/codehaus/xfire/spring/xfire.xml</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>com.kk.framework.spring.WebSpringContext</param-value>
+	</context-param>
+-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:resource/context/applicationContext.xml,
+			classpath*:resource/context/applicationContext-*.xml
+		</param-value>
+	</context-param>
+<!-- 
+	<context-param>
+		<param-name>weblogic.httpd.inputCharset./*</param-name>
+		<param-value>UTF-8</param-value>
+	</context-param>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>reportExport</servlet-name>
+		<servlet-class>com.vanceinfo.report.service.ExportServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>reportExport</servlet-name>
+		<url-pattern>/servlet/reportExport</url-pattern>
+	</servlet-mapping>
+-->
+
+	<!--Spring字符过滤-->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+		  <param-name>encoding</param-name>
+		  <param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!--Spring字符过滤-->
+<!-- 
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+-->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+<!-- 
+  <listener>
+		<listener-class>  
+            com.vanceinfo.portal.SessionListener
+        </listener-class>  
+  </listener>
+-->
+
+  <!--JsonRpt配置，输出Json格式的数据-->
+  <servlet>
+    <servlet-name>JsonRpcServlet</servlet-name>
+    <servlet-class>com.kk.framework.rest.JsonRpcServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JsonRpcServlet</servlet-name>
+    <url-pattern>/service/*</url-pattern>
+  </servlet-mapping>
+
+<!-- 
+  <servlet>
+    <servlet-name>CleanJsonServlet</servlet-name>
+    <servlet-class>com.vanceinfo.framework.rest.CleanJsonServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CleanJsonServlet</servlet-name>
+    <url-pattern>/cleanservice/*</url-pattern>
+  </servlet-mapping>
+-->
+
+<!-- 
+	 <filter>
+	    <filter-name>LoginFilter</filter-name>
+		<filter-class>com.grade.system.util.LoginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LoginFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>com.vanceinfo.portal.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>cfmiptDispatcher</servlet-name>
+		<servlet-class>com.grade.system.util.CfminptDispatcher</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>cfmiptDispatcher</servlet-name>
+		<url-pattern>/cidispatch.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>cfmQlttiveDispatcher</servlet-name>
+		<servlet-class>com.grade.system.util.CfmQlttiveDispatcher</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>cfmQlttiveDispatcher</servlet-name>
+		<url-pattern>/quldispatch.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>cfmAdjResDispatcher</servlet-name>
+		<servlet-class>com.grade.system.util.CfmAdjResDispatcher</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>cfmAdjResDispatcher</servlet-name>
+		<url-pattern>/adjrestrict.do</url-pattern>
+	</servlet-mapping>
+-->
+	<!--上传服务
+	<servlet>
+		<servlet-name>UploadServlet</servlet-name>
+		<servlet-class>
+			com.vanceinfo.portal.UploadServlet
+		</servlet-class>
+		<init-param>
+			<param-name>desdir</param-name>
+			<param-value>/grade/upload/</param-value>
+		</init-param>
+	</servlet>
+		<servlet-mapping>
+		<servlet-name>UploadServlet</servlet-name>
+		<url-pattern>/upload</url-pattern>
+	</servlet-mapping>
+	-->
+	
+	<session-config>
+		<session-timeout>-1</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+  	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/WEB-INF/403.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/404.jsp</location>
+	</error-page>
+</web-app>

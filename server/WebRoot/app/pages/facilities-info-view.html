@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>历史设施详情</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link href="../css/mui.min.css" rel="stylesheet">
+		<script src="../js/mui.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="../css/base.css" />
+		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
+
+		<style type="text/css">
+			#map {
+				width: 100%;
+				position: relative;
+				top: 220px;
+				left: 20px;
+				bottom: 70px;
+				line-height: 200px;
+				text-align: center;
+				background: #FFFFFF;
+			}
+			.eva-type .item1 {
+				background: #ff7c81;
+			}
+			.eva-type .item2 {
+				background: #92d14f;
+			}
+			.eva-type .item3 {
+				background: #01b0f1;
+			}
+			.eva-type .item4 {
+				background: #f59c58;
+			}
+			.eva-type .item5 {
+				background: #ff9800;
+			}
+			.eva-type .item6 {
+				background: #0071c1;
+				font-size: 14px;
+				line-height: 14px;
+			}
+			.eva-type .item7 {
+				background: #7030a0;
+				font-size: 14px;
+			}
+			.eva-type .item8 {
+				background: #00af50;
+			}
+			.eva-type .item9 {
+				background: #33cc33;
+			}
+			.eva-type .item10 {
+				background: #ff99cb;
+				font-size: 14px;
+			}
+			.eva-type .item11 {
+				background: #ff7a7f;
+				font-size: 14px;
+				line-height: 14px;
+			}
+			.eva-type .item12 {
+				background: #00ccff;
+			}
+			.footer .mui-btn {
+				padding-left: 15%;
+				padding-right: 15%;
+				padding-top: 15px;
+				padding-bottom: 15px;
+				margin-bottom: 30px;
+				font-size: 20px;
+			}
+			.eva-img {
+				padding: 2px 5px;
+				display: inline-block;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">历史设施详情</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">评价时间</a>
+					<div class="mui-collapse-content">
+						<p id="f-uploadtime"></p>
+					</div>
+				</div>
+			</div>
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">设施位置</a>
+					<div class="mui-collapse-content">
+						<div id="map">地图加载中...</div>
+					</div>
+				</div>
+			</div>
+			<div id="f-type" class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">评价类型</a>
+					<div class="mui-collapse-content">
+						<div class="eva-type">
+							<div infoType="1" class="item item1">人行<br/>跨路桥</div>
+							<div infoType="2" class="item item2">栅栏</div>
+							<div infoType="3" class="item item3">照明<br />设施</div>
+							<div infoType="4" class="item item4">视线诱导标志</div>
+							<div infoType="5" class="item item5">公路<br />反射镜</div>
+							<div infoType="6" class="item item6">公路<br />情报板</div>
+							<div infoType="7" class="item item7">公路监视系统</div>
+							<div infoType="8" class="item item8">停车场</div>
+							<div infoType="9" class="item item9">公共汽车停靠站</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">设施图片</a>
+					<div id="facilitiespicture" class="mui-collapse-content">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript">
+			mui.plusReady(function() 
+			{
+				var self = plus.webview.currentWebview();
+				mui.ajax(localhost + "walk/service/appInfoService/queryAppInfo?id=" + self.recid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 15000, //超时时间设置为15秒；
+					success: function(result) 
+					{
+						//服务器返回响应，根据响应结果，分析是否登录成功；
+						if (result.success) {
+							var data = result.data;
+							var infoContent = data.INFOCONTENT;
+							var address = data.ADDRESS;
+							var uploadtime = data.UPLOADTIME;
+							var infotype = data.INFOTYPE;
+							var id = data.ID;
+							var longitude = data.LONGITUDE;
+							var statu = data.STATU;
+							var latitude = data.LATITUDE;
+							var userid = data.USERID;
+//							document.getElementById("f-address").innerHTML = address;
+							document.getElementById("f-uploadtime").innerHTML = uploadtime;
+
+							var evaltypes = infotype.split(",");
+							var evatypeitems = $(".eva-type .item");
+							for (var j = 0; j < evaltypes.length; j++) {
+								for (var i = 0; i < evatypeitems.length; i++) {
+									var obj = evatypeitems[i];
+									if (obj.getAttribute("infotype") == evaltypes[j]) {
+										obj.innerHTML += '<div class="eva-duihao"><img src="../images/duihao.png" /></div>';
+									}
+								}
+							}
+
+							setTimeout(function() {
+								var map = new plus.maps.Map("map");
+								map.centerAndZoom(new plus.maps.Point(longitude, latitude), 18);
+								var marker = new plus.maps.Marker(new plus.maps.Point(longitude, latitude));
+								marker.setIcon("/logo.png");
+								marker.setLabel(address);
+								map.addOverlay(marker);
+							}, 300);
+							
+						} else {
+							alert("服务异常，请稍后再试！");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						alert("服务异常，请稍后再试！");
+					}
+				});
+				mui.ajax(localhost + "walk/service/appPictureService/queryAppPicture?id=" + self.recid + "&walktype=3", {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 15000, //超时时间设置为15秒；
+					success: function(result) {
+						var html = "";
+						for (var i = 0; i < result.data.length; i++) {
+							html += '<div class="eva-img"><img width="200" height="200" src="' + localhost + "walk/" + result.data[i].FILEPATH + '" /></div>';
+						}
+
+						$("#facilitiespicture").html(html);
+						//						
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			});
+		</script>
+
+	</body>
+
+</html>

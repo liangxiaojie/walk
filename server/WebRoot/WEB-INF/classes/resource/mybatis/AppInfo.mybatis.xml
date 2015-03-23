@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AppInfo.Mapper" >
+
+  	<select id="searchAppInfo" parameterType="Map" resultType="hashmap" useCache="false">
+		select id, address, info_type as infoType, info_content as infoContent, user_id as userId, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, longitude, latitude, statu, max(t2.filedpath) filedpath  
+		from app_info t1 
+		left join (select fid, filedpath, min(id) from app_picture group by fid, filedpath) t2 on t1.id=t2.fid
+		where user_id = #{userId} and statu = #{statu}
+		group by id, address, info_type, info_content, user_Id, uploadtime, longitude, latitude, statu
+		order by uploadtime desc
+	</select>
+
+	<select id="searchAppInfoCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*)
+		from app_info
+		where user_id = #{userId} and statu = #{statu}
+	</select>
+
+	<select id="queryAppInfo" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select id, address, info_type as infoType, info_content as infoContent, user_id as userId, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, longitude, latitude, statu 
+		from app_info 
+		where id = #{id} 
+	</select>
+
+
+	<insert id="saveAppInfo" parameterType="Map" >
+	    insert into APP_INFO (ID, ADDRESS, INFO_TYPE, INFO_CONTENT, USER_ID, UPLOADTIME, LONGITUDE, LATITUDE, STATU)
+		values (#{id}, #{address}, #{info_type}, #{info_content}, #{user_id}, sysdate, #{longitude}, #{latitude}, #{statu} )
+	</insert>
+
+
+  <!-- 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from WALK.APP_EVALUATION
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from WALK.APP_EVALUATION
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.app.domain.AppEvaluation" >
+    insert into WALK.APP_EVALUATION (ID, ADDRESS, EVAL_TYPE, 
+      EVAL_CONTENT, USER_ID, UPLOADTIME, 
+      LONGITUDE, LATITUDE, STATU
+      )
+    values (#{id,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{evalType,jdbcType=VARCHAR}, 
+      #{evalContent,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{uploadtime,jdbcType=TIMESTAMP}, 
+      #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{statu,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.app.domain.AppEvaluation" >
+    insert into WALK.APP_EVALUATION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="evalType != null" >
+        EVAL_TYPE,
+      </if>
+      <if test="evalContent != null" >
+        EVAL_CONTENT,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="uploadtime != null" >
+        UPLOADTIME,
+      </if>
+      <if test="longitude != null" >
+        LONGITUDE,
+      </if>
+      <if test="latitude != null" >
+        LATITUDE,
+      </if>
+      <if test="statu != null" >
+        STATU,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="evalType != null" >
+        #{evalType,jdbcType=VARCHAR},
+      </if>
+      <if test="evalContent != null" >
+        #{evalContent,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="statu != null" >
+        #{statu,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.app.domain.AppEvaluation" >
+    update WALK.APP_EVALUATION
+    <set >
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="evalType != null" >
+        EVAL_TYPE = #{evalType,jdbcType=VARCHAR},
+      </if>
+      <if test="evalContent != null" >
+        EVAL_CONTENT = #{evalContent,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        UPLOADTIME = #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longitude != null" >
+        LONGITUDE = #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        LATITUDE = #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="statu != null" >
+        STATU = #{statu,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.app.domain.AppEvaluation" >
+    update WALK.APP_EVALUATION
+    set ADDRESS = #{address,jdbcType=VARCHAR},
+      EVAL_TYPE = #{evalType,jdbcType=VARCHAR},
+      EVAL_CONTENT = #{evalContent,jdbcType=VARCHAR},
+      USER_ID = #{userId,jdbcType=VARCHAR},
+      UPLOADTIME = #{uploadtime,jdbcType=TIMESTAMP},
+      LONGITUDE = #{longitude,jdbcType=VARCHAR},
+      LATITUDE = #{latitude,jdbcType=VARCHAR},
+      STATU = #{statu,jdbcType=CHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+   -->
+</mapper>

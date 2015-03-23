@@ -1,0 +1,45 @@
+html,
+body {
+	background-color: #efeff4;
+}
+.section {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.footer {
+	width: 96%;
+	margin: auto;
+}
+/* 类型列表 */
+
+.eva-type {
+	overflow: hidden;
+	max-width: 294px;
+	margin: 0 auto;
+	font-size: 16px;
+	color: #fff;
+	text-align: center;
+}
+.eva-type .item {
+	position: relative;
+	float: left;
+	width: 63px;
+	height: 60px;
+	margin: 5px;
+	padding-top: 8px;
+	background: #eee;
+	border-radius: 5px;
+}
+.eva-duihao {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.5);
+}
+.eva-duihao img{
+	margin-top: 12px;
+	width: 40px;
+	height: 40px;
+}

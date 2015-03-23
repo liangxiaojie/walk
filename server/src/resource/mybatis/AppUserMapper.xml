@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.service.AppUserMapper">
+  <resultMap id="BaseResultMap" type="com.app.domain.AppUser">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="USER_PASS" jdbcType="VARCHAR" property="userPass" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="PHONE_NUMBER" jdbcType="CHAR" property="phoneNumber" />
+    <result column="STATU" jdbcType="CHAR" property="statu" />
+    <result column="FLAG" jdbcType="CHAR" property="flag" />
+    <result column="LAST_LOGTIME" jdbcType="TIMESTAMP" property="lastLogtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, USER_ID, USER_NAME, USER_PASS, CREATE_TIME, PHONE_NUMBER, STATU, FLAG, LAST_LOGTIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WALK.APP_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from WALK.APP_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.app.domain.AppUser">
+    insert into WALK.APP_USER (ID, USER_ID, USER_NAME, 
+      USER_PASS, CREATE_TIME, PHONE_NUMBER, 
+      STATU, FLAG, LAST_LOGTIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userPass,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{phoneNumber,jdbcType=CHAR}, 
+      #{statu,jdbcType=CHAR}, #{flag,jdbcType=CHAR}, #{lastLogtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.app.domain.AppUser">
+    insert into WALK.APP_USER
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="userName != null">
+        USER_NAME,
+      </if>
+      <if test="userPass != null">
+        USER_PASS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="phoneNumber != null">
+        PHONE_NUMBER,
+      </if>
+      <if test="statu != null">
+        STATU,
+      </if>
+      <if test="flag != null">
+        FLAG,
+      </if>
+      <if test="lastLogtime != null">
+        LAST_LOGTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null">
+        #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="statu != null">
+        #{statu,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=CHAR},
+      </if>
+      <if test="lastLogtime != null">
+        #{lastLogtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.app.domain.AppUser">
+    update WALK.APP_USER
+    <set>
+      <if test="userId != null">
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null">
+        USER_PASS = #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="phoneNumber != null">
+        PHONE_NUMBER = #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="statu != null">
+        STATU = #{statu,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        FLAG = #{flag,jdbcType=CHAR},
+      </if>
+      <if test="lastLogtime != null">
+        LAST_LOGTIME = #{lastLogtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.app.domain.AppUser">
+    update WALK.APP_USER
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      USER_PASS = #{userPass,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=DATE},
+      PHONE_NUMBER = #{phoneNumber,jdbcType=CHAR},
+      STATU = #{statu,jdbcType=CHAR},
+      FLAG = #{flag,jdbcType=CHAR},
+      LAST_LOGTIME = #{lastLogtime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="BaseResultMap" type="com.app.domain.walk.AppUser">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="USER_PASS" jdbcType="VARCHAR" property="userPass" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="PHONE_NUMBER" jdbcType="CHAR" property="phoneNumber" />
+    <result column="STATU" jdbcType="CHAR" property="statu" />
+    <result column="FLAG" jdbcType="CHAR" property="flag" />
+    <result column="LAST_LOGTIME" jdbcType="TIMESTAMP" property="lastLogtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, USER_ID, USER_NAME, USER_PASS, CREATE_TIME, PHONE_NUMBER, STATU, FLAG, LAST_LOGTIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WALK.APP_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from WALK.APP_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.app.domain.walk.AppUser">
+    insert into WALK.APP_USER (ID, USER_ID, USER_NAME, 
+      USER_PASS, CREATE_TIME, PHONE_NUMBER, 
+      STATU, FLAG, LAST_LOGTIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userPass,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{phoneNumber,jdbcType=CHAR}, 
+      #{statu,jdbcType=CHAR}, #{flag,jdbcType=CHAR}, #{lastLogtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.app.domain.walk.AppUser">
+    insert into WALK.APP_USER
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="userName != null">
+        USER_NAME,
+      </if>
+      <if test="userPass != null">
+        USER_PASS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="phoneNumber != null">
+        PHONE_NUMBER,
+      </if>
+      <if test="statu != null">
+        STATU,
+      </if>
+      <if test="flag != null">
+        FLAG,
+      </if>
+      <if test="lastLogtime != null">
+        LAST_LOGTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null">
+        #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="statu != null">
+        #{statu,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=CHAR},
+      </if>
+      <if test="lastLogtime != null">
+        #{lastLogtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.app.domain.walk.AppUser">
+    update WALK.APP_USER
+    <set>
+      <if test="userId != null">
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null">
+        USER_PASS = #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="phoneNumber != null">
+        PHONE_NUMBER = #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="statu != null">
+        STATU = #{statu,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        FLAG = #{flag,jdbcType=CHAR},
+      </if>
+      <if test="lastLogtime != null">
+        LAST_LOGTIME = #{lastLogtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.app.domain.walk.AppUser">
+    update WALK.APP_USER
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      USER_PASS = #{userPass,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=DATE},
+      PHONE_NUMBER = #{phoneNumber,jdbcType=CHAR},
+      STATU = #{statu,jdbcType=CHAR},
+      FLAG = #{flag,jdbcType=CHAR},
+      LAST_LOGTIME = #{lastLogtime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="BaseResultMap" type="com.app.domain.walk.AppUser">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="USER_PASS" jdbcType="VARCHAR" property="userPass" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="PHONE_NUMBER" jdbcType="CHAR" property="phoneNumber" />
+    <result column="STATU" jdbcType="CHAR" property="statu" />
+    <result column="FLAG" jdbcType="CHAR" property="flag" />
+    <result column="LAST_LOGTIME" jdbcType="TIMESTAMP" property="lastLogtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, USER_ID, USER_NAME, USER_PASS, CREATE_TIME, PHONE_NUMBER, STATU, FLAG, LAST_LOGTIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WALK.APP_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from WALK.APP_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.app.domain.walk.AppUser">
+    insert into WALK.APP_USER (ID, USER_ID, USER_NAME, 
+      USER_PASS, CREATE_TIME, PHONE_NUMBER, 
+      STATU, FLAG, LAST_LOGTIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userPass,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{phoneNumber,jdbcType=CHAR}, 
+      #{statu,jdbcType=CHAR}, #{flag,jdbcType=CHAR}, #{lastLogtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.app.domain.walk.AppUser">
+    insert into WALK.APP_USER
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="userName != null">
+        USER_NAME,
+      </if>
+      <if test="userPass != null">
+        USER_PASS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="phoneNumber != null">
+        PHONE_NUMBER,
+      </if>
+      <if test="statu != null">
+        STATU,
+      </if>
+      <if test="flag != null">
+        FLAG,
+      </if>
+      <if test="lastLogtime != null">
+        LAST_LOGTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null">
+        #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="statu != null">
+        #{statu,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=CHAR},
+      </if>
+      <if test="lastLogtime != null">
+        #{lastLogtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.app.domain.walk.AppUser">
+    update WALK.APP_USER
+    <set>
+      <if test="userId != null">
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null">
+        USER_PASS = #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="phoneNumber != null">
+        PHONE_NUMBER = #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="statu != null">
+        STATU = #{statu,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        FLAG = #{flag,jdbcType=CHAR},
+      </if>
+      <if test="lastLogtime != null">
+        LAST_LOGTIME = #{lastLogtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.app.domain.walk.AppUser">
+    update WALK.APP_USER
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      USER_PASS = #{userPass,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=DATE},
+      PHONE_NUMBER = #{phoneNumber,jdbcType=CHAR},
+      STATU = #{statu,jdbcType=CHAR},
+      FLAG = #{flag,jdbcType=CHAR},
+      LAST_LOGTIME = #{lastLogtime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="BaseResultMap" type="com.app.domain.walk.AppUser">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="USER_PASS" jdbcType="VARCHAR" property="userPass" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="PHONE_NUMBER" jdbcType="CHAR" property="phoneNumber" />
+    <result column="STATU" jdbcType="CHAR" property="statu" />
+    <result column="FLAG" jdbcType="CHAR" property="flag" />
+    <result column="LAST_LOGTIME" jdbcType="TIMESTAMP" property="lastLogtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, USER_ID, USER_NAME, USER_PASS, CREATE_TIME, PHONE_NUMBER, STATU, FLAG, LAST_LOGTIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WALK.APP_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from WALK.APP_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.app.domain.walk.AppUser">
+    insert into WALK.APP_USER (ID, USER_ID, USER_NAME, 
+      USER_PASS, CREATE_TIME, PHONE_NUMBER, 
+      STATU, FLAG, LAST_LOGTIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userPass,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{phoneNumber,jdbcType=CHAR}, 
+      #{statu,jdbcType=CHAR}, #{flag,jdbcType=CHAR}, #{lastLogtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.app.domain.walk.AppUser">
+    insert into WALK.APP_USER
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="userName != null">
+        USER_NAME,
+      </if>
+      <if test="userPass != null">
+        USER_PASS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="phoneNumber != null">
+        PHONE_NUMBER,
+      </if>
+      <if test="statu != null">
+        STATU,
+      </if>
+      <if test="flag != null">
+        FLAG,
+      </if>
+      <if test="lastLogtime != null">
+        LAST_LOGTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null">
+        #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="statu != null">
+        #{statu,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=CHAR},
+      </if>
+      <if test="lastLogtime != null">
+        #{lastLogtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.app.domain.walk.AppUser">
+    update WALK.APP_USER
+    <set>
+      <if test="userId != null">
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null">
+        USER_PASS = #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="phoneNumber != null">
+        PHONE_NUMBER = #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="statu != null">
+        STATU = #{statu,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        FLAG = #{flag,jdbcType=CHAR},
+      </if>
+      <if test="lastLogtime != null">
+        LAST_LOGTIME = #{lastLogtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.app.domain.walk.AppUser">
+    update WALK.APP_USER
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      USER_PASS = #{userPass,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=DATE},
+      PHONE_NUMBER = #{phoneNumber,jdbcType=CHAR},
+      STATU = #{statu,jdbcType=CHAR},
+      FLAG = #{flag,jdbcType=CHAR},
+      LAST_LOGTIME = #{lastLogtime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
