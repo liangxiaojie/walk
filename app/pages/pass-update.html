@@ -8,11 +8,11 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-		<link href="css/mui.min.css" rel="stylesheet">
-		<script src="js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet">
+		<script src="../js/mui.min.js"></script>
 
-		<link rel="stylesheet" type="text/css" href="css/base.css" />
-		<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../css/base.css" />
+		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 
 	<body>
@@ -25,8 +25,8 @@
 		<div class="mui-content">
 			<form class="mui-input-group" style="margin-top: 12px;">
 				<div class="mui-input-row">
-					<label>修改后密码</label>
-					<input type="password" class="mui-input-clear" id="pass-old" placeholder="请输入修改后的密码">
+					<label>原密码</label>
+					<input type="password" class="mui-input-clear" id="pass-old" placeholder="请输入原密码">
 				</div>
 				<div class="mui-input-row">
 					<label>修改后密码</label>
@@ -43,15 +43,19 @@
 			</form>
 		</div>
 
-		<script src="js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			function validate() {
 				//数据验证
-				if (!$("#userid").val()) {
-					return "请输入用户名";
+				if(!$("#pass-old").val()){
+					return "请输入原密码";
 				}
 				if (!$("#pass").val()) {
 					return "请输入密码";
+				}
+				if($("#pass").val()==$("#pass-old").val()){
+					return "修改后密码不能与原密码一样，请重新输入";
 				}
 				if (!$("#pass-queren").val()) {
 					return "请输入确认密码";
@@ -61,11 +65,51 @@
 				}
 				return true;
 			}
+			function showWindow(id, url) {
+				mui.openWindow({
+					id: id,
+					url: url,
+					show: {
+						autoshow: true,
+						aniShow: 'slide-in-right'
+					},
+					waiting: {
+						autoshow: false
+					}
+				})
+			}
 
 			function passUpdate() {
 				var val = validate();
 				if (val === true) {
-					alert("注册成功")
+					mui.ajax(localhost + "walk/service/appUserService/updateAppUserPass", {
+						data: {
+							passOld: $("#pass-old").val(),
+							pass:$("#pass").val(),
+							passQueren: $("#pass-queren").val()
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 15000, //超时时间设置为15秒；
+						success: function(result) {
+							//服务器返回响应，根据响应结果，分析是否登录成功；
+							if (result.success) {
+								if (result.data.code == "S001") {
+									alert("恭喜你，密码修改成功，请重新登录");
+									showWindow("../login.html","../login.html");
+								} else {
+									alert(result.data.msg);
+								}
+							} else {
+								alert("服务异常，请稍后再试！");
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							alert("服务异常，请稍后再试！");
+						}
+					});
 				} else {
 					alert(val);
 				}

@@ -29,7 +29,7 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
+					<a class="mui-navigate-right" onclick="showWindow('pass-update.html','pass-update.html')">
 						修改密码
 					</a>
 				</li>
@@ -69,6 +69,19 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
+		function showWindow(id, url) {
+				mui.openWindow({
+					id: id,
+					url: url,
+					show: {
+						autoshow: true,
+						aniShow: 'slide-in-right'
+					},
+					waiting: {
+						autoshow: false
+					}
+				})
+			}
 			function clearStorage() {
 				mui.plusReady(function() {
 					plus.nativeUI.confirm("确定清除本地已暂存的所有数据吗？", function(e) {
