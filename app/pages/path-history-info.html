@@ -15,6 +15,16 @@
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
 
 		<style type="text/css">
+			#map {
+				width: 100%;
+				position: relative;
+				top: 220px;
+				left: 20px;
+				bottom: 70px;
+				line-height: 200px;
+				text-align: center;
+				background: #FFFFFF;
+			}
 			.eva-type .item1 {
 				background: #ff7c81;
 			}
@@ -65,6 +75,27 @@
 				margin-bottom: 30px;
 				font-size: 20px;
 			}
+			.eva-img {
+				padding: 2px 5px;
+				display: inline-block;
+			}
+			.row {
+				clear: both;
+				padding: 5px;
+			}
+			.float-left {
+				float: left;
+			}
+			.score .score-title {
+				margin: 5px 10px;
+			}
+			.score .score-star {
+				margin: 5px 10px;
+			}
+			.score-other {
+				clear: both;
+				padding: 0 15px;
+			}
 		</style>
 	</head>
 
@@ -78,60 +109,78 @@
 		<div class="mui-content">
 			<div class="section">
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
-					<a class="mui-navigate-right" href="#">设施位置</a>
-					<div class="mui-collapse-content">
-						<p id="f-address">请稍后</p>
-					</div>
-				</div>
-			</div>
-			<div id="f-type" class="section">
-				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
-					<a class="mui-navigate-right" href="#">评价类型</a>
-					<div class="mui-collapse-content">
-						<div class="eva-type">
-							<div class="item item1">人行道宽度窄</div>
-							<div class="item item2">
-								<div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: rgba(0,0,0,0.5);">
-									<img style="margin-top: 12px;" width="40" src="../images/duihao.png" />
-								</div>人行道无盲道</div>
-							<div class="item item3">盲道有障碍物</div>
-							<div class="item item4">人行道不平整</div>
-							<div class="item item5">绿化
-								<br />环境差</div>
-							<div class="item item6">人行道与非机动车道未隔离</div>
-							<div class="item item7">人行道
-								<br />有障碍物</div>
-							<div class="item item8">缺少过街设施</div>
-							<div class="item item9">过街距离过长</div>
-							<div class="item item10">过街信号灯过短</div>
-							<div class="item item11">信号灯
-								<br />等待时间过长</div>
-							<div class="item item12">缺少
-								<br />人行道</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="section">
-				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
-					<a class="mui-navigate-right" href="#">评价图片</a>
-					<div class="mui-collapse-content">
-						<div class="eva-img">
-							<img width="150" src="../images/cbd.jpg" />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="section">
-				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
-					<a class="mui-navigate-right" href="#">评价上传时间</a>
+					<a class="mui-navigate-right" href="#">评价时间</a>
 					<div class="mui-collapse-content">
 						<p id="f-uploadtime"></p>
 					</div>
 				</div>
 			</div>
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">设施位置</a>
+					<div class="mui-collapse-content">
+						<div id="map">地图加载中...</div>
+					</div>
+				</div>
+			</div>
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">对该路径的评价</a>
+					<div class="mui-collapse-content">
+						<div class="score">
+							<div class="row">
+								<div class="float-left score-title">安全性</div>
+								<div class="float-left score-star"></div>
+								<input type="hidden" name="score1" class="score1" value="3">
+							</div>
+							<div class="row">
+								<div class="float-left score-title">便利性</div>
+								<div class="float-left score-star"></div>
+								<input type="hidden" name="score2" class="score2" value="3">
+							</div>
+							<div class="row">
+								<div class="float-left score-title">舒适性</div>
+								<div class="float-left score-star"></div>
+								<input type="hidden" name="score3" class="score3" value="3">
+							</div>
+						</div>
+						<p class="score-other">个人意见：</p>
+					</div>
+				</div>
+			</div>
+			<div class="section">
+				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right" href="#">其他信息</a>
+					<div class="mui-collapse-content">
+						<p>开始地址：<span class="sadd"></span>
+						</p>
+						<p>结束地址：<span class="eadd"></span>
+						</p>
+						<p>开始时间：<span class="sdate"></span>
+						</p>
+						<p>结束时间：<span class="edate"></span>
+						</p>
+						<p>起点经度：<span class="slon"></span>
+						</p>
+						<p>起点纬度：<span class="slat"></span>
+						</p>
+						<p>结束经度：<span class="elon"></span>
+						</p>
+						<p>结束纬度：<span class="elat"></span>
+						</p>
+						<p>步行距离：<span class="distance"></span>
+						</p>
+						<p>步行时长：<span class="costtime"></span>
+						</p>
+						<p>提交人：<span class="userid"></span>
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 
+		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.raty/jquery.raty.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
 
 		<script type="text/javascript">
@@ -145,19 +194,81 @@
 						//服务器返回响应，根据响应结果，分析是否登录成功；
 						if (result.success) {
 							var data = result.data;
-							var evalContent = data.EVALCONTENT;
-							var address = data.ADDRESS;
 							var uploadtime = data.UPLOADTIME;
-							var evaltype = data.EVALTYPE;
-							var id = data.ID;
-							var longitude = data.LONGITUDE;
-							var filedpath = data.FILEDPATH;
-							var statu = data.STATU;
-							var latitude = data.LATITUDE;
-							var userid = data.USERID;
-							document.getElementById("f-address").innerHTML=address;
-							document.getElementById("f-uploadtime").innerHTML=uploadtime;
-							
+							var sadd = data.SADD;
+							var eadd = data.EADD;
+							var sdate = data.SDATE;
+							var edate = data.EDATE;
+							var slon = data.SLON;
+							var slat = data.SLAT;
+							var elon = data.ELON;
+							var elat = data.ELAT;
+							var distance = data.DISTANCE;
+							var costtime = data.COSTTIME;
+							var proce = data.PROCE;
+							var kpi1 = data.KPI1;
+							var kpi2 = data.KPI2;
+							var kpi3 = data.KPI3;
+							var kpi = data.KPI;
+							var suggest = data.SUGGEST;
+							var userid = data.USER_ID;
+							$("#f-uploadtime").html(uploadtime);
+							$(".score-other").html(suggest);
+							$(".sadd").html(sadd);
+							$(".eadd").html(eadd);
+							$(".sdate").html(sdate);
+							$(".edate").html(edate);
+							$(".slon").html(slon);
+							$(".slat").html(slat);
+							$(".elon").html(elon);
+							$(".elat").html(elat);
+							$(".distance").html(distance);
+							$(".costtime").html(costtime);
+							$(".userid").html(userid);
+							$(".score1").val(kpi1);
+							$(".score2").val(kpi2);
+							$(".score3").val(kpi3);
+							$.fn.raty.defaults.path = '../js/jquery.raty/img';
+							$('.score-star').each(function(i) {
+								$(this).raty({
+									number: 5, //多少个星星设置
+									score: $(this).next('input').val(), //初始值是设置
+									targetType: 'number', //类型选择，number是数字值，hint，是设置的数组值
+									size: 16,
+									cancel: false,
+									targetKeep: true,
+									precision: false, //是否包含小数
+									click: function(score, evt) {
+										var s1 = 0;
+										var s2 = 0;
+										var s3 = 0;
+										var s4 = 0;
+										$(".score-star input").each(function(i) {
+											var temp = parseInt($(this).val() == "" ? 0 : $(this).val());
+											if (i == 0) {
+												s1 = temp;
+											}
+											if (i == 1) {
+												s2 = temp;
+											}
+											if (i == 2) {
+												s3 = temp;
+											}
+											if (i == 3) {
+												s4 = temp;
+											}
+										});
+									}
+								});
+							});
+							setTimeout(function() {
+								var map = new plus.maps.Map("map");
+								map.centerAndZoom(new plus.maps.Point(slon, slat), 18);
+								var marker = new plus.maps.Marker(new plus.maps.Point(slon, slat));
+								marker.setIcon("/logo.png");
+								marker.setLabel(sadd);
+								map.addOverlay(marker);
+							}, 300);
 						} else {
 							alert("服务异常，请稍后再试！");
 						}
