@@ -58,7 +58,7 @@
 			</ul>
 			<ul class="mui-table-view" style="margin-top: 25px;">
 				<li class="mui-table-view-cell">
-					<a style="text-align: center;color: #FF3B30;">
+					<a style="text-align: center;color: #FF3B30;" onclick="loginOut()">
 						退出登录
 					</a>
 				</li>
@@ -69,7 +69,7 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-		function showWindow(id, url) {
+			function showWindow(id, url) {
 				mui.openWindow({
 					id: id,
 					url: url,
@@ -82,6 +82,7 @@
 					}
 				})
 			}
+			//清除缓存
 			function clearStorage() {
 				mui.plusReady(function() {
 					plus.nativeUI.confirm("确定清除本地已暂存的所有数据吗？", function(e) {
@@ -89,6 +90,16 @@
 							plus.storage.clear();
 						}
 					}, "清除缓存", ["确定", "取消"]);
+				});
+			}
+			//退出登录
+			function loginOut() {
+				mui.plusReady(function() {
+					plus.nativeUI.confirm("确定退出登录吗？", function(e) {
+						if (e.index == 0) {
+							showWindow('../login.html', '../login.html');
+						}
+					}, "退出登录", ["确定", "取消"]);
 				});
 			}
 		</script>

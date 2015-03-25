@@ -188,7 +188,12 @@
 				path.kpi1 = s1;
 				path.kpi2 = s2;
 				path.kpi3 = s3;
-				path.kpi = (s1 + s2 + s3) / 3;
+				var temp=(s1 + s2 + s3) / 3;
+				if(temp.toString().length>2){
+					path.kpi = temp.toFixed(2);
+				}else{
+					path.kpi = temp;
+				}
 				path.suggest = $("#textarea").val();
 			}
 
@@ -228,15 +233,18 @@
 									showWindow("../index.html","../index.html");
 								} else {
 									alert(result.data.msg);
+									wt.close();
 								}
 							} else {
 								alert("服务异常，请稍后再试！");
+								wt.close();
 							}
 						},
 						error: function(xhr, type, errorThrown) {
 							//异常处理；
 							console.log(type);
 							alert("服务异常，请稍后再试！");
+							wt.close();
 						}
 					});
 				} else {

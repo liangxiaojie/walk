@@ -26,7 +26,7 @@
 			<form class="mui-input-group" style="margin-top: 12px;">
 				<div class="mui-input-row">
 					<label>原密码</label>
-					<input type="password" class="mui-input-clear" id="pass-old" placeholder="请输入原密码">
+					<input type="password" class="mui-input-clear" id="pass-old" style="margin-top: 2px;" placeholder="请输入原密码">
 				</div>
 				<div class="mui-input-row">
 					<label>修改后密码</label>
@@ -52,7 +52,7 @@
 					return "请输入原密码";
 				}
 				if (!$("#pass").val()) {
-					return "请输入密码";
+					return "请输入修改后密码";
 				}
 				if($("#pass").val()==$("#pass-old").val()){
 					return "修改后密码不能与原密码一样，请重新输入";
@@ -61,7 +61,7 @@
 					return "请输入确认密码";
 				}
 				if ($("#pass").val() != $("#pass-queren").val()) {
-					return "两次输入密码不一致，请重新输入";
+					return "两次输入的密码不一致，请重新输入";
 				}
 				return true;
 			}

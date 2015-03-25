@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>历史设施详情</title>
+		<title>设施信息更新</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -15,16 +15,6 @@
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
 
 		<style type="text/css">
-			#map {
-				width: 100%;
-				position: relative;
-				top: 220px;
-				left: 20px;
-				bottom: 70px;
-				line-height: 200px;
-				text-align: center;
-				background: #FFFFFF;
-			}
 			.eva-type .item1 {
 				background: #ff7c81;
 			}
@@ -75,38 +65,27 @@
 				margin-bottom: 30px;
 				font-size: 20px;
 			}
-			.eva-img {
-				padding: 2px 5px;
-				display: inline-block;
-			}
 		</style>
 	</head>
 
 	<body>
-
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">历史设施详情</h1>
+			<h1 class="mui-title">设施信息更新</h1>
 		</header>
-
 		<div class="mui-content">
-			<div class="section">
-				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
-					<a class="mui-navigate-right" href="#">评价时间</a>
-					<div class="mui-collapse-content">
-						<p id="f-uploadtime"></p>
-					</div>
-				</div>
-			</div>
 			<div class="section">
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
 					<a class="mui-navigate-right" href="#">设施位置</a>
 					<div class="mui-collapse-content">
-						<div id="map">地图加载中...</div>
+						<p id="f-address" class="no-position"></p>
+						<div id="map">
+
+						</div>
 					</div>
 				</div>
 			</div>
-			<div id="f-type" class="section">
+			<div class="section">
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
 					<a class="mui-navigate-right" href="#">评价类型</a>
 					<div class="mui-collapse-content">
@@ -125,8 +104,13 @@
 							<div evalType="10" class="item item10">过街信号灯过短</div>
 							<div evalType="11" class="item item11">信号灯
 								<br />等待时间过长</div>
-							<div evalType="12" class="item item12">缺少
+							<div evalType="12" class="item item12">&nbsp;&nbsp;缺少
 								<br />人行道</div>
+						</div>
+						<hr />
+						<div class="mui-input-row">
+							<label style="width: 25%;">其他</label>
+							<input id="eva-type-orther" style="float: left;" type="text" class="mui-input-speech mui-input-clear" placeholder="请输入其他评价类型">
 						</div>
 					</div>
 				</div>
@@ -134,93 +118,262 @@
 			<div class="section">
 				<div class="mui-card mui-table-view-cell mui-collapse mui-active">
 					<a class="mui-navigate-right" href="#">评价图片</a>
-					<div id="facilitiespicture" class="mui-collapse-content" style="text-align: center;">
+					<div id="f-imgs" class="mui-collapse-content" style="text-align: center;">
+						<div id="eva-img">
+						</div>
+						<div class="mui-btn mui-btn-primary mui-btn-block mui-btn-outlined" onclick="appendByCamera()">拍照</div>
+						<div class="mui-btn mui-btn-primary mui-btn-block mui-btn-outlined" onclick="appendByGallery()">相册选取</div>
 					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined" onclick="save()">暂存</button>&nbsp;&nbsp;
+					<button type="button" class="mui-btn mui-btn-primary" onclick="upload()">提交</button>
 				</div>
 			</div>
 		</div>
 
 		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
-
 		<script type="text/javascript">
-			mui.plusReady(function() 
-			{				
-				var self = plus.webview.currentWebview();
-				mui.ajax(localhost + "walk/service/appEvaluationService/queryAppEvaluation?id=" + self.recid, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'get', //HTTP请求类型
-					timeout: 15000, //超时时间设置为15秒；
-					success: function(result) 
-					{
-						//服务器返回响应，根据响应结果，分析是否登录成功；
-						if (result.success) {
-							var data = result.data;
-							var evalContent = data.EVALCONTENT;
-							var address = data.ADDRESS;
-							var uploadtime = data.UPLOADTIME;
-							var evaltype = data.EVALTYPE;
-							var id = data.ID;
-							var longitude = data.LONGITUDE;
-							var statu = data.STATU;
-							var latitude = data.LATITUDE;
-							var userid = data.USERID;
-//							document.getElementById("f-address").innerHTML = address;
-							document.getElementById("f-uploadtime").innerHTML = uploadtime;
-
-							var evaltypes = evaltype.split(",");
-							var evatypeitems = $(".eva-type .item");
-							for (var j = 0; j < evaltypes.length; j++) {
-								for (var i = 0; i < evatypeitems.length; i++) {
-									var obj = evatypeitems[i];
-									if (obj.getAttribute("evaltype") == evaltypes[j]) {
-										obj.innerHTML += '<div class="eva-duihao"><img src="../images/duihao.png" /></div>';
-									}
-								}
-							}
-							
-							
-							setTimeout(function() {
-								var map = new plus.maps.Map("map");
-								map.centerAndZoom(new plus.maps.Point(longitude, latitude), 18);
-								var marker = new plus.maps.Marker(new plus.maps.Point(longitude, latitude));
-								marker.setIcon("/logo.png");
-								marker.setLabel(address);
-								map.addOverlay(marker);
-							}, 300);
-							
-						} else {
-							alert("服务异常，请稍后再试！");
-						}
-					},
-					error: function(xhr, type, errorThrown) {
-						//异常处理；
-						console.log(type);
-						alert("服务异常，请稍后再试！");
+			var facilities = {};
+			facilities.address = "";
+			facilities.longitude = "";
+			facilities.latitude = "";
+			var files = [];
+			var index = 1;
+			$(function() {
+				$(".eva-type .item").click(function() {
+					var obj = $(this);
+					if (obj.hasClass("active")) {
+						obj.removeClass("active");
+						obj.find(".eva-duihao").remove();
+					} else {
+						obj.addClass("active");
+						this.innerHTML += '<div class="eva-duihao"><img src="../images/duihao.png" /></div>';
 					}
 				});
-				mui.ajax(localhost + "walk/service/appPictureService/queryAppPicture?id=" + self.recid + "&walktype=2", {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'get', //HTTP请求类型
-					timeout: 15000, //超时时间设置为15秒；
-					success: function(result) {
-
-						var html = "";
-						for (var i = 0; i < result.data.length; i++) {
-							html += '<div class="eva-img"><img width="200" height="200" src="' + localhost + "walk/" + result.data[i].FILEPATH + '" /></div>';
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					facilities.id = self.recid;
+					var rows = JSON.parse(plus.storage.getItem("walk_facilities_eval"));
+					for (var i = 0; i < rows.length; i++) {
+						if (rows[i].id == self.recid) { 
+							facilities.address=rows[i].address;
+							facilities.longitude=rows[i].longitude;
+							facilities.latitude=rows[i].latitude;
+							facilities.evalType=rows[i].evalType;
+							facilities.evalContent=rows[i].evalContent;
+							facilities.saveTime=rows[i].saveTime;
+							facilities.imgs=rows[i].imgs;
+							setVal();
+							break;
 						}
-						
-						$("#facilitiespicture").html(html);
-						//						
-					},
-					error: function(xhr, type, errorThrown) {
-						//异常处理；
-						console.log(type);
 					}
 				});
 			});
-		</script>
+			//设置值
+			function setVal(){
+				$("#f-address").html(facilities.address);
+				var evaltypes = facilities.evalType.split(",");
+				var evatypeitems = $(".eva-type .item");
+				for (var j = 0; j < evaltypes.length; j++) {
+					for (var i = 0; i < evatypeitems.length; i++) {
+						var obj = evatypeitems[i];
+						if (obj.getAttribute("evaltype") == evaltypes[j]) {
+							$(obj).addClass("active");
+							obj.innerHTML += '<div class="eva-duihao"><img src="../images/duihao.png" /></div>';
+						}
+					}
+				}
+				$("#eva-type-orther").val(facilities.evalContent);
+				var fimgs = $("#f-imgs");
+				var html="";
+				for (var i = 0; i < facilities.imgs.length; i++) {
+					html += '<div class="eva-img"><img width="200" height="200" src="' + facilities.imgs[i].path + '" /></div>';
+				}
+				fimgs.html(html + fimgs.html());
+				files=facilities.imgs;
+			}
 
+			function validate() {
+				//数据验证
+				//				if (!facilities.address) {
+				//					return "无法获取当前位置，请打开定位服务";
+				//				}
+				if (!facilities.evalType && !facilities.evalContent) {
+					return "请选择评价类型或输入其他评价类型";
+				}
+				if (facilities.imgs.length == 0) {
+					return "请添加评价图片";
+				}
+				return true;
+			}
+
+			function addData() {
+				var evtypes = $(".eva-type .item.active");
+				facilities.evalType = "";
+				for (var i = 0; i < evtypes.length; i++) {
+					facilities.evalType += evtypes[i].getAttribute("evaltype") + ",";
+				}
+				if (facilities.evalType) {
+					facilities.evalType = facilities.evalType.substr(0, facilities.evalType.length - 1);
+				}
+				facilities.evalContent = $("#eva-type-orther").val();
+				facilities.imgs = files;
+			}
+
+			function save() {
+				//暂存数据到手机的sqlite
+				var wt = plus.nativeUI.showWaiting();
+				addData();
+				var vdt = validate();
+				if (vdt === true) {
+					var rows = JSON.parse(plus.storage.getItem("walk_facilities_eval"));
+					if (rows == null) {
+						rows = new Array();
+					}
+					var record = {
+						id: facilities.id,
+						address: facilities.address,
+						longitude: facilities.longitude,
+						latitude: facilities.latitude,
+						evalType: facilities.evalType,
+						evalContent: facilities.evalContent,
+						saveTime: new Date().Format("yyyy-MM-dd hh:mm:ss"),
+						imgs: facilities.imgs
+					};
+					for (var i = 0; i < rows.length; i++) {
+						if (rows[i].id == facilities.id) { 
+							rows[i]=record;
+							break;
+						}
+					}
+					plus.storage.setItem("walk_facilities_eval", JSON.stringify(rows));
+					alert("暂存成功！");
+					wt.close();
+					mui.back();
+				} else {
+					alert("暂存失败，" + vdt)
+					wt.close();
+				}
+			}
+			function showWindow(id, url, recid, rectype) {
+				mui.openWindow({
+					id: id,
+					url: url,
+					show: {
+						autoshow: true,
+						aniShow: 'slide-in-right'
+					},
+					waiting: {
+						autoshow: false
+					},
+					extras: {
+						recid: recid,
+						rectype: rectype
+					}
+				})
+			}
+			function upload() {
+				addData();
+				// 上传文件
+				var server = localhost + "walk/service/appEvaluationService/saveAppEvaluation?address=" + encodeURIComponent(encodeURIComponent(facilities.address)) + "&eval_type=" + facilities.evalType + "&eval_content=" + encodeURIComponent(encodeURIComponent(facilities.evalContent)) + "&longitude=" + facilities.longitude + "&latitude=" + facilities.latitude;
+				var wt = plus.nativeUI.showWaiting();
+				var vdt = validate();
+				if (vdt === true) {
+					var task = plus.uploader.createUpload(server, {
+							method: "POST"
+						},
+						function(t, status) { //上传完成
+							if (status == 200) {
+								//alert("上传成功：" + t.responseText);
+								var rows = JSON.parse(plus.storage.getItem("walk_facilities_eval"));
+								for (var i = 0; i < rows.length; i++) {
+									if (rows[i].id == facilities.id) { 
+										rows.splice(i,1);
+										break;
+									}
+								}
+								plus.storage.setItem("walk_facilities_eval", JSON.stringify(rows));
+								alert("上传成功，点击确定返回首页");
+								plus.uploader.clear();
+								//plus.storage.setItem("uploader", t.responseText);
+								wt.close();
+								showWindow("../index.html","../index.html");
+							} else {
+								alert("上传失败：" + status);
+								wt.close();
+							}
+						}
+					);
+					task.addData("string_key", "string_value");
+					task.addData("client", "HelloH5+");
+					task.addData("uid", getUid());
+					for (var i = 0; i < files.length; i++) {
+						var f = files[i];
+						task.addFile(f.path, {
+							key: f.name
+						});
+					}
+					/*
+						task.addEventListener('statechanged', function(upload, status){
+
+							var total = upload.totalSize;
+					//		console.log(status + "total==== " + total);
+							window.clearInterval(timer);
+							var timer = window.setInterval(function(){
+								document.getElementById('pic_mask').innerHTML = Math.round(upload.uploadedSize/total)+'%';
+								console.log("upload.uploadedSize==== " + upload.uploadedSize);
+							}, 1000)
+							if (total == upload.uploadedSize)
+							{
+								window.clearInterval(timer);
+								document.getElementById('pic_mask').innerHTML = '100%';
+							}
+						}, false);
+					*/
+					task.start();
+				} else {
+					alert("提交失败，" + vdt)
+					wt.close();
+				}
+			}
+
+			function appendByCamera() {
+				// 拍照添加文件
+				plus.camera.getCamera().captureImage(function(p) {
+					appendFile(p);
+				});
+			}
+
+			function appendByGallery() {
+				// 从相册添加文件
+				plus.gallery.pick(function(p) {
+					appendFile(p);
+				});
+			}
+
+			function appendFile(p) {
+				// 添加文件
+				var fe = document.getElementById("eva-img");
+				var li = document.createElement("p");
+				var n = p.substr(p.lastIndexOf('/') + 1);
+				li.innerText = n;
+				fe.appendChild(li);
+				files.push({
+					name: "uploadkey" + index,
+					path: p
+				});
+				index++;
+			}
+
+			function getUid() {
+				// 产生一个随机数
+				return Math.floor(Math.random() * 100000000 + 10000000).toString();
+			}
+		</script>
 	</body>
 
 </html>
