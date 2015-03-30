@@ -41,5 +41,16 @@
 	<update id="updateAppUserLogTime" parameterType="com.app.domain.AppUser" >
 		update  APP_USER set LAST_LOGTIME = sysdate where ID = #{id}
 	</update>
+	
+	<select id="getAppUserUsers" parameterType="Map" resultType="hashmap" useCache="false">
+		select ID, USER_ID, USER_NAME, USER_PASS, to_char(CREATE_TIME, 'yyyy-MM-dd hh24:mi:ss') CREATE_TIME, PHONE_NUMBER, STATU, FLAG, to_char(LAST_LOGTIME, 'yyyy-MM-dd hh24:mi:ss') LAST_LOGTIME 
+		from APP_USER t1 
+		order by LAST_LOGTIME desc
+	</select>
+	
+	<select id="getAppUserUsersCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*)
+		from APP_USER t1 
+	</select>
 
 </mapper>

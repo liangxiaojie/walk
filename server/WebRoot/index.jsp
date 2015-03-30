@@ -25,7 +25,7 @@
     }
     if (isPC)
     {
-        location.replace("system/login.jsp");
+        location.replace("admin/html/login.html");
     }else
     {
         location.replace("app/login.jsp");

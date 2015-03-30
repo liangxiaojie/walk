@@ -1,0 +1,28 @@
+
+<title>地图-步行出行环境评价应用系统</title>
+
+<div class="page-header">
+	<h1>
+		地图
+		<small>
+			<i class="ace-icon fa fa-angle-double-right"></i>
+			地图显示所有设施信息及设施评价
+		</small>
+	</h1>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<iframe width="100%" height="500px" frameborder="0" src="map.html"></iframe>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$('.page-content-area').ace_ajax('loadScripts', [], function() {
+		jQuery(function($) {
+			$(document).one('ajaxloadstart.page', function(e) {
+			
+			});
+		});
+	});
+</script>

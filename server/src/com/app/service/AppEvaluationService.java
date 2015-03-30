@@ -17,4 +17,6 @@ public interface AppEvaluationService
 //	public HashMap<String, String> queryAppEvaluation(Map<String, String> paraMap, HttpServletRequest request);
 
 //	public HashMap<String, String> saveAppEvaluation(Map<String, String> paraMap, HttpServletRequest request);
+	
+	public Page getAppEvaluations(Map<String, String> parasMap, HttpServletRequest request);
 }

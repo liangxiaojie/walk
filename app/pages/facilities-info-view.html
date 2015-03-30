@@ -16,12 +16,7 @@
 
 		<style type="text/css">
 			#map {
-				width: 100%;
-				position: relative;
-				top: 220px;
-				left: 20px;
-				bottom: 70px;
-				line-height: 200px;
+				margin-top: 10px;
 				text-align: center;
 				background: #FFFFFF;
 			}
@@ -171,15 +166,15 @@
 									}
 								}
 							}
-
-							setTimeout(function() {
-								var map = new plus.maps.Map("map");
-								map.centerAndZoom(new plus.maps.Point(longitude, latitude), 18);
-								var marker = new plus.maps.Marker(new plus.maps.Point(longitude, latitude));
-								marker.setIcon("/logo.png");
-								marker.setLabel(address);
-								map.addOverlay(marker);
-							}, 300);
+							$("#map").html('<img src="http://api.map.baidu.com/staticimage?width=300&height=200&center=&labels='+longitude+','+latitude+'&labelStyles='+address+',1,12,000000,ffffff,1&zoom=16&markers='+longitude+','+latitude+'&markerStyles=s,A,0xff0000"/><p>'+address+'</p>');
+//							setTimeout(function() {
+//								var map = new plus.maps.Map("map");
+//								map.centerAndZoom(new plus.maps.Point(longitude, latitude), 18);
+//								var marker = new plus.maps.Marker(new plus.maps.Point(longitude, latitude));
+//								marker.setIcon("/logo.png");
+//								marker.setLabel(address);
+//								map.addOverlay(marker);
+//							}, 300);
 							
 						} else {
 							alert("服务异常，请稍后再试！");

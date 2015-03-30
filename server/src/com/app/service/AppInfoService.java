@@ -16,4 +16,6 @@ public interface AppInfoService
 //	public HashMap<String, String> queryAppInfo(Map<String, String> paraMap, HttpServletRequest request);
 
 //	public HashMap<String, String> saveAppInfo(Map<String, String> paraMap, HttpServletRequest request);
+	
+	public Page getAppInfos(Map<String, String> parasMap, HttpServletRequest request);
 }

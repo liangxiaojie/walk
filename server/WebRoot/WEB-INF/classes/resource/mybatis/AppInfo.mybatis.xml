@@ -2,6 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="AppInfo.Mapper" >
 
+	<select id="getAppInfos" parameterType="Map" resultType="hashmap" useCache="false">
+		select ID,ADDRESS,INFO_TYPE,INFO_CONTENT,USER_ID, to_char(UPLOADTIME, 'yyyy-MM-dd hh24:mi:ss') UPLOADTIME,LONGITUDE,LATITUDE,STATU 
+		from APP_INFO t1
+		order by UPLOADTIME desc
+	</select>
+	
+	<select id="getAppInfosCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*)
+		from APP_INFO t1 
+	</select>
+
   	<select id="searchAppInfo" parameterType="Map" resultType="hashmap" useCache="false">
 		select id, address, info_type as infoType, info_content as infoContent, user_id as userId, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, longitude, latitude, statu, max(t2.filedpath) filedpath  
 		from app_info t1 

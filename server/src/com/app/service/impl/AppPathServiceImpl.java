@@ -91,4 +91,17 @@ public class AppPathServiceImpl extends BaseService implements AppPathService
 		return rtnMap;
 	}
 
+	@Override
+	public Page getAppPaths(Map<String, String> parasMap,HttpServletRequest request) {
+
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		int pageNo = Integer.parseInt(parasMap.get("pageNo"));
+		int pageSize = Integer.parseInt(parasMap.get("pageSize"));
+
+		Page page = getDaoSupportTemplate().query4Page("AppPath.Mapper.getAppPaths", "AppPath.Mapper.getAppPathsCount", paraMap, pageNo, pageSize);
+
+		return page;
+	}
+
 }

@@ -176,4 +176,17 @@ public class AppEvaluationServiceImpl extends BaseService implements AppEvaluati
 
 		return rtnMap;
 	}
+
+	@Override
+	public Page getAppEvaluations(Map<String, String> parasMap, HttpServletRequest request) {
+
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		int pageNo = Integer.parseInt(parasMap.get("pageNo"));
+		int pageSize = Integer.parseInt(parasMap.get("pageSize"));
+
+		Page page = getDaoSupportTemplate().query4Page("AppEvaluation.Mapper.getAppEvaluations", "AppEvaluation.Mapper.getAppEvaluationsCount", paraMap, pageNo, pageSize);
+
+		return page;
+	}
 }

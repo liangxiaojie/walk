@@ -2,6 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="AppPath.Mapper" >
 
+	<select id="getAppPaths" parameterType="Map" resultType="hashmap" useCache="false">
+		select ID, SADD,EADD, to_char(SDATE, 'yyyy-MM-dd hh24:mi:ss') SDATE, to_char(EDATE, 'yyyy-MM-dd hh24:mi:ss') EDATE,SLON,SLAT,ELON,ELAT,DISTANCE,COSTTIME,to_char(PROCE) PROCE,KPI1,KPI2,KPI3,KPI,SUGGEST, to_char(UPLOADTIME, 'yyyy-MM-dd hh24:mi:ss') UPLOADTIME,USER_ID,STATU
+		from APP_PATH t1
+		order by UPLOADTIME desc
+	</select>
+	
+	<select id="getAppPathsCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*)
+		from APP_PATH t1 
+	</select>
+
   	<select id="searchAppPath" parameterType="Map" resultType="hashmap" useCache="false">
 		select id, sadd, eadd, distance, costtime, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, distance, costtime,kpi1, kpi2, kpi3, kpi
 		from app_path t1 

@@ -1,5 +1,6 @@
 package com.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import com.app.common.Notes;
 import com.app.domain.AppUser;
 import com.app.service.AppUserService;
 import com.kk.framework.dao.DaoSupportTemplate;
+import com.kk.framework.dao.Page;
 import com.kk.framework.service.BaseService;
 
 public class AppUserServiceImpl extends BaseService implements AppUserService
@@ -162,6 +164,24 @@ public class AppUserServiceImpl extends BaseService implements AppUserService
 			rtnMap.put("msg", "恭喜你，密码修改成功！");
 		}
 		return rtnMap;
+	}
+
+	@Override
+	public Page getAppUserUsers(Map<String, String> parasMap, HttpServletRequest request) {
+		List rtnList = new ArrayList ();
+		HashMap<String, String> rtnMap = new HashMap<String, String>();
+
+//		AppUser appUser = (AppUser)request.getSession().getAttribute(Notes.APPUSER_LOGIN_SESSION);
+		Map<String, String> paraMap = new HashMap<String, String>();
+//		paraMap.put("userId", appUser.getUserId());
+//		paraMap.put("statu", Notes.AppPathStatuActive);
+
+		int pageNo = Integer.parseInt(parasMap.get("pageNo"));
+		int pageSize = Integer.parseInt(parasMap.get("pageSize"));
+
+		Page page = getDaoSupportTemplate().query4Page("AppUser.Mapper.getAppUserUsers", "AppUser.Mapper.getAppUserUsersCount", paraMap, pageNo, pageSize);
+
+		return page;
 	}
 
 }

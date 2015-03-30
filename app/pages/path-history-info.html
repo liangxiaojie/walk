@@ -16,14 +16,13 @@
 
 		<style type="text/css">
 			#map {
-				width: 100%;
-				position: relative;
-				top: 220px;
-				left: 20px;
-				bottom: 70px;
-				line-height: 200px;
 				text-align: center;
-				background: #FFFFFF;
+				overflow: hidden;
+				margin:0;
+				height: 200px;
+			}
+			#f-address{
+				text-align: center;
 			}
 			.eva-type .item1 {
 				background: #ff7c81;
@@ -120,6 +119,7 @@
 					<a class="mui-navigate-right" href="#">设施位置</a>
 					<div class="mui-collapse-content">
 						<div id="map">地图加载中...</div>
+						<p id="f-address"></p>
 					</div>
 				</div>
 			</div>
@@ -182,6 +182,8 @@
 		<script src="../js/jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/jquery.raty/jquery.raty.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=hVI52P08obxgT6Gl1uxKnxId&v=1.0"></script>
 
 		<script type="text/javascript">
 			mui.plusReady(function() {
@@ -205,7 +207,7 @@
 							var elat = data.ELAT;
 							var distance = data.DISTANCE;
 							var costtime = data.COSTTIME;
-							var proce = data.PROCE;
+							var proce = JSON.parse(data.PROCE);
 							var kpi1 = data.KPI1;
 							var kpi2 = data.KPI2;
 							var kpi3 = data.KPI3;
@@ -261,14 +263,39 @@
 									}
 								});
 							});
-							setTimeout(function() {
-								var map = new plus.maps.Map("map");
-								map.centerAndZoom(new plus.maps.Point(slon, slat), 18);
-								var marker = new plus.maps.Marker(new plus.maps.Point(slon, slat));
-								marker.setIcon("/logo.png");
-								marker.setLabel(sadd);
-								map.addOverlay(marker);
-							}, 300);
+							
+							$("#f-address").html('开始地址：'+sadd+'<br/>结束地址：'+eadd);
+							// 百度地图API功能
+							var map = new BMap.Map("map");
+							var point = new BMap.Point(slon, slat);
+							map.centerAndZoom(point, 16);
+							map.addControl(new BMap.ZoomControl()); //添加地图缩放控件
+							
+							var marker1 = new BMap.Marker(new BMap.Point(slon, slat));  //创建标注
+							var marker2 = new BMap.Marker(new BMap.Point(elon, elat));  //创建标注
+							map.addOverlay(marker1);                 // 将标注添加到地图中
+							map.addOverlay(marker2);
+							//创建信息窗口
+							var infoWindow1 = new BMap.InfoWindow(sadd);
+							marker1.addEventListener("click", function(){this.openInfoWindow(infoWindow1);});
+							var infoWindow2 = new BMap.InfoWindow(eadd);
+							marker2.addEventListener("click", function(){this.openInfoWindow(infoWindow2);});
+							
+							var polyl=[];
+							for (var i = 0; i < proce.length; i++) {
+								polyl.push(new BMap.Point(proce[i].longitude, proce[i].latitude));
+							}
+							var polyline = new BMap.Polyline(polyl, {strokeColor:"blue", strokeWeight:6, strokeOpacity:0.5});
+							map.addOverlay(polyline);
+							
+//							setTimeout(function() {
+//								var map = new plus.maps.Map("map");
+//								map.centerAndZoom(new plus.maps.Point(slon, slat), 18);
+//								var marker = new plus.maps.Marker(new plus.maps.Point(slon, slat));
+//								marker.setIcon("/logo.png");
+//								marker.setLabel(sadd);
+//								map.addOverlay(marker);
+//							}, 300);
 						} else {
 							alert("服务异常，请稍后再试！");
 						}

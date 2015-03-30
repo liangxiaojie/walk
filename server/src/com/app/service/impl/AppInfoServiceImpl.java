@@ -178,4 +178,17 @@ public class AppInfoServiceImpl extends BaseService implements AppInfoService
 
 		return rtnMap;
 	}
+
+	@Override
+	public Page getAppInfos(Map<String, String> parasMap,HttpServletRequest request) {
+
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		int pageNo = Integer.parseInt(parasMap.get("pageNo"));
+		int pageSize = Integer.parseInt(parasMap.get("pageSize"));
+
+		Page page = getDaoSupportTemplate().query4Page("AppInfo.Mapper.getAppInfos", "AppInfo.Mapper.getAppInfosCount", paraMap, pageNo, pageSize);
+
+		return page;
+	}
 }
