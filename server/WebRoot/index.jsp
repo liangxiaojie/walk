@@ -12,24 +12,21 @@
   
   <body>
     <SCRIPT LANGUAGE="JavaScript">
-    var userAgentInfo = navigator.userAgent;
-    var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
-    var isPC = true;
-    for (var v = 0; v < Agents.length; v++) 
-    {
-        if (userAgentInfo.indexOf(Agents[v]) > 0) 
-        {
-            isPC = false;
-            break;
-        }
-    }
-    if (isPC)
-    {
-        location.replace("admin/html/login.html");
-    }else
-    {
-        location.replace("app/login.jsp");
-    }
+	    var userAgentInfo = navigator.userAgent;
+	    var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+	    var isPC = true;
+	    for (var v = 0; v < Agents.length; v++) 
+	    {
+	        if (userAgentInfo.indexOf(Agents[v]) > 0) 
+	        {
+	            isPC = false;
+	            break;
+	        }
+	    }
+	    if (isPC)
+	    {
+	        location.replace("admin/html/login.html");
+	    }
     </SCRIPT>
   </body>
 </html>

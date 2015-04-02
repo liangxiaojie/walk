@@ -104,4 +104,10 @@ public class AppPathServiceImpl extends BaseService implements AppPathService
 		return page;
 	}
 
+	@Override
+	public Map<String, String> getAppPathsCount(HttpServletRequest request) {
+		Map<String, String> rtnMap = (Map<String, String>) getDaoSupportTemplate().get("AppPath.Mapper.getAppPathsCount");
+		return rtnMap;
+	}
+
 }

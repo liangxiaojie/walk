@@ -46,8 +46,18 @@ body,html,#allmap {
 						map.centerAndZoom(point,15);
 					}
 					for ( var i in grid_data) {
-					 var point = new BMap.Point(grid_data[i].LONGITUDE, grid_data[i].LATITUDE);
-					 addMarker(point);
+						var sContent ='<div style="width:800px;height:400px;" ><iframe src="admin-facilities-info-view.html?id='+grid_data[i].ID+'" frameborder="0" style="width:730px;height:100%;"></iframe></div>';
+						var point = new BMap.Point(grid_data[i].LONGITUDE, grid_data[i].LATITUDE);
+						var marker = new BMap.Marker(point);
+						var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
+						map.addOverlay(marker);
+						marker.addEventListener("click", function(){          
+						   this.openInfoWindow(infoWindow);
+						   //图片加载完毕重绘infowindow
+						   document.getElementById('imgDemo').onload = function (){
+							   infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+						   }
+						});
 					}
 			   }
 			});
@@ -58,8 +68,18 @@ body,html,#allmap {
 			   success: function(data){
 					grid_data=data.data.rows;
 					for ( var i in grid_data) {
-					 var point = new BMap.Point(grid_data[i].LONGITUDE, grid_data[i].LATITUDE);
-					 addMarker(point);
+						var sContent ='<div style="width:800px;height:400px;" ><iframe src="admin-facilities-eval-view.html?id='+grid_data[i].ID+'" frameborder="0" style="width:730px;height:100%;"></iframe></div>';
+						var point = new BMap.Point(grid_data[i].LONGITUDE, grid_data[i].LATITUDE);
+						var marker = new BMap.Marker(point);
+						var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
+						map.addOverlay(marker);
+						marker.addEventListener("click", function(){          
+						   this.openInfoWindow(infoWindow);
+						   //图片加载完毕重绘infowindow
+						   document.getElementById('imgDemo').onload = function (){
+							   infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+						   }
+						});
 					}
 			   }
 			});

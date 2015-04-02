@@ -191,4 +191,10 @@ public class AppInfoServiceImpl extends BaseService implements AppInfoService
 
 		return page;
 	}
+
+	@Override
+	public Map<String, String> getAppInfosCount(HttpServletRequest request) {
+		Map<String, String> rtnMap = (Map<String, String>) getDaoSupportTemplate().get("AppInfo.Mapper.getAppInfosCount");
+		return rtnMap;
+	}
 }

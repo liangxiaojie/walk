@@ -96,8 +96,7 @@ public class DaoSupportTemplateImpl extends SqlSessionDaoSupport implements DaoS
 	{
 		int k = Integer.valueOf(String.valueOf(getValue(s1, obj))).intValue();
 		RowBounds rowbounds = new RowBounds(i * j, j);
-		List list = getSqlSession().selectList(s);
-//		List list = getSqlSession().selectList(s, obj, rowbounds);
+		List list = getSqlSession().selectList(s, obj, rowbounds);
 		return new Page(i, j, list, k);
 	}
 }

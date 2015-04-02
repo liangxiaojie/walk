@@ -184,4 +184,10 @@ public class AppUserServiceImpl extends BaseService implements AppUserService
 		return page;
 	}
 
+	@Override
+	public Map<String, String> getAppUsersCount(HttpServletRequest request) {
+		Map<String, String> rtnMap = (Map<String, String>) getDaoSupportTemplate().get("AppUser.Mapper.getAppUsersCount");
+		return rtnMap;
+	}
+
 }

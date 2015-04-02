@@ -9,10 +9,16 @@
 	</select>
 	
 	<select id="getAppEvaluationsCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
-		select count(*)
+		select count(*) count
 		from APP_EVALUATION t1 
 	</select>
-
+	
+	<select id="getAppAppEvaluationToday" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*) count 
+		from APP_EVALUATION t 
+		where to_char(t.UPLOADTIME, 'yyyy-MM-dd') = to_char(SYSDATE, 'yyyy-MM-dd')
+	</select>
+	
   	<select id="searchAppEvaluation" parameterType="Map" resultType="hashmap" useCache="false">
 		select id, address, eval_type as evalType, eval_content as evalContent, user_id as userId, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, longitude, latitude, statu, max(t2.filedpath) filedpath 
 		from app_evaluation t1 

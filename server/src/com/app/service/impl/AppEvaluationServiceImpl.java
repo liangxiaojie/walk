@@ -189,4 +189,10 @@ public class AppEvaluationServiceImpl extends BaseService implements AppEvaluati
 
 		return page;
 	}
+
+	@Override
+	public Map<String, String> getAppEvaluationsCount( HttpServletRequest request) {
+		Map<String, String> rtnMap = (Map<String, String>) getDaoSupportTemplate().get("AppEvaluation.Mapper.getAppEvaluationsCount");
+		return rtnMap;
+	}
 }

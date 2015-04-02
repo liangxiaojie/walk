@@ -19,4 +19,5 @@ public interface AppUserService
 	
 	public Page getAppUserUsers(Map<String, String> parasMap, HttpServletRequest request);
 
+	public Map<String, String> getAppUsersCount(HttpServletRequest request);
 }

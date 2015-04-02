@@ -14,6 +14,11 @@
 		<result column="LAST_LOGTIME" jdbcType="TIMESTAMP" property="lastLogtime" />
 	</resultMap>
 
+	<select id="getAppUsersCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*) count
+		from APP_USER t1 
+	</select>
+	
 	<select id="getAppUserInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select ID, USER_ID, USER_NAME, USER_PASS, CREATE_TIME, PHONE_NUMBER, STATU, FLAG, LAST_LOGTIME
 		from APP_USER where ID = #{id}

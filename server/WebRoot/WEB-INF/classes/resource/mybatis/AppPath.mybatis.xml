@@ -9,10 +9,16 @@
 	</select>
 	
 	<select id="getAppPathsCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
-		select count(*)
+		select count(*) count
 		from APP_PATH t1 
 	</select>
 
+	<select id="getAppPathToday" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*) count 
+		from APP_PATH t 
+		where to_char(t.UPLOADTIME, 'yyyy-MM-dd') = to_char(SYSDATE, 'yyyy-MM-dd')
+	</select>
+	
   	<select id="searchAppPath" parameterType="Map" resultType="hashmap" useCache="false">
 		select id, sadd, eadd, distance, costtime, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, distance, costtime,kpi1, kpi2, kpi3, kpi
 		from app_path t1 

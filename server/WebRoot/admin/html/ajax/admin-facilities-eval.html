@@ -83,8 +83,12 @@
 						data : grid_data,
 						datatype : "local",
 						height : 360,
-						colNames : [ '上传人', '上传时间', '地址', '评价类型', '其他评价', '经度', '纬度', '是否删除' ],
+						colNames : [ 'ID','上传人', '上传时间', '地址', '评价类型', '其他评价', '经度', '纬度', '是否删除' ],
 						colModel : [ {
+							name : 'ID',
+							index : 'ID',
+							hidden : true
+						},{
 							name : 'USER_ID'
 						}, {
 							name : 'UPLOADTIME'
@@ -123,8 +127,9 @@
 							}, 0);
 						},
 
-						onCellSelect : function() {
-
+						onCellSelect : function(rowid, iCol, cellcontent, e) {
+							var id = $("#" + rowid).find("td").first().html();
+							window.open("admin-facilities-eval-view.html?id="+id);
 						},
 
 						//editurl: "/dummy.html",//nothing is saved

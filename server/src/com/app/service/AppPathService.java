@@ -18,4 +18,6 @@ public interface AppPathService
 //	public HashMap<String, String> saveAppPath(Map<String, String> paraMap, HttpServletRequest request);
 	
 	public Page getAppPaths(Map<String, String> parasMap, HttpServletRequest request);
+
+	public Map<String, String> getAppPathsCount(HttpServletRequest request);
 }

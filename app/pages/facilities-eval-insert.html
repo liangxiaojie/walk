@@ -217,6 +217,7 @@
 				//暂存数据到手机的sqlite
 				var wt = plus.nativeUI.showWaiting();
 				addData();
+				console.log(facilities.imgs)
 				var vdt = validate();
 				if (vdt === true) {
 					var rows = JSON.parse(plus.storage.getItem("walk_facilities_eval"));

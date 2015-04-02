@@ -9,8 +9,14 @@
 	</select>
 	
 	<select id="getAppInfosCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
-		select count(*)
+		select count(*) count
 		from APP_INFO t1 
+	</select>
+	
+	<select id="getAppInfoToday" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*) count 
+		from APP_INFO t 
+		where to_char(t.UPLOADTIME, 'yyyy-MM-dd') = to_char(SYSDATE, 'yyyy-MM-dd')
 	</select>
 
   	<select id="searchAppInfo" parameterType="Map" resultType="hashmap" useCache="false">

@@ -72,8 +72,12 @@
 						data : grid_data,
 						datatype : "local",
 						height : 360,
-						colNames : [ '提交人', '提交时间', '个人意见', '是否删除', '综合评分', '安全性', '舒适性', '便利性', '步行时长', '步行距离', '开始地址', '结束地址', '开始时间', '结束时间', '起点经度', '起点纬度', '结束经度', '结束纬度' ],
+						colNames : [ 'ID', '提交人', '提交时间', '个人意见', '是否删除', '综合评分', '安全性', '舒适性', '便利性', '步行时长', '步行距离', '开始地址', '结束地址', '开始时间', '结束时间', '起点经度', '起点纬度', '结束经度', '结束纬度' ],
 						colModel : [ {
+							name : 'ID',
+							index : 'ID',
+							hidden : true
+						}, {
 							name : 'USER_ID'
 						}, {
 							name : 'UPLOADTIME'
@@ -132,8 +136,9 @@
 							}, 0);
 						},
 
-						onCellSelect : function() {
-
+						onCellSelect : function(rowid, iCol, cellcontent, e) {
+							var id = $("#" + rowid).find("td").first().html();
+							window.open("admin-path-view.html?id="+id);
 						},
 
 						//editurl: "/dummy.html",//nothing is saved
