@@ -7,7 +7,7 @@
 		首页
 		<small>
 			<i class="ace-icon fa fa-angle-double-right"></i>
-			首页
+			欢迎登录步行出行环境评价应用系统
 		</small>
 	</h1>
 </div>
@@ -37,12 +37,12 @@
 					</div>
 
 					<div class="infobox-data">
-						<span class="infobox-data-number" id="dataCount1">32</span>
+						<span class="infobox-data-number" id="pathCount">0</span>
 						<div class="infobox-content">路径评价提交量</div>
 					</div>
 
 					<!-- #section:pages/dashboard.infobox.stat -->
-					<div class="stat stat-success">+11%</div>
+					<div class="stat stat-success" id="pathCountTodayRate">0</div>
 
 					<!-- /section:pages/dashboard.infobox.stat -->
 				</div>
@@ -53,11 +53,11 @@
 					</div>
 
 					<div class="infobox-data">
-						<span class="infobox-data-number" id="dataCount2">0</span>
+						<span class="infobox-data-number" id="evalCount">0</span>
 						<div class="infobox-content">设施评价提交量</div>
 					</div>
 
-					<div class="stat stat-success">+8%</div>
+					<div class="stat stat-success" id="evalCountTodayRate">0</div>
 				</div>
 
 				<div class="infobox infobox-pink">
@@ -66,10 +66,10 @@
 					</div>
 
 					<div class="infobox-data">
-						<span class="infobox-data-number" id="dataCount3">0</span>
+						<span class="infobox-data-number" id="infoCount">0</span>
 						<div class="infobox-content">设施信息提交量</div>
 					</div>
-					<div class="stat stat-success">+16%</div>
+					<div class="stat stat-success" id="infoCountTodayRate">0</div>
 				</div>
 
 				<div class="space-6"></div>
@@ -80,7 +80,7 @@
 					</div>
 
 					<div class="infobox-data">
-						<span class="infobox-data-number" id="dataCount4">0</span>
+						<span class="infobox-data-number" id="allCountsToday">0</span>
 						<div class="infobox-content">今日新增</div>
 					</div>
 				</div>
@@ -93,12 +93,11 @@
 
 					<!-- /section:pages/dashboard.infobox.sparkline -->
 					<div class="infobox-data">
-						<span class="infobox-data-number" id="dataCount5">0</span>
+						<span class="infobox-data-number" id="allCounts">0</span>
 						<div class="infobox-content">总提交量</div>
 					</div>
 
-					<div class="badge badge-success">
-						12%
+					<div class="badge badge-success" id="allCountsTodayRate">0%
 						<i class="ace-icon fa fa-arrow-up"></i>
 					</div>
 				</div>
@@ -115,11 +114,11 @@
 
 					<!-- /section:pages/dashboard.infobox.sparkline -->
 					<div class="infobox-data">
-						<div class="infobox-content">用户数</div>
-						<div class="infobox-content" id="dataCount6">0</div>
+						<div class="infobox-content">总用户数</div>
+						<div class="infobox-content" id="userCount">0</div>
 					</div>
 				</div>
-
+<!--
 				<div class="infobox infobox-grey infobox-small infobox-dark">
 					<div class="infobox-chart">
 						<span class="sparkline" data-values="3,4,2,3,4,4,2,2"></span>
@@ -131,7 +130,7 @@
 					</div>
 				</div>
 
-				<!-- /section:pages/dashboard.infobox.dark -->
+				 /section:pages/dashboard.infobox.dark -->
 			</div>
 
 			<div class="vspace-12-sm"></div>
@@ -143,7 +142,6 @@
 							<i class="ace-icon fa fa-signal"></i>
 							设施评价问题类型占比
 						</h5>
-
 					</div>
 
 					<div class="widget-body">
@@ -169,7 +167,7 @@
 
 		<!-- /section:custom/extra.hr -->
 		<div class="row">
-			<div class="col-sm-7">
+			<div class="col-sm-6">
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
@@ -206,7 +204,7 @@
 									</tr>
 								</thead>
 
-								<tbody>
+								<tbody id="zuixin">
 									<tr>
 										<td>张三</td>
 
@@ -284,7 +282,7 @@
 			</div>
 			<!-- /.col -->
 
-			<div class="col-sm-5">
+			<div class="col-sm-6">
 				<div class="widget-box">
 					<div class="widget-header widget-header-flat widget-header-small">
 						<h5 class="widget-title">
@@ -332,76 +330,70 @@
 		//inline scripts related to this page
 		jQuery(function($) {
 			var sumCount=0;
-			$.ajax("/walk/service/appPathService/getAppPathsCount", {
+			var data = null;
+			var data1 = null;
+			$.ajax("/walk/service/appCountService/getAppCount", {
 				dataType : 'json', //服务器返回json格式数据
 				type : 'GET', //HTTP请求类型
 				timeout : 15000, //超时时间设置为15秒；
 				success : function(result) {
-					if (result.success) {
-						$("#dataCount1").html(result.data.COUNT);
-						sumCount+=result.data.COUNT;
-						$("#dataCount5").html(sumCount);
+					if (result.success) 
+					{
+						$("#pathCount").html(result.data.pathCount);
+						if(result.data.pathCountTodayRate){$("#pathCountTodayRate").html(result.data.pathCountTodayRate+"%");}
+						$("#evalCount").html(result.data.evalCount);
+						if(result.data.evalCountTodayRate){$("#evalCountTodayRate").html(result.data.evalCountTodayRate+"%");}
+						$("#infoCount").html(result.data.infoCount);
+						if(result.data.infoCountTodayRate){$("#infoCountTodayRate").html(result.data.infoCountTodayRate+"%");}
+						$("#userCount").html(result.data.userCount);
+						$("#allCountsToday").html(result.data.allCountsToday);
+						$("#allCounts").html(result.data.allCounts);
+						if(result.data.allCountsTodayRate){$("#allCountsTodayRate").html(result.data.allCountsTodayRate+"%");}
+
+
+						var appAllRecord = result.data.appAllRecord;
+						var html="";
+						for ( var i in appAllRecord) {
+							if(i<7){
+								var tmp="";
+								switch (appAllRecord[i].APPTYPE) {
+									case "1":
+										tmp='<span class="label label-warning arrowed arrowed-right">'+appAllRecord[i].APPCONTENT+'</span>';
+										break;
+									case "2":
+										tmp='<span class="label label-info arrowed-right arrowed-in">'+appAllRecord[i].APPCONTENT+'</span>';
+										break;
+									case "3":
+										tmp='<span class="label label-danger arrowed">'+appAllRecord[i].APPCONTENT+'</span>';
+										break;
+									default:
+										tmp='<span class="label label-success arrowed-in arrowed-in-right">'+appAllRecord[i].APPCONTENT+'</span>';
+										break;
+								}
+								html+='<tr>'
+									+'<td>' + appAllRecord[i].USER_ID + '</td>'
+									+'<td class="hidden-480"> '+tmp+' </td>'
+									+'<td><b class="green">' + appAllRecord[i].UPLOADTIME + '</b></td>'
+									+'</tr>';
+							}
+						}
+						$("#zuixin").html(html);
+						
+						data = result.data.evalMap;
+						data1 = result.data.infoMap;
+						drawPieChart(placeholder, data);
+						drawPieChart(placeholder1, data1);
+
 					} else {
 						alert("服务异常，请稍后再试！");
 					}
 				},
 				error : function(xhr, type, errorThrown) {
 					//异常处理；
-					alert("服务异常，请稍后再试！");
+					alert("网络异常，请检查网络连接！");
 				}
 			});
-			$.ajax("/walk/service/appEvaluationService/getAppEvaluationsCount", {
-				dataType : 'json', //服务器返回json格式数据
-				type : 'GET', //HTTP请求类型
-				timeout : 15000, //超时时间设置为15秒；
-				success : function(result) {
-					if (result.success) {
-						$("#dataCount2").html(result.data.COUNT);
-						sumCount+=result.data.COUNT;
-						$("#dataCount5").html(sumCount);
-					} else {
-						alert("服务异常，请稍后再试！");
-					}
-				},
-				error : function(xhr, type, errorThrown) {
-					//异常处理；
-					alert("服务异常，请稍后再试！");
-				}
-			});
-			$.ajax("/walk/service/appInfoService/getAppInfosCount", {
-				dataType : 'json', //服务器返回json格式数据
-				type : 'GET', //HTTP请求类型
-				timeout : 15000, //超时时间设置为15秒；
-				success : function(result) {
-					if (result.success) {
-						$("#dataCount3").html(result.data.COUNT);
-						sumCount+=result.data.COUNT;
-						$("#dataCount5").html(sumCount);
-					} else {
-						alert("服务异常，请稍后再试！");
-					}
-				},
-				error : function(xhr, type, errorThrown) {
-					//异常处理；
-					alert("服务异常，请稍后再试！");
-				}
-			});
-			$.ajax("/walk/service/appUserService/getAppUsersCount", {
-				dataType : 'json', //服务器返回json格式数据
-				type : 'GET', //HTTP请求类型
-				timeout : 15000, //超时时间设置为15秒；
-				success : function(result) {
-					if (result.success) {
-						$("#dataCount6").html(result.data.COUNT);
-					} else {
-						alert("服务异常，请稍后再试！");
-					}
-				},
-				error : function(xhr, type, errorThrown) {
-					//异常处理；
-					alert("服务异常，请稍后再试！");
-				}
-			});
+			
 
 			$('.easy-pie-chart.percentage').each(function() {
 				var $box = $(this).closest('.infobox');
@@ -430,68 +422,24 @@
 				});
 			});
 
-			//flot chart resize plugin, somehow manipulates default browser resize event to optimize it!
-			//but sometimes it brings up errors with normal resize event handlers
 			$.resize.throttleWindow = false;
 
-			var placeholder = $('#piechart-placeholder').css({
+			var placeholder = $('#piechart-placeholder1').css({
 				'width' : '86%',
-				'min-height' : '180px'
+				'min-height' : '290px'
 			});
-			var data = [ {
-				label : "人行道宽度窄",
-				data : 38.7,
-				color : "#68BC31"
-			}, {
-				label : "人行道无盲道",
-				data : 24.5,
-				color : "#2091CF"
-			}, {
-				label : "盲道有障碍物",
-				data : 8.2,
-				color : "#AF4E96"
-			}, {
-				label : "绿化环境差",
-				data : 18.6,
-				color : "#DA5430"
-			}, {
-				label : "其他",
-				data : 10,
-				color : "#FEE074"
-			} ]
-			var placeholder1 = $('#piechart-placeholder1').css({
+			var placeholder1 = $('#piechart-placeholder').css({
 				'width' : '86%',
-				'min-height' : '210px'
+				'min-height' : '170px'
 			});
-			var data1 = [ {
-				label : "人行跨路桥",
-				data : 38.7,
-				color : "#68BC31"
-			}, {
-				label : "照明设施",
-				data : 24.5,
-				color : "#2091CF"
-			}, {
-				label : "停车场",
-				data : 8.2,
-				color : "#AF4E96"
-			}, {
-				label : "公共汽车停靠站",
-				data : 18.6,
-				color : "#DA5430"
-			}, {
-				label : "栅栏",
-				data : 10,
-				color : "#FEE074"
-			} ]
 			function drawPieChart(placeholder, data, position) {
 				$.plot(placeholder, data, {
 					series : {
 						pie : {
 							show : true,
-							tilt : 0.8,
+							tilt : 1,
 							highlight : {
-								opacity : 0.25
+								opacity : 0.3
 							},
 							stroke : {
 								color : '#fff',
@@ -512,12 +460,13 @@
 					}
 				})
 			}
-			drawPieChart(placeholder, data);
-			drawPieChart(placeholder1, data1);
+			
+			
 			/**
 			we saved the drawing function and the data to redraw with different position later when switching to RTL mode dynamically
 			so that's not needed actually.
 			 */
+			
 			placeholder.data('chart', data);
 			placeholder.data('draw', drawPieChart);
 
@@ -529,7 +478,25 @@
 				if (item) {
 					if (previousPoint != item.seriesIndex) {
 						previousPoint = item.seriesIndex;
-						var tip = item.series['label'] + " : " + item.series['percent'] + '%';
+						var tip = item.series['label'] + " : " + item.series['percent'].toFixed(2) + '%';
+						$tooltip.show().children(0).text(tip);
+					}
+					$tooltip.css({
+						top : pos.pageY + 10,
+						left : pos.pageX + 10
+					});
+				} else {
+					$tooltip.hide();
+					previousPoint = null;
+				}
+
+			});
+			
+			placeholder1.on('plothover', function(event, pos, item) {
+				if (item) {
+					if (previousPoint != item.seriesIndex) {
+						previousPoint = item.seriesIndex;
+						var tip = item.series['label'] + " : " + item.series['percent'].toFixed(2) + '%';
 						$tooltip.show().children(0).text(tip);
 					}
 					$tooltip.css({
@@ -627,7 +594,7 @@
 				else
 					$(this).removeClass('dropup');
 			});
-
+			
 		})
 
 	});

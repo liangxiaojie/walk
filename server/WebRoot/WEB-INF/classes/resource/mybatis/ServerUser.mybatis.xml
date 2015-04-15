@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ServerUser.Mapper" >
+
+	<resultMap id="BaseResultMap" type="com.app.domain.ServerUser">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+		<result column="USER_PASS" jdbcType="VARCHAR" property="userPass" />
+		<result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+		<result column="PHONE_NUMBER" jdbcType="CHAR" property="phoneNumber" />
+		<result column="STATU" jdbcType="CHAR" property="statu" />
+		<result column="FLAG" jdbcType="CHAR" property="flag" />
+		<result column="LAST_LOGTIME" jdbcType="TIMESTAMP" property="lastLogtime" />
+	</resultMap>
+
+	<select id="getServerUsersCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*) count
+		from SYS_USER t1 
+	</select>
+	
+	<select id="getServerUserInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select ID, USER_ID, USER_NAME, USER_PASS, CREATE_TIME, PHONE_NUMBER, STATU, FLAG, LAST_LOGTIME
+		from SYS_USER where ID = #{id}
+	</select>
+	
+	<select id="checkServerUserExist" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select ID, USER_ID, USER_NAME, USER_PASS, STATU, FLAG
+		from SYS_USER where USER_ID = #{userId} and FLAG = #{flag} 
+	</select>
+	
+	<select id="checkServerUserExist1" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select ID, USER_ID, USER_NAME, USER_PASS, STATU, FLAG
+		from SYS_USER where USER_ID = #{userid} 
+	</select>
+	
+	<insert id="saveServerUser" parameterType="Map" >
+	    insert into SYS_USER (ID, USER_ID, USER_NAME, USER_PASS,CREATE_TIME,PHONE_NUMBER, STATU, FLAG)
+		values (#{id},#{userid},#{nickname},#{pass},sysdate,#{phone},#{statu},#{flag})
+	</insert>
+	
+	<update id="updateServerUserPass"  parameterType="Map" >
+		update  SYS_USER set USER_PASS = #{pass} where ID = #{id}
+	</update>
+
+	<update id="updateServerUserLogTime" parameterType="com.app.domain.ServerUser" >
+		update  SYS_USER set LAST_LOGTIME = sysdate where ID = #{id}
+	</update>
+	
+	<select id="getServerUserUsers" parameterType="Map" resultType="hashmap" useCache="false">
+		select ID, USER_ID, USER_NAME, USER_PASS, to_char(CREATE_TIME, 'yyyy-MM-dd hh24:mi:ss') CREATE_TIME, PHONE_NUMBER, STATU, FLAG, to_char(LAST_LOGTIME, 'yyyy-MM-dd hh24:mi:ss') LAST_LOGTIME 
+		from SYS_USER t1 where flag='0'
+		order by LAST_LOGTIME desc
+	</select>
+	
+	<select id="getServerUserUsersCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*) where flag='0'
+		from SYS_USER t1 
+	</select>
+
+	<select id="deleteSysUser" parameterType="Map" flushCache="false" useCache="false">
+		update SYS_USER set flag=#{flag} where id = #{id} 
+	</select>
+</mapper>

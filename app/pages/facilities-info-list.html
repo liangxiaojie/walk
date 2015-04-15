@@ -121,7 +121,6 @@
 									  + '		</div>'
 									  + '	</div>'
 									  + '</li>';
-
 //								html += '<li class="mui-table-view-cell mui-mmui-media"><a class="mui-navigate-right" onclick="showWindow(\'facilities-info-view\',\'facilities-info-view.html\',\'' + data[i].id + '\',0)">' + '  <img class="mui-media-object mui-pull-left" src="../images/cbd.jpg">' + '	<div class="mui-media-body">' + '		<div style="float:left;">新增人行道' + (index++) + '</div><h6></h6>' + '		<p class="mui-ellipsis">顺义区马坡镇XX路新增人行道...</p>' + '	</div>' + '</a></li>';
 						
 							}
@@ -173,58 +172,60 @@
 			 * 上拉加载具体业务实现
 			 */
 			function pullupRefresh() {
-				setTimeout(function() {
-					var table = document.body.querySelector('#scroll2 .mui-table-view');
-					var cells = document.body.querySelectorAll('#scroll2 .mui-table-view-cell');
-					if (slideType === 1) {
-						mui.ajax(localhost + "walk/service/appInfoService/searchAppInfo?pageNo=" + pageNo + "&pageSize=" + pageSize, {
-							dataType: 'json', //服务器返回json格式数据
-							type: 'get', //HTTP请求类型
-							timeout: 15000, //超时时间设置为15秒；
-							success: function(result) {
-								//服务器返回响应，根据响应结果，分析是否登录成功；
-								if (result.success) 
-								{
-									var data = result.data;
-									var rows = data.rows;
-									var pageIndex = pageNo * pageSize;
-									if (rows.length > 0) 
+				var table = $('#pullrefresh .mui-scroll');
+				if (slideType === 1) {
+					mui.ajax(localhost + "walk/service/appInfoService/searchAppInfo?pageNo=" + pageNo + "&pageSize=" + pageSize, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 15000, //超时时间设置为15秒；
+						success: function(result) {
+							//服务器返回响应，根据响应结果，分析是否登录成功；
+							if (result.success){
+								var data = result.data;
+								var rows = data.rows;
+								var pageIndex = pageNo * pageSize;
+								var html = '<ul id="serverRow" class="mui-table-view">';
+								if (rows.length > 0){
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //刷新完成
+									for (var i = 0; i < rows.length; i++) 
 									{
-										for (var i = 0; i < rows.length; i++) 
-										{
-											var evalContent = rows[i].INFOCONTENT;
-											var address = rows[i].ADDRESS;
-											var uploadtime = rows[i].UPLOADTIME;
-											var evaltype = rows[i].INFOTYPE;
-											var id = rows[i].ID;
-											var longitude = rows[i].LONGITUDE;
-											var filedpath = rows[i].FILEDPATH;
-											var statu = rows[i].STATU;
-											var latitude = rows[i].LATITUDE;
-											var userid = rows[i].USERID;
-											var li = document.createElement('li');
-											li.className = 'mui-table-view-cell mui-mmui-media';
-											li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-info-view\',\'facilities-info-view.html\',\'' + id + '\',1)">' + '  <img class="mui-media-object mui-pull-left" src="'+localhost+'walk'+filedpath+'">' + '	<div class="mui-media-body">' + '		<div style="float:left;">' + address + '</div><h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">'+getTypeNames(infoTypeNames, evaltype)+'...</p>' + '	</div>' + '</a>'
-											table.appendChild(li);
-										}
-										mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
-									} else {
-										mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
+										var evalContent = rows[i].INFOCONTENT;
+										var address = rows[i].ADDRESS;
+										var uploadtime = rows[i].UPLOADTIME;
+										var evaltype = rows[i].INFOTYPE;
+										var id = rows[i].ID;
+										var longitude = rows[i].LONGITUDE;
+										var filedpath = rows[i].FILEDPATH;
+										var statu = rows[i].STATU;
+										var latitude = rows[i].LATITUDE;
+										var userid = rows[i].USERID;
+										html += '<li class="mui-table-view-cell">'
+										  + '	<a class="mui-navigate-right" onclick="showWindow(\'facilities-info-view\',\'facilities-info-view.html\',\'' + id + '\',1)">' + '  <img class="mui-media-object mui-pull-left" src="'+ localhost + 'walk' + filedpath + '">' + '	<div class="mui-media-body">' + '		<div style="float:left;">' + address + '</div><h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">'+getTypeNames(infoTypeNames, evaltype)+'...</p>' + '	</div>' + '</a>'					
+										  + '</li>';
+	//											var li = document.createElement('li');
+	//											li.className = 'mui-table-view-cell mui-mmui-media';
+	//											li.innerHTML = '<a class="mui-navigate-right" onclick="showWindow(\'facilities-info-view\',\'facilities-info-view.html\',\'' + id + '\',1)">' + '  <img class="mui-media-object mui-pull-left" src="'+localhost+'walk'+filedpath+'">' + '	<div class="mui-media-body">' + '		<div style="float:left;">' + address + '</div><h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + uploadtime + '</h6>' + '		<p class="mui-ellipsis">'+getTypeNames(infoTypeNames, evaltype)+'...</p>' + '	</div>' + '</a>'
+	//											table.appendChild(li);
 									}
-									pageNo++;
+									html += '</ul>';
+									table.html(html);
+									//mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //刷新完成
 								} else {
-									alert("服务异常，请稍后再试！");
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
 								}
-							},
-							error: function(xhr, type, errorThrown) {
-								//异常处理；
+								pageNo++;
+							} else {
 								alert("服务异常，请稍后再试！");
 							}
-						});
-					} else {
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //refresh completed
-					}
-				}, 200);
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							alert("服务异常，请稍后再试！");
+						}
+					});
+				} else {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //刷新完成
+				}
 			}
 			mui.init({
 				swipeBack: false,
@@ -261,9 +262,13 @@
 					if (e.detail.slideNumber === 1) {
 						slideType = 1;
 						var load = $("#scroll2 .mui-loading");
-						if ($("#scroll2 .mui-loading").length > 0) {
-							pullupRefresh();
+						if (load.length > 0) {
 							load.remove();
+							mui('#pullrefresh').pullRefresh().pullupLoading();
+							pullupRefresh();
+							mui('#pullrefresh').innerHTML="";
+							mui('#pullrefresh').pullRefresh().pullupLoading();
+							pullupRefresh();
 						}
 					}
 				});

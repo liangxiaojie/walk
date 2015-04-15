@@ -110,4 +110,17 @@ public class AppPathServiceImpl extends BaseService implements AppPathService
 		return rtnMap;
 	}
 
+	public Map<String, String> deleteAppPath(Map<String, String> parasMap, HttpServletRequest request)
+	{
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("id", parasMap.get("id"));
+		paraMap.put("statu", Notes.AppPathStatuDeleted);
+
+		daoSupportTemplate.delete("AppPath.Mapper.deleteAppPath", paraMap);
+
+		Map<String, String> rtnMap = new HashMap<String, String>();
+		rtnMap.put("code", "S001");
+		rtnMap.put("msg", "删除成功！");
+		return rtnMap;
+	}
 }

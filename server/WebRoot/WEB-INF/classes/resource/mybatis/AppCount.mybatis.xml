@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AppCount.Mapper" >
+	<select id="getAppPathCounts" parameterType="Map" resultType="String" useCache="false">
+		select count(*) pathCount from APP_PATH where statu = #{statu}
+	</select>
+	<select id="getAppPathCountsTodayRate" parameterType="Map" resultType="String" useCache="false">
+		select round((select count(*) pathCount from APP_PATH where statu = #{statu} and to_char(uploadtime, 'yyyy-MM-dd') = to_char(sysdate, 'yyyy-MM-dd'))/(select count(*) pathCount from APP_PATH where statu = #{statu} ), 2)*100 from dual
+	</select>
+	<select id="getAppEvalCounts" parameterType="Map" resultType="String" useCache="false">
+		select count(*) evalCount from APP_EVALUATION where statu = #{statu}
+	</select>
+	<select id="getAppEvalCountsTodayRate" parameterType="Map" resultType="String" useCache="false">
+		select round((select count(*) evalCount from APP_EVALUATION where statu = #{statu} and to_char(uploadtime, 'yyyy-MM-dd') = to_char(sysdate, 'yyyy-MM-dd'))/(select count(*) evalCount from APP_EVALUATION where statu = #{statu} ), 2)*100 from dual
+	</select>
+	<select id="getAppInfoCounts" parameterType="Map" resultType="String" useCache="false">
+		select count(*) infoCount from APP_INFO where statu = #{statu}
+	</select>
+	<select id="getAppInfoCountsTodayRate" parameterType="Map" resultType="String" useCache="false">
+		select round((select count(*) infoCount from APP_INFO where statu = #{statu} and to_char(uploadtime, 'yyyy-MM-dd') = to_char(sysdate, 'yyyy-MM-dd'))/(select count(*) infoCount from APP_INFO where statu = #{statu} ), 2)*100 from dual
+	</select>
+	<select id="getAppUserCounts" parameterType="Map" resultType="String" useCache="false">
+		select count(*) infoCount from APP_USER where statu = #{statu}
+	</select>
+	
+	<select id="getAppAllCountsToday" parameterType="Map" resultType="String" useCache="false">
+		SELECT (select count(*) pathCount from APP_PATH where statu = 0 and to_char(uploadtime, 'yyyy-MM-dd') = to_char(sysdate, 'yyyy-MM-dd'))+(select count(*) pathCount from APP_EVALUATION where statu = 0 and to_char(uploadtime, 'yyyy-MM-dd') = to_char(sysdate, 'yyyy-MM-dd'))+(select count(*) pathCount from APP_INFO where statu = 0 and to_char(uploadtime, 'yyyy-MM-dd') = to_char(sysdate, 'yyyy-MM-dd')) FROM DUAL
+	</select>
+	<select id="getAppAllCounts" parameterType="Map" resultType="String" useCache="false">
+		SELECT (select count(*) pathCount from APP_PATH where statu = 0 )+(select count(*) pathCount from APP_EVALUATION where statu = 0 )+(select count(*) pathCount from APP_INFO where statu = 0 ) FROM DUAL
+	</select>
+
+	<select id="getAppAllRecord" parameterType="Map" resultType="hashmap" useCache="false">
+		select * from 
+		(
+		    select * from 
+		    (
+		        select id, user_id, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, '1' appType, '路径评价' appContent from app_path where statu='0'
+		        union 
+		        select id, user_id, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, '2' appType, '设施评价' appContent from app_evaluation where statu='0'
+		        union
+		        select id, user_id, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, '3' appType, '设施更新' appContent from app_info where statu='0'
+		    ) order by uploadtime desc 
+		) where rownum<![CDATA[<]]> 10
+	</select>
+
+	<select id="getAppEvalType" parameterType="Map" resultType="String" useCache="false">
+		select eval_type from app_evaluation where statu='0'
+	</select>
+	<select id="getAppInfoType" parameterType="Map" resultType="String" useCache="false">
+		select info_type from app_info where statu='0'
+	</select>
+<!-- 
+  	<select id="searchAppEvaluation" parameterType="Map" resultType="hashmap" useCache="false">
+		select id, address, eval_type as evalType, eval_content as evalContent, user_id as userId, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, longitude, latitude, statu, max(t2.filedpath) filedpath 
+		from app_evaluation t1 
+		left join (select fid, filedpath, min(id) from app_picture group by fid, filedpath) t2 on t1.id=t2.fid
+		where user_id = #{userId} and statu = #{statu} 
+		group by id, address, eval_Type, eval_Content, user_Id, uploadtime, longitude, latitude, statu
+		order by uploadtime desc
+	</select>
+
+	<select id="searchAppEvaluationCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select count(*)
+		from app_evaluation
+		where user_id = #{userId} and statu = #{statu}
+	</select>
+
+	<select id="queryAppEvaluation" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
+		select id, address, eval_type as evalType, eval_content as evalContent, user_id as userId, to_char(uploadtime, 'yyyy-MM-dd hh24:mi:ss') uploadtime, longitude, latitude, statu 
+		from app_evaluation 
+		where id = #{id} 
+	</select>
+ -->
+</mapper>

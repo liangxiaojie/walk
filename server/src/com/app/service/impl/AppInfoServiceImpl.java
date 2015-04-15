@@ -156,7 +156,7 @@ public class AppInfoServiceImpl extends BaseService implements AppInfoService
 						paraMap.put("fid", id);
 						paraMap.put("filename", fileName);
 						paraMap.put("filetype", fileEnd);
-						paraMap.put("filedpath", "\\file\\3info\\" + uuid + "." + fileEnd );
+						paraMap.put("filedpath", "\\file\\3info\\thumb\\" + uuid + "." + fileEnd );
 						paraMap.put("filepath", "\\file\\3info\\" + uuid + "." + fileEnd );
 						paraMap.put("filesize", String.valueOf(item.getSize()));
 						paraMap.put("walktype", "3");
@@ -191,10 +191,17 @@ public class AppInfoServiceImpl extends BaseService implements AppInfoService
 
 		return page;
 	}
+	public Map<String, String> deleteAppInfo(Map<String, String> parasMap, HttpServletRequest request)
+	{
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("id", parasMap.get("id"));
+		paraMap.put("statu", Notes.AppInfoStatuDeleted);		//0未删除  1已删除
 
-	@Override
-	public Map<String, String> getAppInfosCount(HttpServletRequest request) {
-		Map<String, String> rtnMap = (Map<String, String>) getDaoSupportTemplate().get("AppInfo.Mapper.getAppInfosCount");
+		daoSupportTemplate.delete("AppInfo.Mapper.deleteAppInfo", paraMap);
+
+		Map<String, String> rtnMap = new HashMap<String, String>();
+		rtnMap.put("code", "S001");
+		rtnMap.put("msg", "删除成功！");
 		return rtnMap;
 	}
 }

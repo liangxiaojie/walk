@@ -19,6 +19,8 @@ public interface AppEvaluationService
 //	public HashMap<String, String> saveAppEvaluation(Map<String, String> paraMap, HttpServletRequest request);
 	
 	public Page getAppEvaluations(Map<String, String> parasMap, HttpServletRequest request);
-	
+
 	public Map<String, String> getAppEvaluationsCount(HttpServletRequest request);
+
+	public Map<String, String> deleteAppEval(Map<String, String> parasMap, HttpServletRequest request);
 }

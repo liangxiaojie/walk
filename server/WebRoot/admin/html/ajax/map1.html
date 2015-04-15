@@ -1,16 +1,10 @@
 
 <title>地图-步行出行环境评价应用系统</title>
-
-<div class="page-header">
-	<h1>
-		地图
-		<small>
-			<i class="ace-icon fa fa-angle-double-right"></i>
-			地图显示所有设施信息及设施评价
-		</small>
-	</h1>
-</div>
-
+<style>
+.page-content {
+	padding: 12px 12px 0px;
+}
+</style>
 <div class="row">
 	<div class="col-xs-12">
 		<iframe id="mapIframe" width="100%" frameborder="0" src="map.html"></iframe>
@@ -19,7 +13,7 @@
 
 <script type="text/javascript">
 	function iframeResize(){
-		$("#mapIframe").height($(window).height()-200);
+		$("#mapIframe").height($(window).height()-150);
 	}
 	$('.page-content-area').ace_ajax('loadScripts', [], function() {
 		jQuery(function($) {

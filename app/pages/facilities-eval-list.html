@@ -261,9 +261,10 @@
 					if (e.detail.slideNumber === 1) {
 						slideType = 1;
 						var load = $("#scroll2 .mui-loading");
-						if ($("#scroll2 .mui-loading").length > 0) {
-							pullupRefresh();
+						if (load.length > 0) {
 							load.remove();
+							mui('#pullrefresh').pullRefresh().pullupLoading();
+							pullupRefresh();
 						}
 					}
 				});

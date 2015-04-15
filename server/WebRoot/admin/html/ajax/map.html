@@ -32,7 +32,7 @@ body,html,#allmap {
 			//百度地图API功能
 			map = new BMap.Map("allmap");            // 创建Map实例
 			var point = new BMap.Point(116.404, 39.915); // 创建点坐标
-			map.centerAndZoom(point,15);                 
+			map.centerAndZoom(point,11);                 
 			map.enableScrollWheelZoom();                 //启用滚轮放大缩小
 			
 			$.ajax({
@@ -43,7 +43,7 @@ body,html,#allmap {
 					grid_data=data.data.rows;
 					if(grid_data.length>0){
 						var point = new BMap.Point(grid_data[0].LONGITUDE, grid_data[0].LATITUDE);
-						map.centerAndZoom(point,15);
+						//map.centerAndZoom(point,15);
 					}
 					for ( var i in grid_data) {
 						var sContent ='<div style="width:800px;height:400px;" ><iframe src="admin-facilities-info-view.html?id='+grid_data[i].ID+'" frameborder="0" style="width:730px;height:100%;"></iframe></div>';

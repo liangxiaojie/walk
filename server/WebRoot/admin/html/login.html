@@ -37,10 +37,20 @@
 		.font-set{
 			font:24px normal 'microsoft yahei','微软雅黑';
 		}
+		body{
+			background:url(login_bj.jpg) no-repeat center top !important;
+			background-size:100% 100% !important;
+		}
 		</STYLE>
+		<script language="JavaScript">
+		function keyLogin(){
+		 if (event.keyCode==13)  //回车键的键值为13
+			 userlogin();
+		}
+		</script>
 	</head>
 
-	<body class="login-layout">
+	<body class="login-layout" onkeydown="keyLogin();">
 		<div class="main-container">
 			<div class="main-content">
 				<div class="row">
@@ -142,16 +152,38 @@
 				if (!pass) {
 					return "请输入密码";
 				}
-				if (username=="zhangsan" && pass=="123") {
-					return true;
-				}else{
-					return "用户名密码错误";
-				}
+				return true;
 			}
+			
 			function userlogin(){
 				var val=validate();
 				if(val===true){
-					location.href="ajax/ajax.html#page/index";
+					$.ajax("/walk/service/serverUserService/login", {
+						data: {
+							userId: document.getElementById('username').value,
+							userPass: document.getElementById('pass').value
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 15000, //超时时间设置为15秒；
+						success: function(result) {
+							//服务器返回响应，根据响应结果，分析是否登录成功；
+							if (result.success) {
+								if (result.data.code == "S001") {
+									location.href="ajax/ajax.html#page/index";
+								} else {
+									alert(result.data.msg);
+								}
+							} else {
+								alert("服务异常，请稍后再试！");
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							alert("服务异常，请稍后再试！");
+						}
+					});
 				}else{
 					alert(val);
 				}

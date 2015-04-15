@@ -18,6 +18,6 @@ public interface AppInfoService
 //	public HashMap<String, String> saveAppInfo(Map<String, String> paraMap, HttpServletRequest request);
 	
 	public Page getAppInfos(Map<String, String> parasMap, HttpServletRequest request);
-
-	public Map<String, String> getAppInfosCount(HttpServletRequest request);
+	
+	public Map<String, String> deleteAppInfo(Map<String, String> parasMap, HttpServletRequest request);
 }

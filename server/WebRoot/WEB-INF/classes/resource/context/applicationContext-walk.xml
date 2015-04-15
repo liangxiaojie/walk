@@ -27,6 +27,14 @@
 		</property>  
 	</bean>
  -->
+ 	<bean id="serverUserService" class="com.app.service.impl.ServerUserServiceImpl">
+		<property name="daoSupportTemplate" ref="daoSupportTemplate"/>
+	</bean>
+	
+	<bean id="appCountService" class="com.app.service.impl.AppCountServiceImpl">
+		<property name="daoSupportTemplate" ref="daoSupportTemplate"/>
+	</bean>
+	
  	<bean id="appUserService" class="com.app.service.impl.AppUserServiceImpl">
 		<property name="daoSupportTemplate" ref="daoSupportTemplate"/>
 	</bean>

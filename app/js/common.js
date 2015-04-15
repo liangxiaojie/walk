@@ -1,8 +1,8 @@
-﻿var localhost = "http://192.168.2.111:8080/";
+﻿var localhost = "http://203.207.224.105:8080/";
 var mapkey = "hVI52P08obxgT6Gl1uxKnxId";
 function getTypeNames(typeNames, typeValues)
 {
-	console.log(typeValues)
+//	console.log(typeValues)
 	var rtnValue = "";
 	var typeValueArray = typeValues.split(","); 
 	for (var j = 0; j < typeValueArray.length; j++)

@@ -195,4 +195,18 @@ public class AppEvaluationServiceImpl extends BaseService implements AppEvaluati
 		Map<String, String> rtnMap = (Map<String, String>) getDaoSupportTemplate().get("AppEvaluation.Mapper.getAppEvaluationsCount");
 		return rtnMap;
 	}
+	
+	public Map<String, String> deleteAppEval(Map<String, String> parasMap, HttpServletRequest request)
+	{
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("id", parasMap.get("id"));
+		paraMap.put("statu", Notes.AppEvaluationStatuDeleted); // 0未删除 1已删除
+
+		daoSupportTemplate.delete("AppEvaluation.Mapper.deleteAppEval", paraMap);
+
+		Map<String, String> rtnMap = new HashMap<String, String>();
+		rtnMap.put("code", "S001");
+		rtnMap.put("msg", "删除成功！");
+		return rtnMap;
+	}
 }

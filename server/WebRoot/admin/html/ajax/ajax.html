@@ -34,6 +34,14 @@
 		<script src="../../assets/js/html5shiv.js"></script>
 		<script src="../../assets/js/respond.js"></script>
 		<![endif]-->
+		<style type="text/css">
+		#loginOut{
+			color:#fff;
+		}
+		#loginOut:hover{
+			color:#000;
+		}
+		</style>
 	</head>
 
 	<body class="no-skin">
@@ -80,8 +88,8 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								<img class="nav-user-photo" src="../../assets/avatars/user.jpg" alt="Jason's Photo" />
 								<span class="user-info">
-									<small>欢迎您,</small>
-									张三
+									<small>欢迎您</small>
+									<span id="loginOut" onclick="location.href='../login.html'">退出</span>
 								</span>
 
 							</a>
@@ -156,6 +164,15 @@
 						<a data-url="page/admin-facilities-eval" href="ajax.html#page/admin-facilities-eval">
 							<i class="menu-icon fa fa-list-alt"></i>
 							<span class="menu-text"> 设施评价管理 </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+
+					<li class="">
+						<a data-url="page/admin-server-user" href="ajax.html#page/admin-server-user">
+							<i class="menu-icon fa fa-list-alt"></i>
+							<span class="menu-text"> 后台用户管理 </span>
 						</a>
 
 						<b class="arrow"></b>

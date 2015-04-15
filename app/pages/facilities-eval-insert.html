@@ -304,8 +304,14 @@
 
 			function appendByCamera() {
 				// 拍照添加文件
-				plus.camera.getCamera().captureImage(function(p) {
-					appendFile(p);
+				plus.camera.getCamera().captureImage( function ( p ) {
+					plus.io.resolveLocalFileSystemURL( p, function ( entry ) {
+						appendFile(entry.toLocalURL());
+					}, function ( e ) {
+						outLine( "读取拍照文件错误："+e.message );
+					} );
+				}, function ( e ) {
+					outSet( "取消拍照" );
 				});
 			}
 

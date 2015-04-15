@@ -4,19 +4,12 @@
 
 	<select id="getAppPaths" parameterType="Map" resultType="hashmap" useCache="false">
 		select ID, SADD,EADD, to_char(SDATE, 'yyyy-MM-dd hh24:mi:ss') SDATE, to_char(EDATE, 'yyyy-MM-dd hh24:mi:ss') EDATE,SLON,SLAT,ELON,ELAT,DISTANCE,COSTTIME,to_char(PROCE) PROCE,KPI1,KPI2,KPI3,KPI,SUGGEST, to_char(UPLOADTIME, 'yyyy-MM-dd hh24:mi:ss') UPLOADTIME,USER_ID,STATU
-		from APP_PATH t1
+		from APP_PATH t1 where statu = '0'
 		order by UPLOADTIME desc
 	</select>
 	
 	<select id="getAppPathsCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
-		select count(*) count
-		from APP_PATH t1 
-	</select>
-
-	<select id="getAppPathToday" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
-		select count(*) count 
-		from APP_PATH t 
-		where to_char(t.UPLOADTIME, 'yyyy-MM-dd') = to_char(SYSDATE, 'yyyy-MM-dd')
+		select count(*) count from APP_PATH t1  where statu = '0'
 	</select>
 	
   	<select id="searchAppPath" parameterType="Map" resultType="hashmap" useCache="false">
@@ -43,6 +36,9 @@
 		values (#{id}, #{sadd}, to_date(#{sdate}, 'yyyy-MM-dd hh24:mi:ss'), #{slon}, #{slat}, #{eadd}, to_date(#{edate}, 'yyyy-MM-dd hh24:mi:ss'), #{elon}, #{elat}, #{distance}, #{costtime}, #{proce}, #{kpi1}, #{kpi2}, #{kpi3}, #{kpi}, #{suggest}, sysdate, #{user_id}, #{statu} )
 	</insert>
 
+	<select id="deleteAppPath" parameterType="Map" flushCache="false" useCache="false">
+		update app_path set statu=#{statu} where id = #{id} 
+	</select>
 
 
   <!-- 

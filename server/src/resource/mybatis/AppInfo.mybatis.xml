@@ -4,19 +4,12 @@
 
 	<select id="getAppInfos" parameterType="Map" resultType="hashmap" useCache="false">
 		select ID,ADDRESS,INFO_TYPE,INFO_CONTENT,USER_ID, to_char(UPLOADTIME, 'yyyy-MM-dd hh24:mi:ss') UPLOADTIME,LONGITUDE,LATITUDE,STATU 
-		from APP_INFO t1
+		from APP_INFO t1 where statu = '0'
 		order by UPLOADTIME desc
 	</select>
 	
 	<select id="getAppInfosCount" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
-		select count(*) count
-		from APP_INFO t1 
-	</select>
-	
-	<select id="getAppInfoToday" parameterType="Map" resultType="hashmap" flushCache="false" useCache="false">
-		select count(*) count 
-		from APP_INFO t 
-		where to_char(t.UPLOADTIME, 'yyyy-MM-dd') = to_char(SYSDATE, 'yyyy-MM-dd')
+		select count(*) count from APP_INFO t1 where statu = '0'
 	</select>
 
   	<select id="searchAppInfo" parameterType="Map" resultType="hashmap" useCache="false">
@@ -45,6 +38,10 @@
 	    insert into APP_INFO (ID, ADDRESS, INFO_TYPE, INFO_CONTENT, USER_ID, UPLOADTIME, LONGITUDE, LATITUDE, STATU)
 		values (#{id}, #{address}, #{info_type}, #{info_content}, #{user_id}, sysdate, #{longitude}, #{latitude}, #{statu} )
 	</insert>
+	
+	<select id="deleteAppInfo" parameterType="Map" flushCache="false" useCache="false">
+		update app_info set statu=#{statu} where id = #{id} 
+	</select>
 
 
   <!-- 

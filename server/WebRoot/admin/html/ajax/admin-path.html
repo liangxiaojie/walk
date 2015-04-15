@@ -46,6 +46,7 @@
 			if (grid_data[i].STATU == 1) {
 				grid_data[i].STATU = "是";
 			}
+			grid_data[i].COSTTIME=(grid_data[i].COSTTIME/1000).toFixed(2)+"秒";
 		}
 		return grid_data;
 	}
@@ -61,7 +62,7 @@
 
 			$.ajax({
 				type : "GET",
-				url : "/walk/service/appPathService/getAppPaths?pageNo=0&pageSize=10",
+				url : "/walk/service/appPathService/getAppPaths?pageNo=0&pageSize=100",
 				dataType : 'json', //服务器返回json格式数据
 				success : function(data) {
 					grid_data = data.data.rows;
@@ -72,8 +73,17 @@
 						data : grid_data,
 						datatype : "local",
 						height : 360,
-						colNames : [ 'ID', '提交人', '提交时间', '个人意见', '是否删除', '综合评分', '安全性', '舒适性', '便利性', '步行时长', '步行距离', '开始地址', '结束地址', '开始时间', '结束时间', '起点经度', '起点纬度', '结束经度', '结束纬度' ],
-						colModel : [ {
+						colNames : [ '操作','ID', '提交人', '提交时间', '个人意见', '综合评分', '安全性', '舒适性', '便利性', '步行时长', '开始地址', '结束地址', '开始时间', '结束时间', '起点经度', '起点纬度', '结束经度', '结束纬度' ],
+						colModel : [{name:'myac',index:'', width:60, fixed:true, sortable:false, resize:false,
+							formatter:'actions', 
+							formatoptions:{ 
+								keys:true,
+								//delbutton: false,//disable delete button
+								editbutton: false,
+								delOptions:{recreateForm: true, beforeShowForm:beforeDeleteCallback}
+								//editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}
+							}
+						}, {
 							name : 'ID',
 							index : 'ID',
 							hidden : true
@@ -84,8 +94,6 @@
 						}, {
 							name : 'SUGGEST'
 						}, {
-							name : 'STATU'
-						}, {
 							name : 'KPI'
 						}, {
 							name : 'KPI1'
@@ -95,8 +103,6 @@
 							name : 'KPI3'
 						}, {
 							name : 'COSTTIME'
-						}, {
-							name : 'DISTANCE'
 						}, {
 							name : 'SADD'
 						}, {
@@ -137,11 +143,13 @@
 						},
 
 						onCellSelect : function(rowid, iCol, cellcontent, e) {
-							var id = $("#" + rowid).find("td").first().html();
-							window.open("admin-path-view.html?id="+id);
+							if(iCol>1){
+								var id = $($("#" + rowid).find("td")[1]).html();
+								window.open("admin-path-view.html?id="+id);
+							}
 						},
 
-						//editurl: "/dummy.html",//nothing is saved
+						editurl: "/walk/",
 						caption : "路径管理"
 
 					//,autowidth: true,
@@ -242,10 +250,24 @@
 			}
 
 			function style_delete_form(form) {
+				form.closest('.ui-jqdialog').find('.ui-jqdialog-title').html("确认删除");
+				form.closest('.ui-jqdialog').find('.delmsg').html("确认删除这条记录吗？");
 				var buttons = form.next().find('.EditButton .fm-button');
 				buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide();//ui-icon, s-icon
-				buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
-				buttons.eq(1).addClass('btn-default').prepend('<i class="ace-icon fa fa-times"></i>')
+				buttons.eq(0).addClass('btn-danger').html("删除").prepend('<i class="ace-icon fa fa-trash-o"></i>');
+				buttons.eq(1).addClass('btn-default').html("取消").prepend('<i class="ace-icon fa fa-times"></i>');
+				buttons.eq(0).click(function(e){
+					var rowId=$("#grid-table").jqGrid("getGridParam","selrow");
+					var rowData = $("#grid-table").jqGrid("getRowData",rowId);
+					$.ajax({
+						type : "GET",
+						url : "/walk/service/appPathService/deleteAppPath?id="+rowData.ID,
+						dataType : 'json', //服务器返回json格式数据
+						success : function(data) {
+							console.log(data.data.msg);
+						}
+					});
+				});
 			}
 
 			function style_search_filters(form) {

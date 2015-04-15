@@ -20,4 +20,6 @@ public interface AppPathService
 	public Page getAppPaths(Map<String, String> parasMap, HttpServletRequest request);
 
 	public Map<String, String> getAppPathsCount(HttpServletRequest request);
+	
+	public Map<String, String> deleteAppPath(Map<String, String> parasMap, HttpServletRequest request);
 }

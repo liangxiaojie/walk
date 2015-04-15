@@ -168,8 +168,8 @@
 						</p>
 						<p>结束纬度：<span class="elat"></span>
 						</p>
-						<p>步行距离：<span class="distance"></span>
-						</p>
+						<!--<p>步行距离：<span class="distance"></span>
+						</p>-->
 						<p>步行时长：<span class="costtime"></span>
 						</p>
 						<p>提交人：<span class="userid"></span>
@@ -224,8 +224,8 @@
 							$(".slat").html(slat);
 							$(".elon").html(elon);
 							$(".elat").html(elat);
-							$(".distance").html(distance);
-							$(".costtime").html(costtime);
+//							$(".distance").html(distance);
+							$(".costtime").html(costtime/1000+"秒");
 							$(".userid").html(userid);
 							$(".score1").val(kpi1);
 							$(".score2").val(kpi2);

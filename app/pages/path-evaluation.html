@@ -15,14 +15,27 @@
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
 
 		<style>
-			#map {
-				width: 100%;
+			.mui-content {
 				position: absolute;
 				top: 48px;
-				bottom: 70px;
-				line-height: 200px;
-				text-align: center;
-				background: #FFFFFF;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				padding-top: 0!important;
+			}
+			#allmap {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				margin: 0;
+			}
+			#golist {
+				display: none;
+			}
+			@media (max-device-width: 800px) {
+				#golist {
+					display: block!important;
+				}
 			}
 			.footer {
 				position: absolute;
@@ -45,105 +58,77 @@
 				top: 3px;
 			}
 		</style>
-		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript">
-			var ws = null,
-				wo = null;
-			var em = null,
-				map = null;
 
-			function showWindow(id, url) {
-				var obj={};
-					mui.openWindow({
-						id: id,
-						url: url,
-						show: {
-							autoshow: true,
-							aniShow: 'slide-in-right'
-						},
-						waiting: {
-							autoshow: false
-						},
-						extras: {
-							obj: path
-						}
-					})
-				}
-				// H5 plus事件处理
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-icon mui-icon-right-nav mui-pull-right mui-icon-location" onclick="setLocal()"></div>
+			<h1 class="mui-title">路径评价</h1>
+		</header>
+
+		<div class="mui-content">
+			<div id="allmap">地图获取中</div>
+			<div class="footer">
+				<a class="mui-btn mui-btn-primary mui-btn-block" onclick="toRecord();">
+					<img id="img-icon" class="img-icon" src="../images/icons/start.png" />
+					<span id="record">开始记录</span>
+				</a>
+			</div>
+		</div>
+
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=hVI52P08obxgT6Gl1uxKnxId"></script>
+		<script type="text/javascript">
+			var map = new BMap.Map("allmap");
+			var geolocation = new BMap.Geolocation();
 
 			function plusReady() {
-				//				if (!em || ws) {
-				//					return
-				//				};
-				// 获取窗口对象
-				ws = plus.webview.currentWebview();
-				wo = ws.opener();
 				setTimeout(function() {
-					map = new plus.maps.Map("map");
-					map.getUserLocation(function(state, pos) {
-						map.showUserLocation(true);
-						map.centerAndZoom(new plus.maps.Point(pos.getLng(), pos.getLat()), 18);
-					});
-					//					createMarker();
-					// 创建子窗口
-					//createSubview();
+					var point = new BMap.Point(116.331398, 39.897445);
+					map.centerAndZoom(point, 18);
+					this.setLocal();
 				}, 300);
-				// 显示页面并关闭等待框
-				ws.show("slide-in-right", 300);
 			}
 			if (window.plus) {
 				plusReady();
 			} else {
 				document.addEventListener("plusready", plusReady, false);
 			}
-			 // DOMContentloaded事件处理
-			document.addEventListener("DOMContentLoaded", function() {
-				em = document.getElementById("map");
-				window.plus && plusReady();
-			}, false);
-
+			/* 获取当前位置
+			 * 返回point对象
+			 */
 			function userLocation() {
-				map.showUserLocation(true);
-				map.getUserLocation(function(state, pos) {
-					//					console.log(state)
-					//					console.log(pos.getLat() + "====" + pos.getLng())
-					if (0 == state) {
-						map.centerAndZoom(new plus.maps.Point(pos.getLng(), pos.getLat()), 18);
-						//						map.setCenter(pos);
-						//						map.setZoom(18);
-					}
-				});
-			}
-
-			function createMarker() {
-				map.getUserLocation(function(state, pos) {
-					var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
-					marker.setIcon("/logo.png");
-					marker.setLabel("起点");
-					var bubble = new plus.maps.Bubble("起点");
-					marker.setBubble(bubble);
-					map.addOverlay(marker);
-				});
-			}
-
-			function createSubview() {
-				if ('Android' != plus.os.name) {
-					return;
+					geolocation.getCurrentPosition(function(r) {
+						if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+							return r.point;
+						} else {
+							alert('定位失败，' + this.getStatus());
+							return null;
+						}
+					}, {
+						enableHighAccuracy: true
+					});
 				}
-				var wsub = plus.webview.create('map_sub.html', 'sub', {
-					top: '46px',
-					height: '34px',
-					position: 'absolute',
-					scrollIndicator: 'none',
-					background: 'transparent'
-				});
-				ws.append(wsub);
-			}
+				//定位当前位置
 
-			function resetMap() {
-				map.centerAndZoom(new plus.maps.Point(116.666755, 40.16814), 12);
+			function setLocal() {
+				geolocation.getCurrentPosition(function(r) {
+					if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+						var point = r.point;
+						var mk = new BMap.Marker(point);
+						map.addOverlay(mk);
+						map.panTo(point);
+					} else {
+						alert('定位失败，' + this.getStatus());
+					}
+				}, {
+					enableHighAccuracy: true
+				});
 			}
-			var path = {};
+			var path = {}; //路径对象
 			path.sadd = ""; //开始地址
 			path.sdate = ""; //开始时间
 			path.slon = ""; //开始经度
@@ -167,120 +152,104 @@
 				if (recorded) {
 					if (confirm("您确认停止记录吗?")) {
 						recorded = false;
-						map.getUserLocation(function(state, pos) {
-							path.elon = pos.getLng();
-							path.elat = pos.getLat();
-							path.edate = new Date();
-							path.costtime = path.edate - path.sdate;
-							path.proce = points;
-							var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
-							marker.setIcon("/logo.png");
-							marker.setLabel("终点");
-							//						var bubble = new plus.maps.Bubble("起点");
-							//						marker.setBubble(bubble);
-							map.addOverlay(marker);
-							document.getElementById("img-icon").src = "../images/icons/start.png";
-							document.getElementById("record").innerHTML = "开始记录";
-							mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=" + mapkey, {
-								dataType: 'json', //服务器返回json格式数据
-								type: 'get', //HTTP请求类型
-								timeout: 15000, //超时时间设置为15秒；
-								success: function(result) {
-									//服务器返回响应，根据响应结果，分析是否请求成功；
-									if (result.status == "OK") {
-										path.eadd = result.result.formatted_address;
-										//console.log(JSON.stringify(path));
-										showWindow("path-info.html","path-info.html");
-									} else {
-										alert("无法获取当前位置，请打开定位服务");
-									}
-								},
-								error: function(xhr, type, errorThrown) {
-									//异常处理；
-									console.log(type);
-									alert("定位服务异常，请稍后再试！");
-								}
-							});
+						document.getElementById("record").innerHTML = "获取路径中...";
+						geolocation.getCurrentPosition(function(r) {
+							if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+								var pos = r.point;
+								path.elon = pos.lng;
+								path.elat = pos.lat;
+								path.edate = new Date();
+								path.costtime = path.edate - path.sdate;
+								path.proce = points;
+								var marker = new BMap.Marker(pos); // 创建标注
+								map.addOverlay(marker); // 将标注添加到地图中
+								var label = new BMap.Label("终点", {
+									offset: new BMap.Size(20, -10)
+								});
+								marker.setLabel(label);
+								var geoc = new BMap.Geocoder();
+								geoc.getLocation(pos, function(rs) {
+									path.eadd = rs.address;
+									document.getElementById("img-icon").src = "../images/icons/start.png";
+									document.getElementById("record").innerHTML = "开始记录";
+									showWindow("path-info.html", "path-info.html");
+								});
+							} else {
+								alert('定位失败，' + this.getStatus());
+							}
+						}, {
+							enableHighAccuracy: true
 						});
 					}
 				} else {
-					recorded = true;
-					map.getUserLocation(function(state, pos) {
-						path.slon = pos.getLng();
-						path.slat = pos.getLat()
-						path.sdate = new Date();
-						var marker = new plus.maps.Marker(new plus.maps.Point(pos.getLng(), pos.getLat()));
-						marker.setIcon("/logo.png");
-						marker.setLabel("起点");
-						//						var bubble = new plus.maps.Bubble("起点");
-						//						marker.setBubble(bubble);
-						map.addOverlay(marker);
-						document.getElementById("img-icon").src = "../images/icons/stop.png";
-						document.getElementById("record").innerHTML = "停止记录";
-						mui.ajax("http://api.map.baidu.com/geocoder?location=" + pos.getLat() + "," + pos.getLng() + "&output=json&key=" + mapkey, {
-							dataType: 'json', //服务器返回json格式数据
-							type: 'get', //HTTP请求类型
-							timeout: 15000, //超时时间设置为15秒；
-							success: function(result) {
-								//服务器返回响应，根据响应结果，分析是否请求成功；
-								if (result.status == "OK") {
-									path.sadd = result.result.formatted_address;
-								} else {
-									alert("无法获取当前位置，请打开定位服务");
-								}
-							},
-							error: function(xhr, type, errorThrown) {
-								//异常处理；
-								console.log(type);
-								alert("定位服务异常，请稍后再试！");
-							}
-						});
+					document.getElementById("record").innerHTML = "获取当前位置中...";
+					geolocation.getCurrentPosition(function(r) {
+						if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+							var pos = r.point;
+							path.slon = pos.lng;
+							path.slat = pos.lat;
+							path.sdate = new Date();
+							var marker = new BMap.Marker(pos); // 创建标注
+							map.addOverlay(marker); // 将标注添加到地图中
+							var label = new BMap.Label("起点", {
+								offset: new BMap.Size(20, -10)
+							});
+							marker.setLabel(label);
+							document.getElementById("img-icon").src = "../images/icons/stop.png";
+							document.getElementById("record").innerHTML = "停止记录";
+							recorded = true;
+							var geoc = new BMap.Geocoder();
+							geoc.getLocation(pos, function(rs) {
+								path.sadd = rs.address;
+							});
+						} else {
+							alert('定位失败，' + this.getStatus());
+						}
+					}, {
+						enableHighAccuracy: true
 					});
 					//i=0时，坐标不变。测试时改为1
 					var i = 1;
 					window.setInterval(function() {
 						if (recorded) {
-							map.getUserLocation(function(state, pos) {
-								points.push(new plus.maps.Point(pos.getLng() + i * 0.0001, pos.getLat() + i * 0.0001));
-								var polylineObj = new plus.maps.Polyline(points);
-								map.centerAndZoom(new plus.maps.Point(pos.getLng() + i * 0.0001, pos.getLat() + i * 0.0001), 18);
-								polylineObj.setStrokeColor("#00FF00");
-								polylineObj.setLineWidth(8);
-								map.addOverlay(polylineObj);
-								i++;
+							geolocation.getCurrentPosition(function(r) {
+								if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+									var pos = r.point;
+									points.push(new BMap.Point(pos.lng, pos.lat));
+									var polylineObj = new BMap.Polyline(points);
+									map.centerAndZoom(pos, 18);
+									polylineObj.setStrokeColor("#00FF00");
+									polylineObj.setStrokeWeight(8);
+									map.addOverlay(polylineObj);
+									i++;
+								} else {
+									alert('定位失败，' + this.getStatus());
+								}
+							}, {
+								enableHighAccuracy: true
 							});
 						}
-					}, 3000);
+					}, 1000);
 				}
 			}
 
-			mui('.mui-scroll-wrapper').scroll();
-			mui('body').on('shown', '.mui-popover', function(e) {
-				//console.log('shown', e.detail.id);//detail为当前popover元素
-			});
-			mui('body').on('hidden', '.mui-popover', function(e) {
-				//console.log('hidden', e.detail.id);//detail为当前popover元素
-			});
+			function showWindow(id, url) {
+				mui.openWindow({
+					id: id,
+					url: url,
+					show: {
+						autoshow: true,
+						aniShow: 'slide-in-right'
+					},
+					waiting: {
+						autoshow: false
+					},
+					extras: {
+						obj: path
+					}
+				})
+			}
 		</script>
-	</head>
-
-	<body>
-
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<div class="mui-icon mui-icon-right-nav mui-pull-right mui-icon-location" onclick="userLocation();"></div>
-			<h1 class="mui-title">路径评价</h1>
-		</header>
-
-		<div class="mui-content">
-			<div id="map">地图加载中...</div>
-			<div class="footer">
-				<a class="mui-btn mui-btn-primary mui-btn-block" onclick="toRecord();">
-					<img id="img-icon" class="img-icon" src="../images/icons/start.png" />
-					<span id="record">开始记录</span>
-				</a>
-			</div>
-		</div>
 
 	</body>
 

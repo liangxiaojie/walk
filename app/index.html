@@ -65,7 +65,7 @@
 				步行出行环境评价应用系统
 			</div>
 			<div class="user">
-				<span>欢迎您，张三</span>
+				<span id="username">欢迎您，张三</span>
 			</div>
 		</div>
 		<div id="list" class="container">
@@ -146,6 +146,7 @@
 
 	<!-- script -->
 	<script src="js/mui.min.js"></script>
+	<script src="js/common.js"></script>
 
 	<script type="text/javascript">
 		var menu = null;
@@ -199,6 +200,25 @@
 				}
 			}
 		};
+
+		mui.ajax(localhost + "walk/service/appUserService/getAppUserInfo", {
+				dataType: 'json', //服务器返回json格式数据
+				type: 'get', //HTTP请求类型
+				timeout: 15000, //超时时间设置为15秒；
+				success: function(result) {
+					//服务器返回响应，根据响应结果，分析是否登录成功；
+					if (result.success){
+						var data = result.data;
+						document.getElementById("username").innerHTML="欢迎您，"+data.userName;
+					} else {
+						alert("服务异常，请稍后再试！");
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					//异常处理；
+					alert("服务异常，请稍后再试！");
+				}
+			});
 
 		function showWindow(id, url) {
 				mui.openWindow({

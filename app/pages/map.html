@@ -7,109 +7,113 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		
+
 		<link href="../css/mui.min.css" rel="stylesheet">
 		<script src="../js/mui.min.js"></script>
-		
-		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+
+		<link rel="stylesheet" type="text/css" href="../css/base.css" />
 		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
-		
+
 		<style type="text/css">
-			#map {
-				width: 100%;
-				position: fixed;
+			.mui-content {
+				position: absolute;
 				top: 48px;
+				left: 0;
+				right: 0;
 				bottom: 0;
-				line-height: 200px;
-				text-align: center;
-				background: #FFFFFF;
+				padding-top: 0!important;
+			}
+			input[type=search] {
+				margin-bottom: 5px;
+			}
+			#allmap {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				margin: 0;
+			}
+			#golist {
+				display: none;
+			}
+			@media (max-device-width: 800px) {
+				#golist {
+					display: block!important;
+				}
+			}
+			#r-result {
+				width: 100%;
 			}
 		</style>
-
-		<script type="text/javascript">
-			var ws = null,
-				wo = null;
-			var em = null,
-				map = null;
-			 // H5 plus事件处理
-			function plusReady() {
-				if (!em || ws) {
-					return
-				};
-				// 获取窗口对象
-				ws = plus.webview.currentWebview();
-				wo = ws.opener();
-				setTimeout(function() {
-					map = new plus.maps.Map("map");
-					map.centerAndZoom(new plus.maps.Point(116.3977, 39.906016), 12);
-					createMarker();
-					// 创建子窗口
-					createSubview();
-				}, 300);
-				// 显示页面并关闭等待框
-				ws.show("slide-in-right", 300);
-			}
-			if (window.plus) {
-				plusReady();
-			} else {
-				document.addEventListener("plusready", plusReady, false);
-			}
-			 // DOMContentloaded事件处理
-			document.addEventListener("DOMContentLoaded", function() {
-				em = document.getElementById("map");
-				window.plus && plusReady();
-			}, false);
-
-			function userLocation() {
-				map.showUserLocation(true);
-				map.getUserLocation(function(state, pos) {
-					if (0 == state) {
-						map.setCenter(pos);
-					}
-				});
-			}
-
-			function createMarker() {
-				var marker = new plus.maps.Marker(new plus.maps.Point(116.347496, 39.970191));
-				marker.setIcon("/logo.png");
-				marker.setLabel("HBuilder");
-				var bubble = new plus.maps.Bubble("打造最好的HTML5移动开发工具");
-				marker.setBubble(bubble);
-				map.addOverlay(marker);
-			}
-
-			function createSubview() {
-				if ('Android' != plus.os.name) {
-					return;
-				}
-				var wsub = plus.webview.create('map_sub.html', 'sub', {
-					top: '46px',
-					height: '34px',
-					position: 'absolute',
-					scrollIndicator: 'none',
-					background: 'transparent'
-				});
-				ws.append(wsub);
-			}
-
-			function resetMap() {
-				map.centerAndZoom(new plus.maps.Point(116.666755, 40.16814), 12);
-			}
-		</script>
 	</head>
 
-	<body>
+	<body onkeydown="keyLogin()">
 
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<div class="mui-icon mui-icon-right-nav mui-pull-right mui-icon-location" onclick="userLocation();"></div>
+			<div class="mui-icon mui-icon-right-nav mui-pull-right mui-icon-location" onclick="setLocal();"></div>
 			<h1 class="mui-title">地图</h1>
 		</header>
 
 		<div class="mui-content">
-			<div id="map">地图加载中...</div>
+			<div id="r-result" class="mui-input-row mui-search">
+				<input id="suggestId" type="search" class="mui-input-speech mui-input-clear" placeholder="请输入要搜索的公共交通、生活设施信息">
+			</div>
+			<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+			<div id="allmap"></div>
 		</div>
 
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=hVI52P08obxgT6Gl1uxKnxId"></script>
+		<script type="text/javascript">
+			 // 百度地图API功能
+			var map = new BMap.Map("allmap");
+			var geolocation = new BMap.Geolocation();
+			map.enableScrollWheelZoom();
+			var local = new BMap.LocalSearch(map, {
+				renderOptions: {
+					map: map,
+					autoViewport: false
+				}
+			});
+			var mPoint = null; //当前位置
+			function keyLogin() {
+				if (event.keyCode == 13){ //回车键的键值为13
+					var circle = new BMap.Circle(mPoint, 2000, {
+						strokeWeight: 1,
+						fillOpacity: 0.1,
+						strokeOpacity: 0.1
+					});
+					map.clearOverlays(); //清除地图上所有覆盖物
+					map.addOverlay(circle);
+					local.searchNearby(document.getElementById("suggestId").value, mPoint, 2000);
+					document.getElementById("suggestId").blur();
+				}
+			}
+
+			function setLocal() {
+					geolocation.getCurrentPosition(function(r) {
+						if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+							var point = r.point;
+							var mk = new BMap.Marker(point);
+							map.clearOverlays(); //清除地图上所有覆盖物
+							map.addOverlay(mk);
+							//map.panTo(point);
+							map.centerAndZoom(point, 15);
+							mPoint = point;
+						} else {
+							alert('定位失败，' + this.getStatus());
+						}
+					}, {
+						enableHighAccuracy: true
+					});
+				}
+				//初始化mui
+			mui.init();
+			mui.plusReady(function() {
+				plus.nativeUI.closeWaiting();
+				setLocal();
+			});
+			setLocal();
+		</script>
 	</body>
 
 </html>

@@ -65,9 +65,10 @@
 				border-bottom: 1px solid #007aff;
 			}
 			.reform {
-				width: 99%;
+				width: 90%;
 				text-align: right;
 				margin-top: 20px;
+				margin-left: 15px;
 			}
 			.reform img {
 				width: 80px;
@@ -84,7 +85,60 @@
 			}
 		</style>
 		<script type="text/javascript">
-			mui.back = function() {};
+			var menu = null;
+			var showMenu = false;
+			mui.init({
+				preloadLimit: 5, //同时并存的预加载窗口数量
+				swipeBack: false,
+				statusBarBackground: '#f7f7f7'
+			});
+			//首页返回键处理
+			//处理逻辑：1秒内，连续两次按返回键，则退出应用；
+			var first = null;
+			mui.back = function() {
+				if (showMenu) {
+					closeMenu();
+				} else {
+					//首次按键，提示‘再按一次退出应用’
+					if (!first) {
+						first = new Date().getTime();
+						mui.toast('再按一次退出应用');
+						setTimeout(function() {
+							first = null;
+						}, 1000);
+					} else {
+						if (new Date().getTime() - first < 1000) {
+							mui.plusReady(function(){
+								plus.runtime.quit();
+							});
+						}
+					}
+				}
+			};
+			
+			function keyLogin(){
+			 if (event.keyCode==13)  //回车键的键值为13
+				 userLogin();
+			}
+			
+			function showWindow(id, url, recid, rectype) {
+				mui.openWindow({
+					id: id,
+					url: url,
+					show: {
+						autoshow: true,
+						aniShow: 'slide-in-right'
+					},
+					waiting: {
+						autoshow: false
+					},
+					extras: {
+						recid: recid,
+						rectype: rectype
+					}
+				})
+			}
+			
 			function userLogin() {
 				mui.ajax(localhost + "walk/service/appUserService/login", {
 					data: {
@@ -110,13 +164,14 @@
 						//异常处理；
 						console.log(type);
 						alert("服务异常，请稍后再试！");
+						//location.href = "index.html";
 					}
 				});
 			}
 		</script>
 	</head>
 
-	<body>
+	<body onkeydown="keyLogin()">
 
 		<div class="mui-content">
 			<div class="header">
@@ -137,7 +192,7 @@
 					<div class="remember">
 						<input type="checkbox" class="mui-checkbox" name="" id="" value="" /> 记住账号
 					</div>
-					<button type="button" class="mui-btn mui-btn-primary">忘了密码？</button>
+					<!--<button type="button" class="mui-btn mui-btn-primary">忘了密码？</button>-->
 					<a class="mui-btn mui-btn-primary" href="register.html">用户注册</a>
 				</div>
 				<div class="footer">
